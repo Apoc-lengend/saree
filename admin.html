@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Serverless Admin Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+    <div id="toast">Changes Saved Successfully!</div>
+
+    <!-- Login Auth Screen -->
+    <div class="auth-wrapper" id="auth-screen">
+        <div class="auth-card">
+            <h2>Admin Login</h2>
+            <p style="text-align:center;font-size:0.9rem;margin-bottom:2rem;color:#777;">Powered by GitHub Pages API</p>
+            <div class="form-group">
+                <label>GitHub Username</label>
+                <input type="text" id="github-username" placeholder="e.g. aditi-textiles">
+            </div>
+            <div class="form-group">
+                <label>Repository Name</label>
+                <input type="text" id="github-repo" placeholder="e.g. saree-website">
+            </div>
+            <div class="form-group">
+                <label>Personal Access Token (PAT)</label>
+                <input type="password" id="github-token" placeholder="ghp_xxxxxxxxxxxxxxx">
+            </div>
+            <button class="btn" onclick="app.login()">Connect to Repository</button>
+        </div>
+    </div>
+
+    <!-- Dashboard Screen -->
+    <div class="container dashboard" id="dashboard-screen">
+        <div class="header-bar">
+            <div>
+                <h1 style="margin:0;color:var(--primary);">Aditi Admin Dashboard</h1>
+                <p style="margin:0.2rem 0;color:var(--second);">Editing <span id="repo-display"></span></p>
+            </div>
+            <button class="btn btn-small" onclick="app.saveChanges()">Commit Changes to GitHub</button>
+        </div>
+
+        <!-- Cover Photos Config -->
+        <div class="panel">
+            <h3>Website Cover Photos</h3>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Home Hero Cover URL</label>
+                    <input type="text" id="cfg-hero-cover" onchange="app.updateConfig('hero_cover', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Sarees Cover URL</label>
+                    <input type="text" id="cfg-sarees-cover" onchange="app.updateConfig('sarees_cover', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Bedsheets Cover URL</label>
+                    <input type="text" id="cfg-bedsheets-cover" onchange="app.updateConfig('bedsheets_cover', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Blankets Cover URL</label>
+                    <input type="text" id="cfg-blankets-cover" onchange="app.updateConfig('blankets_cover', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Pillows Cover URL</label>
+                    <input type="text" id="cfg-pillows-cover" onchange="app.updateConfig('pillows_cover', this.value)">
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Add New Product Form -->
+            <div class="panel">
+                <h3>Add New Product</h3>
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="add-category">
+                        <option value="sarees">Sarees</option>
+                        <option value="bedsheets">Bedsheets</option>
+                        <option value="blankets">Blankets</option>
+                        <option value="pillows">Pillows</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Product Name</label>
+                    <input type="text" id="add-name" placeholder="e.g. Silk Saree">
+                </div>
+                <div class="form-group">
+                    <label>Price</label>
+                    <input type="text" id="add-price" placeholder="e.g. $120.00">
+                </div>
+                <div class="form-group">
+                    <label>Image URL</label>
+                    <input type="text" id="add-image" placeholder="assets/saree.png">
+                </div>
+                <button class="btn btn-small" onclick="app.addProduct()">Add Product</button>
+            </div>
+
+            <!-- Product Manager -->
+            <div class="panel">
+                <h3>Manage Products</h3>
+                <div class="form-group">
+                    <select id="manage-category" onchange="app.renderProducts()">
+                        <option value="sarees">View Sarees</option>
+                        <option value="bedsheets">View Bedsheets</option>
+                        <option value="blankets">View Blankets</option>
+                        <option value="pillows">View Pillows</option>
+                    </select>
+                </div>
+                <div id="product-list" style="max-height: 400px; overflow-y: auto;">
+                    <!-- Rendered by JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="admin.js"></script>
+</body>
+</html>

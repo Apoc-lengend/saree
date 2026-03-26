@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aditi Textiles - Premium Sarees & Home Linens</title>
+    <meta name="description"
+        content="Discover exquisite designer sarees, luxurious bedsheets, plush pillows, and cozy blankets. Elevate your home and wardrobe with Aditi Textiles.">
+    <!-- Google Fonts for Modern Typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="logo">Hello</div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li>
+            <li><a href="#collections">Collections</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+        <div class="lang-switch" style="margin-left: 2rem;">
+            <button class="lang-switcher-btn"
+                style="padding: 0.3rem 1.2rem; cursor: pointer; border-radius: 20px; font-weight: 600; border: 2px solid var(--primary-color); background: transparent; color: var(--secondary-color); font-family: inherit; font-size: 1rem; transition: all 0.3s ease;"
+                onmouseover="this.style.background='var(--primary-color)'; this.style.color='white';"
+                onmouseout="this.style.background='transparent'; this.style.color='var(--secondary-color)';"
+                onclick="toggleLanguage()">HI</button>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero" id="home" style="background-size: cover; background-position: center;">
+        <div class="hero-content">
+            <h1 id="dynamic-hero-title">Weave Your World in Elegance</h1>
+            <p id="dynamic-hero-subtitle">Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.</p>
+            <a href="collections.html" class="btn-primary">Explore Now</a>
+        </div>
+    </header>
+
+    <!-- Collections Section -->
+    <section id="collections" class="collections">
+        <div class="section-title">
+            <h2>Our Collections</h2>
+            <p>Handpicked textiles crafted for those who appreciate the finer things in life.</p>
+        </div>
+
+        <div class="grid">
+            <!-- Saree Collection -->
+            <div class="card" onclick="window.location.href='sarees.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/saree.png" alt="Designer Traditional Sarees Collection">
+                </div>
+                <div class="card-info">
+                    <h3>Designer Sarees</h3>
+                    <p>Experience the rich heritage and delicate craftsmanship of our authentically woven
+                        traditional
+                        and modern sarees.</p>
+                    <a href="sarees.html" class="btn-secondary">View Sarees</a>
+                </div>
+            </div>
+
+            <!-- Bedsheets Collection -->
+            <div class="card" onclick="window.location.href='bedsheets.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/bedsheet.png" alt="Premium Modern Bedsheets Collection">
+                </div>
+                <div class="card-info">
+                    <h3>Premium Bedsheets</h3>
+                    <p>Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk
+                        bedsheets.</p>
+                    <a href="bedsheets.html" class="btn-secondary">View Bedsheets</a>
+                </div>
+            </div>
+
+            <!-- Pillows Collection -->
+            <div class="card" onclick="window.location.href='pillows.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/pillow.png" alt="Plush Elegant Pillows Collection">
+                </div>
+                <div class="card-info">
+                    <h3>Plush Pillows</h3>
+                    <p>Rest your head on our exquisite collection of ultra-soft, ergonomically designed pillows for a
+                        perfect night's sleep.</p>
+                    <a href="pillows.html" class="btn-secondary">View Pillows</a>
+                </div>
+            </div>
+
+            <!-- Blankets Collection -->
+            <div class="card" onclick="window.location.href='blankets.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/blanket.png" alt="Luxurious Cozy Blankets Collection">
+                </div>
+                <div class="card-info">
+                    <h3>Luxury Blankets</h3>
+                    <p>Wrap yourself in warmth with our elegantly textured, lightweight luxury blankets designed for
+                        modern aesthetics.</p>
+                    <a href="blankets.html" class="btn-secondary">View Blankets</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features / About Section -->
+    <section id="about" class="features">
+        <div class="section-title">
+            <h2 style="color: white; border-color: var(--primary-color);">Why Choose Us</h2>
+            <p style="color: #ccc;">The Aditi Guarantee of Quality</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-item">
+                <h4>Premium Quality</h4>
+                <p>We source only the finest fabrics and materials to ensure long-lasting durability, supreme comfort,
+                    and luxurious texture.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Authentic Craftsmanship</h4>
+                <p>Every saree and linen piece is crafted by skilled artisans, keeping traditional methods alive in
+                    modern designs.</p>
+            </div>
+            <div class="feature-item">
+                <h4>Sustainable Practices</h4>
+                <p>We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across
+                    our entire supply chain.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact" class="footer">
+        <div class="footer-content">
+            <div class="footer-logo">Aditi Textiles</div>
+            <p>123 Elegance Avenue, Silk District, Textile City</p>
+            <p>Email: contact@adititextiles.com | Phone: +1 (555) 123-4567</p>
+        </div>
+        <p>&copy; 2026 Aditi Textiles. All rights reserved. Designed with precision and passion.</p>
+    </footer>
+
+    <!-- Simple Script for Navbar Scroll Effect -->
+    <script>
+        window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.style.background = 'rgba(255, 255, 255, 0.98)';
+                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.1)';
+            } else {
+                navbar.style.background = 'rgba(255, 255, 255, 0.9)';
+                navbar.style.boxShadow = '0 4px 30px rgba(0, 0, 0, 0.05)';
+            }
+        });
+
+        async function loadHomeData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                const hero = document.getElementById('home');
+                hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.hero_cover}')`;
+                
+                document.getElementById('dynamic-hero-title').innerText = data.site_config.hero_title;
+                document.getElementById('dynamic-hero-subtitle').innerText = data.site_config.hero_subtitle;
+            } catch(e) { console.error('Error loading data', e); }
+        }
+        document.addEventListener('DOMContentLoaded', loadHomeData);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+{
+  "site_config": {
+    "hero_cover": "assets/saree.png",
+    "sarees_cover": "assets/saree.png",
+    "bedsheets_cover": "assets/bedsheet.png",
+    "blankets_cover": "assets/blanket.png",
+    "pillows_cover": "assets/pillow.png",
+    "hero_title": "Weave Your World in Elegance",
+    "hero_subtitle": "Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.",
+    "sarees_title": "Designer Sarees",
+    "sarees_subtitle": "Pure silk, georgette, and intricately designed traditional sarees.",
+    "bedsheets_title": "Premium Bedsheets",
+    "bedsheets_subtitle": "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.",
+    "blankets_title": "Luxury Blankets",
+    "blankets_subtitle": "Elegantly textured, lightweight warmth for modern living.",
+    "pillows_title": "Plush Pillows",
+    "pillows_subtitle": "Ergonomically designed for a perfect night's sleep."
+  },
+  "products": {
+    "sarees": [
+      {
+        "id": "s1",
+        "name": "Banarasi Silk Saree",
+        "price": "$250.00",
+        "image": "assets/saree.png",
+        "style": ""
+      },
+      {
+        "id": "s2",
+        "name": "Kanjeevaram Silk Saree",
+        "price": "$350.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(45deg);"
+      },
+      {
+        "id": "s3",
+        "name": "Georgette Evening Saree",
+        "price": "$180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);"
+      },
+      {
+        "id": "s4",
+        "name": "Georgette Evening Saree",
+        "price": "$180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);"
+      },
+      {
+        "id": "s5",
+        "name": "Georgette Evening Saree",
+        "price": "$180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);"
+      }
+    ],
+    "bedsheets": [
+      {
+        "id": "be1",
+        "name": "Pure Cotton Pattern Bedding",
+        "price": "$80.00",
+        "image": "assets/bedsheet.png",
+        "style": ""
+      },
+      {
+        "id": "be2",
+        "name": "Luxury Silk Sheet Set",
+        "price": "$140.00",
+        "image": "assets/bedsheet.png",
+        "style": "filter: sepia(0.5);"
+      },
+      {
+        "id": "be3",
+        "name": "Breathable Linen Bedsheet",
+        "price": "$110.00",
+        "image": "assets/bedsheet.png",
+        "style": "filter: grayscale(0.2);"
+      }
+    ],
+    "blankets": [
+      {
+        "id": "bl1",
+        "name": "Merino Wool Blanket",
+        "price": "$120.00",
+        "image": "assets/blanket.png",
+        "style": ""
+      },
+      {
+        "id": "bl2",
+        "name": "Soft Fleece Throw",
+        "price": "$50.00",
+        "image": "assets/blanket.png",
+        "style": "filter: sepia(0.3) hue-rotate(-20deg);"
+      },
+      {
+        "id": "bl3",
+        "name": "Pure Cashmere Blanket",
+        "price": "$290.00",
+        "image": "assets/blanket.png",
+        "style": "filter: contrast(1.1) brightness(0.9);"
+      }
+    ],
+    "pillows": [
+      {
+        "id": "p1",
+        "name": "Memory Foam Pillow",
+        "price": "$45.00",
+        "image": "assets/pillow.png",
+        "style": ""
+      },
+      {
+        "id": "p2",
+        "name": "Premium Down Pillow",
+        "price": "$65.00",
+        "image": "assets/pillow.png",
+        "style": "filter: brightness(0.9);"
+      },
+      {
+        "id": "p3",
+        "name": "Designer Throw Pillow",
+        "price": "$35.00",
+        "image": "assets/pillow.png",
+        "style": "filter: hue-rotate(-20deg);"
+      }
+    ]
+  }
+}

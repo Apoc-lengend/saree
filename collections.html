@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Collections - Aditi Textiles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero { height: 60vh; min-height: 400px; }
+    </style>
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="logo">Aditi</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="collections.html" style="color: var(--primary-color);">Collections</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <div class="lang-switch" style="margin-left: 2rem;">
+           <button class="lang-switcher-btn" style="padding: 0.3rem 1.2rem; cursor: pointer; border-radius: 20px; font-weight: 600; border: 2px solid var(--primary-color); background: transparent; color: var(--secondary-color); font-family: inherit; font-size: 1rem; transition: all 0.3s ease;" onmouseover="this.style.background='var(--primary-color)'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='var(--secondary-color)';" onclick="toggleLanguage()">HI</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content">
+            <h1>All Collections</h1>
+            <p>Explore our wide range of premium textiles.</p>
+        </div>
+    </header>
+
+    <section class="collections" style="padding-top: 4rem;">
+        <div class="grid">
+            <div class="card" onclick="window.location.href='sarees.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/saree.png" alt="Sarees">
+                </div>
+                <div class="card-info">
+                    <h3>Designer Sarees</h3>
+                    <a href="sarees.html" class="btn-secondary">View Sarees</a>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='bedsheets.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/bedsheet.png" alt="Bedsheets">
+                </div>
+                <div class="card-info">
+                    <h3>Premium Bedsheets</h3>
+                    <a href="bedsheets.html" class="btn-secondary">View Bedsheets</a>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='pillows.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/pillow.png" alt="Pillows">
+                </div>
+                <div class="card-info">
+                    <h3>Plush Pillows</h3>
+                    <a href="pillows.html" class="btn-secondary">View Pillows</a>
+                </div>
+            </div>
+            <div class="card" onclick="window.location.href='blankets.html'">
+                <div class="card-img-wrapper">
+                    <img src="assets/blanket.png" alt="Blankets">
+                </div>
+                <div class="card-info">
+                    <h3>Luxury Blankets</h3>
+                    <a href="blankets.html" class="btn-secondary">View Blankets</a>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <p>&copy; 2026 Aditi Textiles. All rights reserved.</p>
+    </footer>
+</body>
+</html>

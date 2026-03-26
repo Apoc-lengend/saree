@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sarees - Aditi Textiles</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero { height: 50vh; min-height: 400px; background-size: cover; background-position: center; }
+    </style>
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+</head>
+<body>
+    <nav class="navbar" id="navbar">
+        <div class="logo">Aditi</div>
+        <ul class="nav-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="collections.html" style="color: var(--primary-color);">Collections</a></li>
+            <li><a href="index.html#about">About Us</a></li>
+            <li><a href="index.html#contact">Contact</a></li>
+        </ul>
+        <div class="lang-switch" style="margin-left: 2rem;">
+           <button class="lang-switcher-btn" style="padding: 0.3rem 1.2rem; cursor: pointer; border-radius: 20px; font-weight: 600; border: 2px solid var(--primary-color); background: transparent; color: var(--secondary-color); font-family: inherit; font-size: 1rem; transition: all 0.3s ease;" onmouseover="this.style.background='var(--primary-color)'; this.style.color='white';" onmouseout="this.style.background='transparent'; this.style.color='var(--secondary-color)';" onclick="toggleLanguage()">HI</button>
+        </div>
+    </nav>
+    <header class="hero" id="dynamic-hero">
+        <div class="hero-content">
+            <h1 id="dynamic-title">Designer Sarees</h1>
+            <p id="dynamic-subtitle">Loading...</p>
+        </div>
+    </header>
+    <section class="collections" style="padding-top: 4rem;">
+        <div class="grid" id="products-grid">
+            <!-- Products will be injected here by JS -->
+        </div>
+    </section>
+
+    <script>
+        async function loadData() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                
+                // Update Config
+                const hero = document.getElementById('dynamic-hero');
+                hero.style.background = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.sarees_cover}') center/cover`;
+                
+                document.getElementById('dynamic-title').innerText = data.site_config.sarees_title;
+                document.getElementById('dynamic-subtitle').innerText = data.site_config.sarees_subtitle;
+
+                // Load Products
+                const grid = document.getElementById('products-grid');
+                grid.innerHTML = '';
+                
+                data.products.sarees.forEach(product => {
+                    const card = document.createElement('div');
+                    card.className = 'card';
+                    card.innerHTML = `
+                        <div class="card-img-wrapper"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}"></div>
+                        <div class="card-info">
+                            <h3>${product.name}</h3>
+                            <p>${product.price}</p>
+                            <a href="#" class="btn-secondary">Add to Cart</a>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', loadData);
+    </script>
+    <footer class="footer">
+        <p>&copy; 2026 Aditi Textiles. All rights reserved.</p>
+    </footer>
+</body>
+</html>
