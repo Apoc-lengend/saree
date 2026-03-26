@@ -52,6 +52,13 @@
         "price": "$180.00",
         "image": "assets/saree.png",
         "style": "filter: hue-rotate(90deg);"
+      },
+      {
+        "id": "p1774529684300",
+        "name": "cotton sotton",
+        "price": "100",
+        "image": "assets/hwe2.png",
+        "style": ""
       }
     ],
     "bedsheets": [
