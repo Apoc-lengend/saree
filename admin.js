@@ -29,7 +29,7 @@ const app = {
 
             const fileData = await res.json();
             this.fileSha = fileData.sha;
-            
+
             // Handle Base64 decode safely
             const jsonText = decodeURIComponent(escape(window.atob(fileData.content.replace(/\n/g, ''))));
             this.data = JSON.parse(jsonText);
@@ -121,7 +121,7 @@ const app = {
 
     async saveChanges() {
         if (!confirm('This will immediately update your website. Continue?')) return;
-        
+
         const jsonText = JSON.stringify(this.data, null, 2);
         // Safely encode to base64
         const contentBase64 = window.btoa(unescape(encodeURIComponent(jsonText)));
@@ -129,7 +129,7 @@ const app = {
         try {
             const res = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/data.json`, {
                 method: 'PUT',
-                headers: { 
+                headers: {
                     'Authorization': `token ${this.auth.token}`,
                     'Content-Type': 'application/json'
                 },
@@ -144,9 +144,9 @@ const app = {
 
             const resData = await res.json();
             this.fileSha = resData.content.sha; // Update SHA for next commit
-            
+
             this.showToast('Success! Your changes were saved. GitHub Pages will deploy them in a few minutes.');
-        } catch(err) {
+        } catch (err) {
             alert(err.message);
         }
     }
