@@ -84,17 +84,17 @@
         "style": ""
       },
       {
-        "id": "p1774531735974",
-        "name": "Synthetic Bedsheets",
-        "price": "100",
-        "image": "assets/hwe2.png",
-        "style": ""
-      },
-      {
         "id": "p1774531902649",
         "name": "Alisha Bedsheet",
         "price": "70000",
         "image": "assets/hwe2.png",
+        "style": ""
+      },
+      {
+        "id": "p1774534170254",
+        "name": "Synthetic Bedsheet",
+        "price": "1203",
+        "image": "assets/bedsheet.png",
         "style": ""
       }
     ],
