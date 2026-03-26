@@ -82,6 +82,13 @@
         "price": "1200",
         "image": "assets/bed1.png",
         "style": ""
+      },
+      {
+        "id": "p1774531735974",
+        "name": "Synthetic Bedsheets",
+        "price": "100",
+        "image": "assets/hwe2.png",
+        "style": ""
       }
     ],
     "blankets": [
