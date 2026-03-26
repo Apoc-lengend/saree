@@ -52,13 +52,6 @@
         "price": "$180.00",
         "image": "assets/saree.png",
         "style": "filter: hue-rotate(90deg);"
-      },
-      {
-        "id": "p1774529684300",
-        "name": "cotton sotton",
-        "price": "100",
-        "image": "assets/hwe2.png",
-        "style": ""
       }
     ],
     "bedsheets": [
@@ -82,6 +75,13 @@
         "price": "$110.00",
         "image": "assets/bedsheet.png",
         "style": "filter: grayscale(0.2);"
+      },
+      {
+        "id": "p1774530205746",
+        "name": "cotton sotton bedsheet",
+        "price": "$2500",
+        "image": "assests/bed1.png",
+        "style": ""
       }
     ],
     "blankets": [
