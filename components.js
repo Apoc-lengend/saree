@@ -9,8 +9,14 @@ class SiteNavbar extends HTMLElement {
                     <li><a href="index.html#about">About Us</a></li>
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
-                <div class="nav-actions" style="margin-left: 2rem; display: flex; align-items: center; gap: 1.5rem;">
+                <div class="nav-actions" style="margin-left: 2rem; display: flex; align-items: center; gap: 1.2rem;">
                     <button id="nav-order-now-btn" onclick="openCart()" style="display:none; padding: 0.4rem 1.2rem; cursor: pointer; border-radius: 30px; font-weight: 700; border: none; background: var(--primary-color); color: white; font-family: inherit; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(194,65,12,0.3);">Order Now</button>
+                    <div class="nav-search-wrap" style="position:relative; display:flex; align-items:center;">
+                        <input id="nav-search-input" type="text" placeholder="Search products..." onkeydown="if(event.key==='Enter') redirectToSearch(this.value)" style="width:0; opacity:0; padding:0; border:none; outline:none; font-family:inherit; font-size:0.9rem; border-radius:30px; background:#f3f4f6; transition:all 0.35s ease; color:#374151;">
+                        <a href="javascript:void(0)" onclick="toggleSearch()" style="text-decoration:none; color:var(--heading-color); display:flex; transition:opacity 0.3s ease; margin-left:4px;" onmouseover="this.style.opacity='0.6'" onmouseout="this.style.opacity='1'">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                        </a>
+                    </div>
                     <a href="javascript:void(0)" onclick="openCart()" style="position: relative; text-decoration: none; color: var(--heading-color); display: flex; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="9" cy="21" r="1"></circle>
@@ -61,6 +67,29 @@ window.addEventListener('scroll', () => {
         }
     }
 });
+
+// --- Search ---
+function toggleSearch() {
+    const input = document.getElementById('nav-search-input');
+    if (!input) return;
+    const isOpen = input.style.opacity === '1';
+    if (isOpen) {
+        input.style.width = '0';
+        input.style.opacity = '0';
+        input.style.padding = '0';
+    } else {
+        input.style.width = '180px';
+        input.style.opacity = '1';
+        input.style.padding = '0.4rem 1rem';
+        input.focus();
+    }
+}
+
+function redirectToSearch(query) {
+    if (query && query.trim()) {
+        window.location.href = 'search.html?q=' + encodeURIComponent(query.trim());
+    }
+}
 
 // --- Cart and Checkout System ---
 let cartItems = JSON.parse(localStorage.getItem('aditi_cart')) || [];

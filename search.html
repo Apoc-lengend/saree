@@ -3,25 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pillows - Aditi Textiles</title>
+    <title>Search Results - Aditi Textiles</title>
+    <meta name="description" content="Search results for Aditi Textiles products.">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>.hero { height: 50vh; min-height: 350px; background-size: cover; background-position: center; }</style>
     <script src="components.js"></script>
     <script src="translations.js"></script>
     <script src="language.js"></script>
 </head>
 <body>
     <site-navbar></site-navbar>
-    <header class="hero" id="dynamic-hero">
-        <div class="hero-content">
-            <h1 id="dynamic-title">Plush Pillows</h1>
-            <p id="dynamic-subtitle">Loading...</p>
+    <section class="collections" style="padding-top: 6rem; padding-bottom: 4rem;">
+        <div class="section-title" style="margin-bottom: 2rem;">
+            <h2 id="search-heading">Search Results</h2>
+            <p id="search-meta" style="color: var(--text-muted); margin-top: 0.5rem;"></p>
         </div>
-    </header>
-    <section class="collections" style="padding-top: 3rem; padding-bottom: 4rem;">
-        <div class="product-grid" id="products-grid"></div>
+        <div class="product-grid" id="search-grid"></div>
+        <div id="no-results" style="display:none; text-align:center; padding: 4rem 1rem; color: var(--text-muted);">
+            <p style="font-size: 1.2rem; margin-bottom: 1rem;">😕 No products found for your search.</p>
+            <a href="collections.html" class="btn-primary">Browse All Collections</a>
+        </div>
     </section>
     <script>
         function buildProductCard(product) {
@@ -46,20 +48,34 @@
             card.innerHTML = `<div class="product-card-img"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlay}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}</div></div>`;
             return card;
         }
-        async function loadData() {
+        async function runSearch() {
+            const params = new URLSearchParams(window.location.search);
+            const query = (params.get('q') || '').trim().toLowerCase();
+            const heading = document.getElementById('search-heading');
+            const meta = document.getElementById('search-meta');
+            const grid = document.getElementById('search-grid');
+            const noResults = document.getElementById('no-results');
+            if (!query) { heading.innerText = 'Search Products'; meta.innerText = 'Enter a term in the search box above.'; return; }
+            heading.innerText = `Results for "${query}"`;
             try {
-                const response = await fetch('data.json');
-                const data = await response.json();
-                const hero = document.getElementById('dynamic-hero');
-                hero.style.background = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${data.site_config.pillows_cover}') center/cover`;
-                document.getElementById('dynamic-title').innerText = data.site_config.pillows_title;
-                document.getElementById('dynamic-subtitle').innerText = data.site_config.pillows_subtitle;
-                const grid = document.getElementById('products-grid');
+                const data = await (await fetch('data.json')).json();
+                let matches = [];
+                Object.keys(data.products).forEach(cat => {
+                    data.products[cat].forEach(p => {
+                        if (p.name.toLowerCase().includes(query) || cat.toLowerCase().includes(query)) matches.push(p);
+                    });
+                });
                 grid.innerHTML = '';
-                data.products.pillows.forEach(product => grid.appendChild(buildProductCard(product)));
-            } catch (error) { console.error('Error loading data:', error); }
+                if (matches.length === 0) {
+                    noResults.style.display = 'block';
+                    meta.innerText = 'No products found.';
+                } else {
+                    meta.innerText = `${matches.length} product${matches.length > 1 ? 's' : ''} found`;
+                    matches.forEach(p => grid.appendChild(buildProductCard(p)));
+                }
+            } catch (err) { meta.innerText = 'Could not load products. Please try again.'; }
         }
-        document.addEventListener('DOMContentLoaded', loadData);
+        document.addEventListener('DOMContentLoaded', runSearch);
     </script>
     <site-footer></site-footer>
 </body>

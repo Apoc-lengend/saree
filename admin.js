@@ -71,15 +71,29 @@ const app = {
         this.data.products[category].forEach((prod, index) => {
             const item = document.createElement('div');
             item.className = 'product-item';
+            // Align items gracefully with gap
+            item.style.alignItems = "flex-start";
             item.innerHTML = `
-                <div class="product-info">
-                    <img src="${prod.image}" onerror="this.src='https://via.placeholder.com/40'">
-                    <div>
+                <div class="product-info" style="flex:1;">
+                    <img src="${prod.image}" onerror="this.src='https://via.placeholder.com/40'" style="margin-top:5px;">
+                    <div style="flex:1;">
                         <strong>${prod.name}</strong><br>
                         <small style="color:#666;">${prod.price}</small>
+                        <div style="margin-top:8px; display:flex; gap:10px; font-size:0.85rem; flex-wrap:wrap;">
+                            <label>Stock: <input type="number" style="width:60px; padding:3px; border:1px solid #ccc; border-radius:3px;" value="${prod.stock !== undefined ? prod.stock : 10}" onchange="app.updateProduct('${category}', ${index}, 'stock', this.value)"></label>
+                            <label>Discount(%): <input type="number" style="width:60px; padding:3px; border:1px solid #ccc; border-radius:3px;" value="${prod.discount || 0}" onchange="app.updateProduct('${category}', ${index}, 'discount', this.value)"></label>
+                            <label>Badge:
+                                <select style="padding:3px; border:1px solid #ccc; border-radius:3px;" onchange="app.updateProduct('${category}', ${index}, 'badge', this.value)">
+                                    <option value="" ${!prod.badge ? 'selected' : ''}>None</option>
+                                    <option value="new" ${prod.badge === 'new' ? 'selected' : ''}>🟢 New</option>
+                                    <option value="sale" ${prod.badge === 'sale' ? 'selected' : ''}>🔴 Sale</option>
+                                    <option value="trending" ${prod.badge === 'trending' ? 'selected' : ''}>🟣 Trending</option>
+                                </select>
+                            </label>
+                        </div>
                     </div>
                 </div>
-                <button class="btn-red" onclick="app.removeProduct('${category}', ${index})">Remove</button>
+                <button class="btn-red" onclick="app.removeProduct('${category}', ${index})" style="margin-left:10px; margin-top:5px;">Remove</button>
             `;
             list.appendChild(item);
         });
@@ -90,6 +104,10 @@ const app = {
         const name = document.getElementById('add-name').value;
         const price = document.getElementById('add-price').value;
         const image = document.getElementById('add-image').value;
+        const stock = parseInt(document.getElementById('add-stock').value) || 0;
+        const discount = parseInt(document.getElementById('add-discount').value) || 0;
+        const badge = document.getElementById('add-badge').value;
+        const dateAdded = new Date().toISOString();
 
         if (!name || !price || !image) {
             alert('Please fill out Name, Price, and Image URL.');
@@ -97,18 +115,29 @@ const app = {
         }
 
         const newId = 'p' + Date.now();
-        this.data.products[category].push({ id: newId, name, price, image, style: '' });
+        this.data.products[category].push({ id: newId, name, price, image, style: '', stock, discount, badge, dateAdded });
 
         // Reset form
         document.getElementById('add-name').value = '';
         document.getElementById('add-price').value = '';
         document.getElementById('add-image').value = '';
+        document.getElementById('add-stock').value = '10';
+        document.getElementById('add-discount').value = '0';
+        document.getElementById('add-badge').value = '';
 
         // Update list if showing same category
         if (document.getElementById('manage-category').value === category) {
             this.renderProducts();
         }
         this.showToast('Product added to memory! Click "Commit Changes" to save to GitHub.');
+    },
+
+    updateProduct(category, index, field, value) {
+        if (field === 'stock' || field === 'discount') {
+            value = parseInt(value) || 0;
+        }
+        this.data.products[category][index][field] = value;
+        this.showToast('Updated! Click "Commit Changes" to deploy.');
     },
 
     removeProduct(category, index) {
