@@ -10,6 +10,7 @@ class SiteNavbar extends HTMLElement {
                     <li><a href="index.html#contact">Contact</a></li>
                 </ul>
                 <div class="nav-actions" style="margin-left: 2rem; display: flex; align-items: center; gap: 1.5rem;">
+                    <button id="nav-order-now-btn" onclick="openCart()" style="display:none; padding: 0.4rem 1.2rem; cursor: pointer; border-radius: 30px; font-weight: 700; border: none; background: var(--primary-color); color: white; font-family: inherit; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(194,65,12,0.3);">Order Now</button>
                     <a href="javascript:void(0)" onclick="openCart()" style="position: relative; text-decoration: none; color: var(--heading-color); display: flex; transition: opacity 0.3s ease;" onmouseover="this.style.opacity='0.7'" onmouseout="this.style.opacity='1'">
                         <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="9" cy="21" r="1"></circle>
@@ -64,18 +65,27 @@ window.addEventListener('scroll', () => {
 // --- Cart and Checkout System ---
 let cartItems = JSON.parse(localStorage.getItem('aditi_cart')) || [];
 
-function addToCart(name, priceStr) {
+function addToCart(name, priceStr, imageSrc) {
     let priceNum = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
     if (isNaN(priceNum)) priceNum = 0;
-    cartItems.push({ name, price: priceNum, priceStr });
+    cartItems.push({ name, price: priceNum, priceStr, image: imageSrc || 'assets/saree.png' });
     localStorage.setItem('aditi_cart', JSON.stringify(cartItems));
     updateCartIcon();
-    alert(name + " added to cart!");
+    // Replaced alert with smooth button appearance
 }
 
 function updateCartIcon() {
     let countEl = document.getElementById('cart-count');
+    let orderNowBtn = document.getElementById('nav-order-now-btn');
     if (countEl) countEl.innerText = cartItems.length;
+    
+    if (orderNowBtn) {
+        if (cartItems.length > 0) {
+            orderNowBtn.style.display = 'block';
+        } else {
+            orderNowBtn.style.display = 'none';
+        }
+    }
 }
 
 function openCart() {
@@ -88,9 +98,12 @@ function openCart() {
     let subtotal = 0;
     cartItems.forEach((item, index) => {
         subtotal += item.price;
-        listEl.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
-            <span style="font-weight:500;">${item.name}</span>
-            <span style="color:#c2410c; font-weight:bold;">${item.priceStr} <button onclick="removeFromCart(${index})" style="background:#e74c3c; color:white; border:none; padding:2px 6px; cursor:pointer; margin-left:10px; border-radius:4px; font-weight:bold;">X</button></span>
+        listEl.innerHTML += `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:12px;">
+                <img src="${item.image}" style="width:50px; height:50px; border-radius:6px; object-fit:cover; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
+                <span style="font-weight:600; font-size: 0.95rem;">${item.name}</span>
+            </div>
+            <span style="color:#c2410c; font-weight:bold; white-space:nowrap; margin-left:10px;">${item.priceStr} <button onclick="removeFromCart(${index})" style="background:#e74c3c; color:white; border:none; padding:3px 7px; cursor:pointer; margin-left:8px; border-radius:4px; font-weight:bold;">X</button></span>
         </div>`;
     });
 
@@ -128,10 +141,11 @@ function closeCheckout() {
 function confirmOrder() {
     let name = document.getElementById('checkout-name').value;
     let phone = document.getElementById('checkout-phone').value;
+    let address = document.getElementById('checkout-address').value;
 
-    if (!name || !phone) { alert("Please enter both Name and Mobile No. to proceed."); return; }
+    if (!name || !phone || !address) { alert("Please enter Name, Mobile No. and Delivery Address to proceed."); return; }
 
-    let orderText = `*Hello Aditi Textiles!* I would like to place an order.%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A%0A*Order Details:*%0A`;
+    let orderText = `*Hello Aditi Textiles!* I would like to place an order.%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Delivery Address:* ${address}%0A%0A*Order Details:*%0A`;
 
     let subtotal = 0;
     cartItems.forEach(item => {
@@ -149,7 +163,7 @@ function confirmOrder() {
     updateCartIcon();
     closeCheckout();
 
-    let whatsappUrl = `https://wa.me/919425424981?text=${orderText}`;
+    let whatsappUrl = `https://wa.me/919876543210?text=${orderText}`;
     window.location.href = whatsappUrl;
 }
 
@@ -164,7 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div style="border-top: 2px solid #eee; padding-top: 1rem;">
                     <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-weight:500;"><span>Subtotal:</span> <span id="cart-subtotal">₹0</span></p>
                     <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>GST (18%):</span> <span id="cart-gst">₹0</span></p>
-                    <h3 style="display:flex; justify-content:space-between; margin-top:0.5rem; color:#c2410c; font-size:1.4rem;"><span>Total:</span> <span id="cart-total">₹0</span></h3>
+                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>Delivery:</span> <span style="color:#25D366; font-weight:700;">Free Delivery</span></p>
+                    <h3 style="display:flex; justify-content:space-between; margin-top:0.8rem; color:#c2410c; font-size:1.4rem;"><span>Total:</span> <span id="cart-total">₹0</span></h3>
                 </div>
                 <div style="display:flex; justify-content:flex-end; gap: 1rem; margin-top: 2rem;">
                     <button onclick="closeCart()" style="padding: 0.8rem 1.5rem; border:1px solid #ccc; background:#f9fafb; cursor:pointer; border-radius:6px; font-weight:600;">Keep Shopping</button>
@@ -174,17 +189,24 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>
 
         <div id="checkout-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-            <div style="background:white; padding: 2.5rem; border-radius: 12px; max-width: 400px; width: 90%; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+            <div style="background:white; padding: 2.5rem; border-radius: 12px; max-width: 440px; width: 90%; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.2); max-height:90vh; overflow-y:auto;">
                 <h2 style="margin-bottom: 1.5rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; color:#111827; font-family:'Playfair Display', serif;">Confirm Details</h2>
                 <div style="margin-bottom: 1.2rem;">
                     <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#374151;">Full Name</label>
                     <input type="text" id="checkout-name" placeholder="E.g. Aditi Sharma" style="width:100%; padding:0.8rem; border:1px solid #d1d5db; border-radius:6px; outline:none;">
                 </div>
-                <div style="margin-bottom: 1.5rem;">
+                <div style="margin-bottom: 1.2rem;">
                     <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#374151;">Mobile No.</label>
                     <input type="tel" id="checkout-phone" placeholder="+91 XXXXX XXXXX" style="width:100%; padding:0.8rem; border:1px solid #d1d5db; border-radius:6px; outline:none;">
                 </div>
-                <div style="display:flex; justify-content:space-between; gap: 1rem; margin-top: 2rem;">
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="display:block; margin-bottom:0.5rem; font-weight:600; color:#374151;">Delivery Address</label>
+                    <textarea id="checkout-address" placeholder="House No, Street Name, City, Pincode" style="width:100%; padding:0.8rem; border:1px solid #d1d5db; border-radius:6px; outline:none; font-family:inherit; resize:vertical; min-height:80px;"></textarea>
+                </div>
+                <p style="margin-bottom: 1.5rem; padding: 0.8rem 1rem; background: #fff3cd; color: #856404; font-size: 0.95rem; border-radius: 6px; border: 1px solid #ffeeba; line-height:1.4;">
+                    <strong>Note:</strong> Call this no <strong>9876543210</strong> and do the payment for conforming your order.
+                </p>
+                <div style="display:flex; justify-content:space-between; gap: 1rem;">
                     <button onclick="closeCheckout()" style="padding: 0.8rem 1.5rem; border:1px solid #ccc; background:#f9fafb; cursor:pointer; border-radius:6px; font-weight:600; width:100%;">Cancel</button>
                     <button onclick="confirmOrder()" style="padding: 0.8rem 1.5rem; background:#25D366; color:white; border:none; cursor:pointer; border-radius:6px; font-weight:bold; box-shadow:0 4px 10px rgba(37,211,102,0.3); width:100%;">Order on WhatsApp</button>
                 </div>
