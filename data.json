@@ -128,20 +128,6 @@
         "price": "$45.00",
         "image": "assets/pillow.png",
         "style": ""
-      },
-      {
-        "id": "p2",
-        "name": "Premium Down Pillow",
-        "price": "$65.00",
-        "image": "assets/pillow.png",
-        "style": "filter: brightness(0.9);"
-      },
-      {
-        "id": "p3",
-        "name": "Designer Throw Pillow",
-        "price": "$35.00",
-        "image": "assets/pillow.png",
-        "style": "filter: hue-rotate(-20deg);"
       }
     ]
   }
