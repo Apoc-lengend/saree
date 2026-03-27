@@ -1,11 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
+
 :root {
-    --primary-color: #d4af37; /* Gold */
-    --primary-dark: #b5952f;
-    --secondary-color: #2c3e50; /* Dark slate */
-    --text-color: #333333;
-    --bg-color: #fcfcfc;
+    --primary-color: #c2410c; 
+    --primary-dark: #9a3412;
+    --heading-color: #111827; 
+    --text-color: #374151;
+    --text-muted: #6b7280;
+    --bg-color: #fafaf9;
     --card-bg: #ffffff;
-    --glass-bg: rgba(255, 255, 255, 0.9);
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --footer-bg: #1a252f;
+    --features-bg: #111827;
+    --border-color: rgba(0,0,0,0.05);
 }
 
 * {
@@ -37,16 +43,16 @@ body {
     -webkit-backdrop-filter: blur(15px);
     z-index: 1000;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid rgba(150, 150, 150, 0.2);
     transition: all 0.3s ease;
 }
 
 .logo {
-    font-size: 2rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
     font-weight: 700;
-    color: var(--secondary-color);
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
+    color: var(--heading-color);
+    letter-spacing: 1px;
 }
 
 .nav-links {
@@ -57,7 +63,7 @@ body {
 
 .nav-links a {
     text-decoration: none;
-    color: var(--secondary-color);
+    color: var(--heading-color);
     font-weight: 500;
     font-size: 1.1rem;
     position: relative;
@@ -103,11 +109,12 @@ body {
 }
 
 .hero-content h1 {
+    font-family: 'Playfair Display', serif;
     font-size: 4.5rem;
     font-weight: 700;
     margin-bottom: 1.5rem;
-    text-shadow: 2px 4px 8px rgba(0,0,0,0.4);
-    line-height: 1.1;
+    text-shadow: 2px 4px 12px rgba(0,0,0,0.6);
+    line-height: 1.15;
 }
 
 .hero-content p {
@@ -126,42 +133,41 @@ body {
 /* Buttons */
 .btn-primary {
     display: inline-block;
-    padding: 1.2rem 3rem;
+    padding: 1rem 2.5rem;
     background-color: var(--primary-color);
     color: white;
     text-decoration: none;
-    border-radius: 50px;
-    font-size: 1.1rem;
+    border-radius: 8px; /* Softer, modern rounding */
+    font-size: 1.05rem;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+    box-shadow: 0 4px 12px rgba(194, 65, 12, 0.25);
 }
 
 .btn-primary:hover {
-    transform: translateY(-5px);
+    transform: translateY(-3px);
     background-color: var(--primary-dark);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    box-shadow: 0 8px 20px rgba(194, 65, 12, 0.4);
 }
 
 .btn-secondary {
     display: inline-block;
     padding: 0.8rem 2rem;
-    border: 2px solid var(--primary-color);
-    color: var(--secondary-color);
+    border: 1px solid var(--heading-color);
+    color: var(--heading-color);
     background: transparent;
     text-decoration: none;
-    border-radius: 30px;
+    border-radius: 8px;
     font-weight: 600;
     transition: all 0.3s ease;
     margin-top: 1rem;
 }
 
 .btn-secondary:hover {
-    background-color: var(--primary-color);
-    color: white;
-    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    background-color: var(--heading-color);
+    color: var(--bg-color);
+    border-color: var(--heading-color);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
 }
 
 /* Collections Section */
@@ -176,9 +182,10 @@ body {
 }
 
 .section-title h2 {
-    font-size: 3rem;
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
+    font-family: 'Playfair Display', serif;
+    font-size: 3.2rem;
+    color: var(--heading-color);
+    margin-bottom: 0.5rem;
     font-weight: 700;
     position: relative;
     display: inline-block;
@@ -196,7 +203,7 @@ body {
 }
 
 .section-title p {
-    color: #666;
+    color: var(--text-muted);
     font-size: 1.2rem;
     margin-top: 1.5rem;
 }
@@ -211,15 +218,15 @@ body {
     background: var(--card-bg);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.08);
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     cursor: pointer;
-    border: 1px solid rgba(0,0,0,0.02);
+    border: 1px solid rgba(0,0,0,0.04);
 }
 
 .card:hover {
     transform: translateY(-15px);
-    box-shadow: 0 25px 45px rgba(0,0,0,0.1);
+    box-shadow: 0 25px 45px rgba(0,0,0,0.15);
 }
 
 .card-img-wrapper {
@@ -254,7 +261,7 @@ body {
 }
 
 .card-info {
-    padding: 2.5rem 2rem;
+    padding: 2rem 1.5rem;
     text-align: center;
     position: relative;
     z-index: 10;
@@ -262,23 +269,32 @@ body {
 }
 
 .card-info h3 {
+    font-family: 'Playfair Display', serif;
     font-size: 1.6rem;
-    color: var(--secondary-color);
-    margin-bottom: 1rem;
+    color: var(--heading-color);
+    margin-bottom: 0.5rem;
     font-weight: 600;
 }
 
 .card-info p {
-    color: #666;
-    margin-bottom: 2rem;
-    font-size: 1rem;
-    line-height: 1.5;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.6;
+}
+
+.card-info .price {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+    font-weight: 700;
 }
 
 /* Features/About Section */
 .features {
     padding: 5rem 5%;
-    background-color: var(--secondary-color);
+    background-color: var(--features-bg);
     color: white;
     text-align: center;
 }
@@ -306,7 +322,7 @@ body {
 
 /* Footer */
 .footer {
-    background-color: #1a252f;
+    background-color: var(--footer-bg);
     color: white;
     text-align: center;
     padding: 3rem 2rem;

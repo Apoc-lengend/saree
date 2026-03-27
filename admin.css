@@ -13,9 +13,19 @@ body { margin: 0; background: var(--light); color: var(--dark); display: flex; f
 /* Auth Screen */
 .auth-wrapper {
     display: flex; justify-content: center; align-items: center; min-height: 100vh;
+    background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('assets/hero_bg.png') center/cover;
+    background-attachment: fixed;
 }
 .auth-card {
-    background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); width: 100%; max-width: 400px;
+    background: rgba(255, 255, 255, 0.85); 
+    backdrop-filter: blur(16px); 
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 3.5rem 3rem; 
+    border-radius: 16px; 
+    box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+    width: 100%; 
+    max-width: 420px;
 }
 .auth-card h2 { margin-top: 0; text-align: center; color: var(--primary); }
 .form-group { margin-bottom: 1.5rem; }

@@ -6,12 +6,12 @@ const translations = {
     "Contact": "संपर्क करें",
     "Aditi": "अदिति",
     "Hello": "hadwkjwda",
-    
+
     // Index Hero
     "Weave Your World in Elegance": "लालित्य में अपनी दुनिया बुनें",
     "Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.": "शुद्ध रेशम की साड़ियों और अल्ट्रा-प्रीमियम घरेलू लिनेन के हमारे चुने हुए संग्रह का अन्वेषण करें, जो अत्यंत आराम और कालातीत विलासिता के लिए डिज़ाइन किए गए हैं।",
     "Explore Now": "अभी एक्सप्लोर करें",
-    
+
     // Index Sections
     "Our Collections": "हमारे संग्रह",
     "Handpicked textiles crafted for those who appreciate the finer things in life.": "जीवन में बेहतरीन चीजों की सराहना करने वालों के लिए तैयार किए गए हाथ से चुने गए वस्त्र।",
@@ -35,13 +35,13 @@ const translations = {
     "Every saree and linen piece is crafted by skilled artisans, keeping traditional methods alive in modern designs.": "प्रत्येक साड़ी और लिनेन के टुकड़े को कुशल कारीगरों द्वारा तैयार किया जाता है, जो आधुनिक डिजाइनों में पारंपरिक तरीकों को जीवित रखते हैं।",
     "Sustainable Practices": "टिकाऊ अभ्यास",
     "We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across our entire supply chain.": "हम पर्यावरण के अनुकूल उत्पादन, कचरे को कम करने और अपनी पूरी आपूर्ति श्रृंखला में नैतिक श्रम का समर्थन करने के लिए प्रतिबद्ध हैं।",
-    
+
     // Footer
     "Aditi Textiles": "अदिति टेक्सटाइल्स",
     "123 Elegance Avenue, Silk District, Textile City": "123 लालित्य एवेन्यू, सिल्क डिस्ट्रिक्ट, टेक्सटाइल सिटी",
     "Email: contact@adititextiles.com | Phone: +1 (555) 123-4567": "ईमेल: contact@adititextiles.com | फोन: +1 (555) 123-4567",
     "© 2026 Aditi Textiles. All rights reserved. Designed with precision and passion.": "© 2026 अदिति टेक्सटाइल्स। सर्वाधिकार सुरक्षित। नवीनता और जुनून के साथ डिज़ाइन किया गया।",
-    
+
     // Sub-pages headers
     "All Collections": "सभी संग्रह",
     "Explore our wide range of premium textiles.": "प्रीमियम वस्त्रों की हमारी विस्तृत चयन का अन्वेषण करें।",
@@ -53,7 +53,7 @@ const translations = {
     "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.": "अल्ट्रा-सॉफ्ट, मिस्र के सूती धागों के साथ अपने अभयारण्य को अपग्रेड करें।",
     "Ergonomically designed for a perfect night's sleep.": "रात की एक उत्तम नींद के लिए एर्गोनॉमिक रूप से डिज़ाइन किया गया।",
     "Elegantly textured, lightweight warmth for modern living.": "आधुनिक जीवन के लिए सुरुचिपूर्ण ढंग से बनावट, हल्के वजन की गर्मी।",
-    
+
     // Products
     "Banarasi Silk Saree": "बनारसी सिल्क साड़ी",
     "Kanjeevaram Silk Saree": "कांचीवरम सिल्क साड़ी",
@@ -67,7 +67,8 @@ const translations = {
     "Merino Wool Blanket": "मेरिनो वूल ब्लैंकेट",
     "Soft Fleece Throw": "सॉफ्ट फ्लीस थ्रो",
     "Pure Cashmere Blanket": "प्योर कश्मीरी ब्लैंकेट",
-    
+    "Alisha Bedsheet": "jdashkjadhs",
+
     // Controls
     "Add to Cart": "कार्ट में डालें"
 };

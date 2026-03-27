@@ -1,4 +1,6 @@
 // language.js
+let langObserver = null;
+
 function toggleLanguage() {
     let currentLang = localStorage.getItem('site_lang') || 'en';
     let newLang = currentLang === 'en' ? 'hi' : 'en';
@@ -6,6 +8,8 @@ function toggleLanguage() {
 }
 
 function applyLanguage(lang) {
+    if (langObserver) langObserver.disconnect();
+    
     function translateNode(node) {
         if (node.nodeType === Node.TEXT_NODE) {
             let text = node.nodeValue.trim();
@@ -38,7 +42,7 @@ function applyLanguage(lang) {
 
     // Update switcher buttons
     document.querySelectorAll('.lang-switcher-btn').forEach(btn => {
-        btn.textContent = lang === 'en' ? 'HI' : 'EN';
+        btn.textContent = lang === 'en' ? 'हिंदी' : 'EN';
     });
     
     // Switch the font-family on body if Hindi to ensure perfect rendering
@@ -50,6 +54,14 @@ function applyLanguage(lang) {
 
     localStorage.setItem('site_lang', lang);
     document.documentElement.lang = lang;
+    
+    // Reconnect the observer
+    if (!langObserver) {
+        langObserver = new MutationObserver(() => {
+            applyLanguage(localStorage.getItem('site_lang') || 'en');
+        });
+    }
+    langObserver.observe(document.body, { childList: true, subtree: true });
 }
 
 // Auto-run on load
