@@ -107,7 +107,7 @@ function openCart() {
         </div>`;
     });
 
-    let gst = subtotal * 0.18;
+    let gst = subtotal * 0.05;
     let total = subtotal + gst;
 
     document.getElementById('cart-subtotal').innerText = subtotal.toLocaleString('en-IN', { style: 'currency', currency: 'INR' });
@@ -177,7 +177,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div id="cart-items-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem; padding-right:5px;"></div>
                 <div style="border-top: 2px solid #eee; padding-top: 1rem;">
                     <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-weight:500;"><span>Subtotal:</span> <span id="cart-subtotal">₹0</span></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>GST (18%):</span> <span id="cart-gst">₹0</span></p>
+                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>GST (5%):</span> <span id="cart-gst">₹0</span></p>
                     <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>Delivery:</span> <span style="color:#25D366; font-weight:700;">Free Delivery</span></p>
                     <h3 style="display:flex; justify-content:space-between; margin-top:0.8rem; color:#c2410c; font-size:1.4rem;"><span>Total:</span> <span id="cart-total">₹0</span></h3>
                 </div>
