@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sarees - Aditi Textiles</title>
+    <title>Sarees - Parinay Saree</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
@@ -24,56 +24,6 @@
         <div class="product-grid" id="products-grid"></div>
     </section>
     <script>
-        function buildProductCard(product) {
-            const discount = product.discount || 0;
-            const stock = product.stock !== undefined ? product.stock : 10;
-            const isOutOfStock = stock <= 0;
-            const badge = product.badge || '';
-
-            const priceNum = parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 0;
-            let priceHTML = '';
-            if (discount > 0) {
-                const msrp = Math.round(priceNum / (1 - discount / 100));
-                // Show MSRP struck through first, then real price
-                priceHTML = `
-                    <span class="original-price">₹${msrp.toLocaleString('en-IN')}</span>
-                    <span class="selling-price">₹${priceNum.toLocaleString('en-IN')}</span>
-                `;
-            } else {
-                priceHTML = `<span class="selling-price">${product.price}</span>`;
-            }
-
-            // Left: auto discount badge
-            const leftBadge = discount > 0
-                ? `<div class="product-badge-wrap"><span class="badge-discount">${discount}% Off</span></div>`
-                : '';
-
-            // Right: admin-controlled label badge
-            const labelMap = { new: 'label-new', sale: 'label-sale', trending: 'label-trending' };
-            const rightBadge = badge && labelMap[badge]
-                ? `<span class="product-label-badge ${labelMap[badge]}">${badge}</span>`
-                : '';
-
-            const overlay = isOutOfStock ? '' : `
-                <div class="product-card-overlay">
-                    <button onclick="addToCart('${product.name.replace(/'/g,"\\'")}', '${product.price}', '${product.image}')">Add to Cart</button>
-                </div>`;
-
-            const card = document.createElement('div');
-            card.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
-            card.innerHTML = `
-                <div class="product-card-img">
-                    <img src="${product.image}" alt="${product.name}" style="${product.style || ''}">
-                    ${leftBadge}
-                    ${rightBadge}
-                    ${overlay}
-                </div>
-                <div class="product-card-info">
-                    <h3 title="${product.name}">${product.name}</h3>
-                    <div class="price-row">${priceHTML}</div>
-                </div>`;
-            return card;
-        }
 
         async function loadData() {
             try {

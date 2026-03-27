@@ -54,6 +54,7 @@ const app = {
         document.getElementById('cfg-bedsheets-cover').value = this.data.site_config.bedsheets_cover || '';
         document.getElementById('cfg-blankets-cover').value = this.data.site_config.blankets_cover || '';
         document.getElementById('cfg-pillows-cover').value = this.data.site_config.pillows_cover || '';
+        document.getElementById('cfg-delivery-value').value = this.data.site_config.delivery_value || 'Free Delivery';
     },
 
     updateConfig(key, value) {

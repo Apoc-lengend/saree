@@ -1,17 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap');
 
 :root {
-    --primary-color: #c2410c; 
-    --primary-dark: #9a3412;
-    --heading-color: #111827; 
-    --text-color: #374151;
-    --text-muted: #6b7280;
-    --bg-color: #fafaf9;
+    --primary-color: #7B1338;      /* Deep Maroon from logo */
+    --primary-dark: #5c0d28;       /* Darker maroon for hover */
+    --accent-color: #C9A84C;       /* Gold from logo */
+    --heading-color: #2d1a10;      /* Deep warm near-black */
+    --text-color: #4a3728;
+    --text-muted: #8a7060;
+    --bg-color: #fdf8f2;           /* Ivory cream background from logo */
     --card-bg: #ffffff;
-    --glass-bg: rgba(255, 255, 255, 0.7);
-    --footer-bg: #1a252f;
-    --features-bg: #111827;
-    --border-color: rgba(0,0,0,0.05);
+    --glass-bg: rgba(253, 248, 242, 0.85);
+    --footer-bg: #2d1a10;
+    --features-bg: #2d1a10;
+    --border-color: rgba(201, 168, 76, 0.15);
 }
 
 * {
@@ -48,11 +49,29 @@ body {
 }
 
 .logo {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-decoration: none;
+}
+
+.logo img {
+    height: 44px;
+    width: auto;
+    object-fit: contain;
+}
+
+.logo-text {
     font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    color: var(--heading-color);
+    color: var(--primary-color);
     letter-spacing: 1px;
+    line-height: 1;
+}
+
+.logo-text span {
+    color: var(--accent-color);
 }
 
 .nav-links {
@@ -137,17 +156,17 @@ body {
     background-color: var(--primary-color);
     color: white;
     text-decoration: none;
-    border-radius: 8px; /* Softer, modern rounding */
+    border-radius: 8px;
     font-size: 1.05rem;
     font-weight: 600;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    box-shadow: 0 4px 12px rgba(194, 65, 12, 0.25);
+    box-shadow: 0 4px 12px rgba(123, 19, 56, 0.25);
 }
 
 .btn-primary:hover {
     transform: translateY(-3px);
     background-color: var(--primary-dark);
-    box-shadow: 0 8px 20px rgba(194, 65, 12, 0.4);
+    box-shadow: 0 8px 20px rgba(123, 19, 56, 0.4);
 }
 
 .btn-secondary {
@@ -291,12 +310,22 @@ body {
     font-weight: 700;
 }
 
-/* Features/About Section */
+/* Features / About Us Section — Ivory background with maroon accents */
 .features {
-    padding: 5rem 5%;
-    background-color: var(--features-bg);
-    color: white;
+    padding: 6rem 5%;
+    background: linear-gradient(135deg, #fdf8f2 0%, #f9f0e6 100%);
+    color: var(--text-color);
     text-align: center;
+    border-top: 4px solid var(--accent-color);
+    border-bottom: 4px solid var(--accent-color);
+}
+
+.features .section-title h2 {
+    color: var(--primary-color) !important;
+}
+
+.features .section-title h2::after {
+    background-color: var(--accent-color);
 }
 
 .features-grid {
@@ -307,17 +336,31 @@ body {
 }
 
 .feature-item {
-    padding: 2rem;
+    padding: 2rem 1.5rem;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(123,19,56,0.06);
+    border: 1px solid rgba(201,168,76,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(123,19,56,0.12);
 }
 
 .feature-item h4 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
+    font-family: 'Playfair Display', serif;
     color: var(--primary-color);
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
+    font-weight: 700;
 }
 
 .feature-item p {
-    opacity: 0.8;
+    color: var(--text-muted);
+    line-height: 1.7;
+    font-size: 0.95rem;
 }
 
 /* Footer */
@@ -523,51 +566,52 @@ body {
 /* Auto discount badge — left side */
 .product-badge-wrap {
     position: absolute;
-    top: 8px;
-    left: 8px;
+    top: 0;
+    left: 0;
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 3px;
     z-index: 5;
 }
 
 .badge-discount {
-    background: #ef4444;
-    color: white;
+    background: var(--primary-color);
+    color: #C9A84C;
     font-size: 0.65rem;
     font-weight: 800;
-    padding: 3px 8px;
-    border-radius: 20px;
+    padding: 4px 10px;
+    border-radius: 0 0 6px 0;   /* Sharp top-left, rounded bottom-right */
     letter-spacing: 0.5px;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,168,76,0.3);
 }
 
-/* Admin-controlled label badge — right side */
+/* Admin-controlled label badge — right side, rectangular */
 .product-label-badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 0;
+    right: 0;
     z-index: 5;
     font-size: 0.65rem;
     font-weight: 800;
     padding: 4px 10px;
-    border-radius: 20px;
-    letter-spacing: 0.8px;
+    border-radius: 0 0 0 6px;   /* Sharp top-right, rounded bottom-left */
+    letter-spacing: 1px;
     text-transform: uppercase;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 .label-new {
-    background: #10b981;
-    color: white;
+    background: var(--accent-color);
+    color: var(--primary-color);
 }
 
 .label-sale {
-    background: #ef4444;
-    color: white;
+    background: var(--primary-color);
+    color: var(--accent-color);
 }
 
 .label-trending {
-    background: #8b5cf6;
-    color: white;
+    background: #2d1a10;
+    color: var(--accent-color);
 }
 

@@ -4,8 +4,8 @@ const translations = {
     "Collections": "संग्रह",
     "About Us": "हमारे बारे में",
     "Contact": "संपर्क करें",
-    "Aditi": "अदिति",
-    "Hello": "hadwkjwda",
+    "Parinay": "परिणय",
+    "Hello": "नमस्ते",
 
     // Index Hero
     "Weave Your World in Elegance": "लालित्य में अपनी दुनिया बुनें",
@@ -28,7 +28,7 @@ const translations = {
     "Wrap yourself in warmth with our elegantly textured, lightweight luxury blankets designed for modern aesthetics.": "आधुनिक सौंदर्यशास्त्र के लिए डिज़ाइन किए गए हमारे सुंदर बनावट वाले, हल्के लक्जरी कंबलों की गर्माहट में खुद को लपेटें।",
     "View Blankets": "कंबल देखें",
     "Why Choose Us": "हमें क्यों चुनें",
-    "The Aditi Guarantee of Quality": "गुणवत्ता की अदिति गारंटी",
+    "The Parinay Saree Promise": "परिणय साड़ी का वादा",
     "Premium Quality": "प्रीमियम गुणवत्ता",
     "We source only the finest fabrics and materials to ensure long-lasting durability, supreme comfort, and luxurious texture.": "हम लंबे समय तक चलने वाले स्थायित्व, सर्वोच्च आराम और शानदार बनावट को सुनिश्चित करने के लिए केवल बेहतरीन कपड़ों और सामग्रियों का उपयोग करते हैं।",
     "Authentic Craftsmanship": "प्रामाणिक शिल्प कौशल",
@@ -37,10 +37,10 @@ const translations = {
     "We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across our entire supply chain.": "हम पर्यावरण के अनुकूल उत्पादन, कचरे को कम करने और अपनी पूरी आपूर्ति श्रृंखला में नैतिक श्रम का समर्थन करने के लिए प्रतिबद्ध हैं।",
 
     // Footer
-    "Aditi Textiles": "अदिति टेक्सटाइल्स",
-    "123 Elegance Avenue, Silk District, Textile City": "123 लालित्य एवेन्यू, सिल्क डिस्ट्रिक्ट, टेक्सटाइल सिटी",
-    "Email: contact@adititextiles.com | Phone: +1 (555) 123-4567": "ईमेल: contact@adititextiles.com | फोन: +1 (555) 123-4567",
-    "© 2026 Aditi Textiles. All rights reserved. Designed with precision and passion.": "© 2026 अदिति टेक्सटाइल्स। सर्वाधिकार सुरक्षित। नवीनता और जुनून के साथ डिज़ाइन किया गया।",
+    "Parinay Saree": "परिणय साड़ी",
+    "Silk District, Textile City": "सिल्क डिस्ट्रिक्ट, टेक्सटाइल सिटी",
+    "Email: contact@parinaysaree.com | Phone: +91 98765 43210": "ईमेल: contact@parinaysaree.com | फोन: +91 98765 43210",
+    "© 2026 Parinay Saree. All rights reserved. Crafted with love & tradition.": "© 2026 परिणय साड़ी। सर्वाधिकार सुरक्षित। प्यार और परंपरा के साथ तैयार।",
 
     // Sub-pages headers
     "All Collections": "सभी संग्रह",
@@ -67,7 +67,6 @@ const translations = {
     "Merino Wool Blanket": "मेरिनो वूल ब्लैंकेट",
     "Soft Fleece Throw": "सॉफ्ट फ्लीस थ्रो",
     "Pure Cashmere Blanket": "प्योर कश्मीरी ब्लैंकेट",
-    "Alisha Bedsheet": "jdashkjadhs",
 
     // Controls
     "Add to Cart": "कार्ट में डालें"

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Serverless Admin Dashboard</title>
+    <title>Parinay Saree - Admin Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="admin.css">
 </head>
@@ -35,7 +35,7 @@
     <div class="container dashboard" id="dashboard-screen">
         <div class="header-bar">
             <div>
-                <h1 style="margin:0;color:var(--primary);">Aditi Admin Dashboard</h1>
+                <h1 style="margin:0;color:var(--primary);">Parinay Saree Admin Dashboard</h1>
                 <p style="margin:0.2rem 0;color:var(--second);">Editing <span id="repo-display"></span></p>
             </div>
             <button class="btn btn-small" onclick="app.saveChanges()">Commit Changes to GitHub</button>
@@ -64,6 +64,10 @@
                 <div class="form-group">
                     <label>Pillows Cover URL</label>
                     <input type="text" id="cfg-pillows-cover" onchange="app.updateConfig('pillows_cover', this.value)">
+                </div>
+                <div class="form-group">
+                    <label>Delivery Rate</label>
+                    <input type="text" id="cfg-delivery-value" placeholder="e.g. Free Delivery or 50" onchange="app.updateConfig('delivery_value', this.value)">
                 </div>
             </div>
         </div>
