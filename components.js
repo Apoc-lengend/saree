@@ -357,7 +357,14 @@ function openCart() {
     document.getElementById('cart-delivery').innerText = deliveryText;
     document.getElementById('cart-total').innerText = '₹' + total.toLocaleString('en-IN');
     let dCartTotal = document.getElementById('d-cart-total');
-    if (dCartTotal) dCartTotal.innerText = 'Rs. ' + total.toLocaleString('en-IN') + '.00';
+    if (dCartTotal) {
+        dCartTotal.innerText = 'Rs. ' + total.toLocaleString('en-IN') + '.00';
+        document.getElementById('d-cart-subtotal').innerText = 'Rs. ' + subtotal.toLocaleString('en-IN') + '.00';
+        document.getElementById('d-cart-gst').innerText = 'Rs. ' + gst.toLocaleString('en-IN') + '.00';
+        let dDel = document.getElementById('d-cart-delivery');
+        if (deliveryCost === 0) dDel.innerText = 'Free Delivery';
+        else dDel.innerText = 'Rs. ' + deliveryCost.toLocaleString('en-IN') + '.00';
+    }
     modal.style.display = 'flex';
 }
 
@@ -511,8 +518,18 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                     
                     <div class="d-hide-m" style="flex-direction:column; width:100%;">
-                       <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem; font-size:1.1rem; color:#111; font-weight:600;">
-                           <span>Estimated total</span> <span id="d-cart-total">Rs. 0</span>
+                       <div style="display:flex; justify-content:space-between; margin-bottom:0.6rem; font-size:0.95rem; color:#444;">
+                           <span>Subtotal:</span> <span id="d-cart-subtotal">Rs. 0.00</span>
+                       </div>
+                       <div style="display:flex; justify-content:space-between; margin-bottom:0.6rem; font-size:0.95rem; color:#444;">
+                           <span>GST (5%):</span> <span id="d-cart-gst">Rs. 0.00</span>
+                       </div>
+                       <div style="display:flex; justify-content:space-between; margin-bottom:1rem; font-size:0.95rem; color:#444; border-bottom:1px solid #eee; padding-bottom:1rem;">
+                           <span>Delivery:</span> <span id="d-cart-delivery" style="color:#25D366; font-weight:600;">Free Delivery</span>
+                       </div>
+
+                       <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem; font-size:1.1rem; color:#111; font-weight:700;">
+                           <span>Estimated total</span> <span id="d-cart-total">Rs. 0.00</span>
                        </div>
                        <p style="font-size:0.85rem; color:#666;">Taxes, discounts and <span style="text-decoration:underline;">shipping</span> calculated at checkout.</p>
                     </div>
