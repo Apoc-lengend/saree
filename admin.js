@@ -21,8 +21,9 @@ const app = {
         }
 
         try {
-            const res = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/data.json`, {
-                headers: { 'Authorization': `token ${this.auth.token}` }
+            const res = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/data.json?timestamp=${Date.now()}`, {
+                headers: { 'Authorization': `token ${this.auth.token}` },
+                cache: 'no-store'
             });
 
             if (!res.ok) throw new Error('Could not fetch data.json. Check your Token and Repo name.');
