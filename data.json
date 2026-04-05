@@ -1,143 +1,157 @@
 {
-    "site_config":  {
-                        "hero_cover":  "assets/saree.png",
-                        "sarees_cover":  "assets/saree.png",
-                        "bedsheets_cover":  "assets/bedsheet.png",
-                        "hero_title":  "Weave Your World in Elegance",
-                        "hero_subtitle":  "Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.",
-                        "sarees_title":  "Designer Sarees",
-                        "sarees_subtitle":  "Pure silk, georgette, and intricately designed traditional sarees.",
-                        "bedsheets_title":  "Premium Bedsheets",
-                        "bedsheets_subtitle":  "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.",
-                        "delivery_value":  "Free Delivery",
-                        "whatsapp_number":  "919876543210"
-                    },
-    "products":  {
-                     "sarees":  [
-                                    {
-                                        "id":  "s1",
-                                        "name":  "Banarasi Silk Saree",
-                                        "price":  "RS 250.00",
-                                        "image":  "assets/saree.png",
-                                        "style":  "",
-                                        "stock":  10,
-                                        "discount":  0,
-                                        "badge":  "",
-                                        "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                    },
-                                    {
-                                        "id":  "s2",
-                                        "name":  "Kanjeevaram Silk Saree",
-                                        "price":  "RS 350.00",
-                                        "image":  "assets/saree.png",
-                                        "style":  "filter: hue-rotate(45deg);",
-                                        "stock":  10,
-                                        "discount":  15,
-                                        "badge":  "sale",
-                                        "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                    },
-                                    {
-                                        "id":  "s3",
-                                        "name":  "Georgette Evening Saree",
-                                        "price":  "RS 180.00",
-                                        "image":  "assets/saree.png",
-                                        "style":  "filter: hue-rotate(90deg);",
-                                        "stock":  10,
-                                        "discount":  0,
-                                        "badge":  "trending",
-                                        "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                    },
-                                    {
-                                        "id":  "s4",
-                                        "name":  "Georgette Evening Saree",
-                                        "price":  "RS 180.00",
-                                        "image":  "assets/saree.png",
-                                        "style":  "filter: hue-rotate(90deg);",
-                                        "stock":  0,
-                                        "discount":  0,
-                                        "badge":  "",
-                                        "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                    },
-                                    {
-                                        "id":  "s5",
-                                        "name":  "Georgette Evening Saree",
-                                        "price":  "RS 180.00",
-                                        "image":  "assets/saree.png",
-                                        "style":  "filter: hue-rotate(90deg);",
-                                        "stock":  10,
-                                        "discount":  0,
-                                        "badge":  "new",
-                                        "dateAdded":  "2026-03-27T00:00:00.000Z"
-                                    }
-                                ],
-                     "bedsheets":  [
-                                       {
-                                           "id":  "be1",
-                                           "name":  "Pure Cotton Pattern Bedding",
-                                           "price":  "RS 80.00",
-                                           "image":  "assets/bedsheet.png",
-                                           "style":  "",
-                                           "stock":  10,
-                                           "discount":  10,
-                                           "badge":  "trending",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       },
-                                       {
-                                           "id":  "be2",
-                                           "name":  "Luxury Silk Sheet Set",
-                                           "price":  "RS 140.00",
-                                           "image":  "assets/bedsheet.png",
-                                           "style":  "filter: sepia(0.5);",
-                                           "stock":  10,
-                                           "discount":  0,
-                                           "badge":  "trending",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       },
-                                       {
-                                           "id":  "be3",
-                                           "name":  "Breathable Linen Bedsheet",
-                                           "price":  "RS 110.00",
-                                           "image":  "assets/bedsheet.png",
-                                           "style":  "filter: grayscale(0.2);",
-                                           "stock":  2,
-                                           "discount":  20,
-                                           "badge":  "",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       },
-                                       {
-                                           "id":  "p1774530428827",
-                                           "name":  "Kayaan Bedsheet",
-                                           "price":  "RS 1200",
-                                           "image":  "assets/bed1.png",
-                                           "style":  "",
-                                           "stock":  1,
-                                           "discount":  50,
-                                           "badge":  "sale",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       },
-                                       {
-                                           "id":  "p1774531902649",
-                                           "name":  "Alisha Bedsheet",
-                                           "price":  "RS 70000",
-                                           "image":  "assets/hwe2.png",
-                                           "style":  "",
-                                           "stock":  1,
-                                           "discount":  0,
-                                           "badge":  "",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       },
-                                       {
-                                           "id":  "p1774534170254",
-                                           "name":  "Synthetic Bedsheet",
-                                           "price":  "RS 1203",
-                                           "image":  "assets/bedsheet.png",
-                                           "style":  "",
-                                           "stock":  10,
-                                           "discount":  0,
-                                           "badge":  "",
-                                           "dateAdded":  "2025-01-01T00:00:00.000Z"
-                                       }
-                                   ]
-                 }
+  "site_config": {
+    "hero_cover": "assets/saree.png",
+    "sarees_cover": "assets/saree.png",
+    "bedsheets_cover": "assets/bedsheet.png",
+    "hero_title": "Weave Your World in Elegance",
+    "hero_subtitle": "Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.",
+    "sarees_title": "Designer Sarees",
+    "sarees_subtitle": "Pure silk, georgette, and intricately designed traditional sarees.",
+    "bedsheets_title": "Premium Bedsheets",
+    "bedsheets_subtitle": "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.",
+    "delivery_value": "Free Delivery",
+    "whatsapp_number": "919876543210"
+  },
+  "products": {
+    "sarees": [
+      {
+        "id": "s1",
+        "name": "Banarasi Silk Saree",
+        "price": "RS 250.00",
+        "image": "assets/saree.png",
+        "style": "",
+        "stock": 10,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "s2",
+        "name": "Kanjeevaram Silk Saree",
+        "price": "RS 350.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(45deg);",
+        "stock": 10,
+        "discount": 15,
+        "badge": "sale",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "s3",
+        "name": "Georgette Evening Saree",
+        "price": "RS 180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);",
+        "stock": 10,
+        "discount": 0,
+        "badge": "trending",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "s4",
+        "name": "Georgette Evening Saree",
+        "price": "RS 180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);",
+        "stock": 0,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "s5",
+        "name": "Georgette Evening Saree",
+        "price": "RS 180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);",
+        "stock": 10,
+        "discount": 0,
+        "badge": "new",
+        "dateAdded": "2026-03-27T00:00:00.000Z"
+      }
+    ],
+    "bedsheets": [
+      {
+        "id": "be1",
+        "name": "Pure Cotton Pattern Bedding",
+        "price": "RS 80.00",
+        "image": "assets/bedsheet.png",
+        "style": "",
+        "stock": 10,
+        "discount": 10,
+        "badge": "trending",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "be2",
+        "name": "Luxury Silk Sheet Set",
+        "price": "RS 140.00",
+        "image": "assets/bedsheet.png",
+        "style": "filter: sepia(0.5);",
+        "stock": 10,
+        "discount": 0,
+        "badge": "trending",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "be3",
+        "name": "Breathable Linen Bedsheet",
+        "price": "RS 110.00",
+        "image": "assets/bedsheet.png",
+        "style": "filter: grayscale(0.2);",
+        "stock": 2,
+        "discount": 20,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "p1774530428827",
+        "name": "Kayaan Bedsheet",
+        "price": "RS 1200",
+        "image": "assets/bed1.png",
+        "style": "",
+        "stock": 1,
+        "discount": 50,
+        "badge": "sale",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "p1774531902649",
+        "name": "Alisha Bedsheet",
+        "price": "RS 70000",
+        "image": "assets/hwe2.png",
+        "style": "",
+        "stock": 1,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "p1774534170254",
+        "name": "Synthetic Bedsheet",
+        "price": "RS 1203",
+        "image": "assets/bedsheet.png",
+        "style": "",
+        "stock": 10,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "p1775421563905",
+        "name": "Silk Bedsheets",
+        "price": "₹1200",
+        "image": "assets/bedsheets/Screenshot_20251031_212414.png",
+        "style": "",
+        "stock": 10,
+        "discount": 20,
+        "badge": "new",
+        "description": "",
+        "more_images": [
+          "assets/bedsheets/Screenshot_20251008_161804.png"
+        ],
+        "dateAdded": "2026-04-05T20:39:18.609Z"
+      }
+    ]
+  }
 }
-
