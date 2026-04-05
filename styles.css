@@ -389,8 +389,34 @@ body {
 
 /* Media Queries for Responsiveness */
 @media (max-width: 768px) {
+    #mobile-menu-btn { display: block !important; }
     .nav-links {
-        display: none;
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: rgba(253, 248, 242, 0.98);
+        margin: 0;
+        padding: 0;
+        transform: translateY(-150%);
+        opacity: 0;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        z-index: -1;
+        pointer-events: none;
+        border-bottom: 2px solid var(--primary-color);
+    }
+    .nav-links.active {
+        transform: translateY(0);
+        opacity: 1;
+        padding: 1.5rem 0;
+        pointer-events: auto;
+    }
+    .nav-links li {
+        text-align: center;
+        margin: 1rem 0;
     }
     
     .hero-content h1 {
@@ -558,8 +584,9 @@ body {
 
 .product-card-info .original-price {
     font-size: 0.85rem;
-    color: var(--primary-color);
+    color: #333333;
     text-decoration: line-through;
+    text-decoration-color: red;
     font-weight: 700;
 }
 

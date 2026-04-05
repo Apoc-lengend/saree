@@ -3,14 +3,17 @@ class SiteNavbar extends HTMLElement {
         this.innerHTML = `
             <nav class="navbar" id="navbar">
                 <a href="index.html" class="logo">
-                    <img src="assets/logo.png" alt="Parinay Saree Logo" onerror="this.style.display='none'">
+                    <img src="assets/ps-logo.png" alt="Parinay Saree Logo" onerror="this.style.display='none'" style="height:46px; object-fit:contain; border-radius:4px;">
                     <span class="logo-text">Parinay <span>Saree</span></span>
                 </a>
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="index.html#collections">Collections</a></li>
-                    <li><a href="index.html#about">About Us</a></li>
-                    <li><a href="index.html#contact">Contact</a></li>
+                <button id="mobile-menu-btn" onclick="toggleMobileMenu()" style="display:none; background:none; border:none; cursor:pointer; color:var(--primary-color);">
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                </button>
+                <ul class="nav-links" id="nav-links">
+                    <li><a href="index.html" onclick="toggleMobileMenu()">Home</a></li>
+                    <li><a href="index.html#collections" onclick="toggleMobileMenu()">Collections</a></li>
+                    <li><a href="index.html#about" onclick="toggleMobileMenu()">About Us</a></li>
+                    <li><a href="index.html#contact" onclick="toggleMobileMenu()">Contact</a></li>
                 </ul>
                 <div class="nav-actions" style="margin-left: 2rem; display: flex; align-items: center; gap: 1.2rem;">
                     <button id="nav-order-now-btn" onclick="openCart()" style="display:none; padding: 0.4rem 1.2rem; cursor: pointer; border-radius: 30px; font-weight: 700; border: none; background: var(--primary-color); color: white; font-family: inherit; font-size: 0.95rem; transition: all 0.3s ease; box-shadow: 0 4px 10px rgba(123,19,56,0.3);">Order Now</button>
@@ -107,28 +110,82 @@ function redirectToSearch(query) {
     }
 }
 
+function toggleMobileMenu() {
+    const nav = document.getElementById('nav-links');
+    if (nav) nav.classList.toggle('active');
+}
+
 let cartItems = JSON.parse(localStorage.getItem('parinay_cart')) || [];
 
 function addToCart(name, priceStr, imageSrc) {
     let priceNum = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
     if (isNaN(priceNum)) priceNum = 0;
-    cartItems.push({ name, price: priceNum, priceStr, image: imageSrc || 'assets/saree.png' });
+    
+    let existing = cartItems.find(i => i.name === name);
+    if(existing) {
+        existing.quantity = (existing.quantity || 1) + 1;
+    } else {
+        cartItems.push({ name, price: priceNum, priceStr: '₹' + priceNum.toLocaleString('en-IN'), image: imageSrc || 'assets/saree.png', quantity: 1 });
+    }
     localStorage.setItem('parinay_cart', JSON.stringify(cartItems));
     updateCartIcon();
 }
 
+window.getProductCardOverlayHTML = function(productName, priceStr, imageSrc) {
+    let existing = cartItems.find(i => i.name === productName);
+    let qty = existing ? existing.quantity : 0;
+    let safeName = String(productName).replace(/'/g,"\\\\'");
+    let priceSafe = String(priceStr).replace(/'/g,"\\\\'");
+    let imgSafe = String(imageSrc).replace(/'/g,"\\\\'");
+
+    if (qty > 0) {
+        return `
+            <div class="product-card-overlay active-state" style="transform:translateY(0); background:rgba(255,255,255,0.95); display:flex; justify-content:center; align-items:center;">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', -1, true)" style="background:var(--primary-color); color:white; border:none; padding:4px 14px; font-weight:bold; font-size:1.2rem; border-radius:6px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);">-</button>
+                    <span style="font-weight:900; font-size:1.1rem; color:var(--heading-color); min-width:24px; text-align:center;">${qty}</span>
+                    <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', 1, true)" style="background:var(--primary-color); color:white; border:none; padding:4px 14px; font-weight:bold; font-size:1.2rem; border-radius:6px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);">+</button>
+                </div>
+            </div>`;
+    } else {
+        return `
+            <div class="product-card-overlay">
+                <button onclick="event.stopPropagation(); addToCart('${safeName}', '${priceSafe}', '${imgSafe}')">Add to Cart</button>
+            </div>`;
+    }
+};
+
+window.updateCartQtyByName = function(name, change, silent = false) {
+    let index = cartItems.findIndex(i => i.name === name);
+    if (index !== -1) {
+        updateCartQty(index, change, silent);
+    }
+};
+
 function updateCartIcon() {
     let countEl = document.getElementById('cart-count');
     let orderNowBtn = document.getElementById('nav-order-now-btn');
-    if (countEl) countEl.innerText = cartItems.length;
+    let totalCount = cartItems.reduce((sum, item) => sum + (item.quantity || 1), 0);
+    if (countEl) countEl.innerText = totalCount;
     
     if (orderNowBtn) {
-        orderNowBtn.style.display = cartItems.length > 0 ? 'block' : 'none';
+        orderNowBtn.style.display = totalCount > 0 ? 'block' : 'none';
     }
+    
+    document.querySelectorAll('.overlay-container').forEach(container => {
+        let n = container.getAttribute('data-product-name');
+        let p = container.getAttribute('data-price');
+        let i = container.getAttribute('data-img');
+        container.innerHTML = window.getProductCardOverlayHTML(n, p, i);
+    });
 }
 
 window.siteConfigData = null;
-fetch('data.json').then(r=>r.json()).then(d=>{ window.siteConfigData = d.site_config; }).catch(e=>{});
+fetch('data.json').then(r=>r.json()).then(d=>{ 
+    window.siteConfigData = d.site_config; 
+    let fab = document.getElementById('whatsapp-fab');
+    if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
+}).catch(e=>{});
 
 window.buildProductCard = function(product) {
     const discount = product.discount || 0;
@@ -141,15 +198,18 @@ window.buildProductCard = function(product) {
         const msrp = Math.round(priceNum / (1 - discount / 100));
         priceHTML = `<span class="original-price">₹${msrp.toLocaleString('en-IN')}</span><span class="selling-price">₹${priceNum.toLocaleString('en-IN')}</span>`;
     } else {
-        priceHTML = `<span class="selling-price">${product.price}</span>`;
+        priceHTML = `<span class="selling-price">₹${priceNum.toLocaleString('en-IN')}</span>`;
     }
     const leftBadge = discount > 0 ? `<div class="product-badge-wrap"><span class="badge-discount">${discount}% Off</span></div>` : '';
     const labelMap = { new: 'label-new', sale: 'label-sale', trending: 'label-trending' };
     const rightBadge = badge && labelMap[badge] ? `<span class="product-label-badge ${labelMap[badge]}">${badge}</span>` : '';
-    const overlay = isOutOfStock ? '' : `<div class="product-card-overlay"><button onclick="addToCart('${product.name.replace(/'/g,"\\\\'")}', '${product.price}', '${product.image}')">Add to Cart</button></div>`;
+    const overlayWrapper = isOutOfStock ? '' : `
+        <div class="overlay-container" data-product-name="${product.name.replace(/"/g, '&quot;')}" data-price="${product.price.replace(/"/g, '&quot;')}" data-img="${product.image.replace(/"/g, '&quot;')}">
+            ${window.getProductCardOverlayHTML(product.name, product.price, product.image)}
+        </div>`;
     const card = document.createElement('div');
     card.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
-    card.innerHTML = `<div class="product-card-img"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlay}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}</div></div>`;
+    card.innerHTML = `<div class="product-card-img"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}</div></div>`;
     return card;
 };
 
@@ -160,16 +220,25 @@ function openCart() {
     listEl.innerHTML = '';
     let subtotal = 0;
     cartItems.forEach((item, index) => {
-        subtotal += item.price;
+        let qty = item.quantity || 1;
+        subtotal += item.price * qty;
         listEl.innerHTML += `
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">
                 <div style="display:flex; align-items:center; gap:12px;">
                     <img src="${item.image}" style="width:50px; height:50px; border-radius:6px; object-fit:cover; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                    <span style="font-weight:600; font-size: 0.95rem;">${item.name}</span>
+                    <div>
+                        <span style="font-weight:600; font-size: 0.95rem;">${item.name}</span>
+                        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
+                            <button onclick="updateCartQty(${index}, -1)" style="padding:2px 8px; cursor:pointer; border:1px solid #ccc; background:#f9f9f9; border-radius:4px;">-</button>
+                            <span style="font-weight:bold; font-size:0.9rem;">${qty}</span>
+                            <button onclick="updateCartQty(${index}, 1)" style="padding:2px 8px; cursor:pointer; border:1px solid #ccc; background:#f9f9f9; border-radius:4px;">+</button>
+                        </div>
+                    </div>
                 </div>
-                <span style="color:var(--primary-color); font-weight:bold; white-space:nowrap; margin-left:10px;">${item.priceStr} 
-                    <button onclick="removeFromCart(${index})" style="background:#ef4444; color:white; border:none; padding:3px 7px; cursor:pointer; margin-left:8px; border-radius:4px; font-weight:bold;">X</button>
-                </span>
+                <div style="text-align:right;">
+                    <span style="color:var(--primary-color); font-weight:bold; white-space:nowrap;">₹${(item.price * qty).toLocaleString('en-IN')}</span>
+                    <button onclick="removeFromCart(${index})" style="background:#ef4444; color:white; border:none; padding:3px 7px; cursor:pointer; margin-left:8px; border-radius:4px; font-weight:bold; font-size:0.8rem;">X</button>
+                </div>
             </div>`;
     });
 
@@ -192,6 +261,24 @@ function openCart() {
     document.getElementById('cart-delivery').innerText = deliveryText;
     document.getElementById('cart-total').innerText = '₹' + total.toLocaleString('en-IN');
     modal.style.display = 'flex';
+}
+
+function updateCartQty(index, change, silent = false) {
+    let item = cartItems[index];
+    if (!item.quantity) item.quantity = 1;
+    item.quantity += change;
+    if (item.quantity <= 0) {
+        cartItems.splice(index, 1);
+    }
+    localStorage.setItem('parinay_cart', JSON.stringify(cartItems));
+    updateCartIcon();
+    
+    let modal = document.getElementById('cart-modal');
+    if (modal && modal.style.display === 'flex') {
+        openCart();
+    } else if (!silent) {
+        openCart();
+    }
 }
 
 function removeFromCart(index) {
@@ -223,8 +310,9 @@ function confirmOrder() {
     let orderText = `*Hello Parinay Saree!* I would like to place an order.%0A%0A*Name:* ${name}%0A*Phone:* ${phone}%0A*Delivery Address:* ${address}%0A%0A*Order Details:*%0A`;
     let subtotal = 0;
     cartItems.forEach(item => {
-        subtotal += item.price;
-        orderText += `- ${item.name} (${item.priceStr})%0A`;
+        let qty = item.quantity || 1;
+        subtotal += item.price * qty;
+        orderText += `- ${item.name} x${qty} (₹${(item.price * qty).toLocaleString('en-IN')})%0A`;
     });
 
     let deliveryCost = 0;
@@ -246,7 +334,8 @@ function confirmOrder() {
     cartItems = [];
     updateCartIcon();
     closeCheckout();
-    let whatsappUrl = `https://wa.me/919876543210?text=${orderText}`;
+    let whatsappNum = (window.siteConfigData && window.siteConfigData.whatsapp_number) ? window.siteConfigData.whatsapp_number : '919876543210';
+    let whatsappUrl = `https://wa.me/${whatsappNum}?text=${orderText}`;
     window.open(whatsappUrl, '_blank');
 }
 

@@ -55,6 +55,7 @@ const app = {
         document.getElementById('cfg-blankets-cover').value = this.data.site_config.blankets_cover || '';
         document.getElementById('cfg-pillows-cover').value = this.data.site_config.pillows_cover || '';
         document.getElementById('cfg-delivery-value').value = this.data.site_config.delivery_value || 'Free Delivery';
+        document.getElementById('cfg-whatsapp').value = this.data.site_config.whatsapp_number || '919876543210';
     },
 
     updateConfig(key, value) {
@@ -103,7 +104,7 @@ const app = {
     addProduct() {
         const category = document.getElementById('add-category').value;
         const name = document.getElementById('add-name').value;
-        const price = document.getElementById('add-price').value;
+        let price = document.getElementById('add-price').value;
         const image = document.getElementById('add-image').value;
         const stock = parseInt(document.getElementById('add-stock').value) || 0;
         const discount = parseInt(document.getElementById('add-discount').value) || 0;
@@ -114,6 +115,13 @@ const app = {
             alert('Please fill out Name, Price, and Image URL.');
             return;
         }
+        
+        const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
+        if (isNaN(priceNum)) {
+            alert('Please enter a valid numerical price.');
+            return;
+        }
+        price = '₹' + priceNum;
 
         const newId = 'p' + Date.now();
         this.data.products[category].push({ id: newId, name, price, image, style: '', stock, discount, badge, dateAdded });
