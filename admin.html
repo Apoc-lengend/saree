@@ -46,16 +46,17 @@
             <h3>Website Cover Photos</h3>
             <div class="grid-2">
                 <div class="form-group">
-                    <label>Home Hero Cover URL</label>
-                    <input type="text" id="cfg-hero-cover" onchange="app.updateConfig('hero_cover', this.value)">
+                    <label id="cfg-hero-label" for="cfg-hero-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Cover</label>
+                    <input type="file" id="cfg-hero-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('hero_cover', this.files[0], 'cfg-hero-label')">
                 </div>
                 <div class="form-group">
-                    <label>Sarees Cover URL</label>
-                    <input type="text" id="cfg-sarees-cover" onchange="app.updateConfig('sarees_cover', this.value)">
+                    <label id="cfg-sarees-label" for="cfg-sarees-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Saree Cover</label>
+                    <input type="file" id="cfg-sarees-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('sarees_cover', this.files[0], 'cfg-sarees-label')">
                 </div>
                 <div class="form-group">
-                    <label>Bedsheets Cover URL</label>
-                    <input type="text" id="cfg-bedsheets-cover" onchange="app.updateConfig('bedsheets_cover', this.value)">
+                    <label id="cfg-bed-label" for="cfg-bedsheets-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Bedsheet Cover</label>
+                    <input type="file" id="cfg-bedsheets-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('bedsheets_cover', this.files[0], 'cfg-bed-label')">
+                </div>
                 <div class="form-group">
                     <label>Delivery Rate</label>
                     <input type="text" id="cfg-delivery-value" placeholder="e.g. Free Delivery or 50" onchange="app.updateConfig('delivery_value', this.value)">
@@ -105,15 +106,17 @@
                 </div>
                 <div class="form-group">
                     <label>Front Image</label>
-                    <input type="file" id="add-image" accept="image/*">
+                    <input type="file" id="add-image" accept="image/*" style="display:none;" onchange="document.getElementById('add-image-label').innerText = this.files[0] ? this.files[0].name : 'Upload Front Image'">
+                    <label for="add-image" id="add-image-label" style="display:block; background:#f9f9f9; padding:12px; text-align:center; border:2px dashed #ccc; border-radius:6px; cursor:pointer; font-weight:bold; color:#555;">📁 Upload Front Image</label>
                 </div>
                 <div class="form-group">
                     <label>Description</label>
                     <textarea id="add-desc" placeholder="Product description..."></textarea>
                 </div>
                 <div class="form-group">
-                    <label>More Images (multiple allowed)</label>
-                    <input type="file" id="add-more-images" multiple accept="image/*">
+                    <label>More Images (Select Multiple)</label>
+                    <input type="file" id="add-more-images" multiple accept="image/*" style="display:none;" onchange="document.getElementById('add-more-label').innerText = this.files.length + ' extra image(s) selected'">
+                    <label for="add-more-images" id="add-more-label" style="display:block; background:#f9f9f9; padding:12px; text-align:center; border:2px dashed #ccc; border-radius:6px; cursor:pointer; font-weight:bold; color:#555;">🖼️ Upload Extra Images</label>
                 </div>
                 <button class="btn btn-small" onclick="app.addProduct()">Add Product</button>
             </div>
@@ -127,7 +130,7 @@
                         <option value="bedsheets">View Bedsheets</option>
                     </select>
                 </div>
-                <div id="product-list" style="max-height: 400px; overflow-y: auto;">
+                <div id="product-list" style="max-height: 650px; overflow-y: auto; padding-right:10px;">
                     <!-- Rendered by JS -->
                 </div>
             </div>

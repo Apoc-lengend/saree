@@ -15,15 +15,154 @@
   "products": {
     "sarees": [
       {
-        "id": "s1",
-        "name": "Banarasi Silk Saree",
-        "price": "RS 250.00",
+        "id": "sar_18_1775425651572351",
+        "name": "Linen Jamdani",
+        "price": "₹4,059",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(170deg) saturate(81%);",
+        "stock": 5,
+        "discount": 0,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-04-03T01:37:47.414Z"
+      },
+      {
+        "id": "sar_3_1775425651572551",
+        "name": "Classic Chiffon",
+        "price": "₹7,233",
         "image": "assets/saree.png",
-        "style": "",
-        "stock": 10,
+        "style": "filter: hue-rotate(220deg) saturate(76%);",
+        "stock": 27,
+        "discount": 0,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2025-12-13T02:44:40.636Z"
+      },
+      {
+        "id": "sar_2_1775425651572351",
+        "name": "Kashmiri Embroidery",
+        "price": "₹6,167",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(280deg) saturate(72%);",
+        "stock": 5,
         "discount": 0,
         "badge": "",
-        "dateAdded": "2025-01-01T00:00:00.000Z"
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-01-02T20:55:51.958Z"
+      },
+      {
+        "id": "sar_16_1775425651572748",
+        "name": "Muga Silk Essence",
+        "price": "₹6,586",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(200deg) saturate(62%);",
+        "stock": 4,
+        "discount": 10,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-02-05T04:53:49.292Z"
+      },
+      {
+        "id": "sar_1_1775425651572684",
+        "name": "Mysore Crepe Saree",
+        "price": "₹9,201",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(60deg) saturate(69%);",
+        "stock": 37,
+        "discount": 10,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-19T13:31:34.822Z"
+      },
+      {
+        "id": "sar_26_1775425651572210",
+        "name": "Uppada Jamdani",
+        "price": "₹1,952",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(260deg) saturate(59%);",
+        "stock": 45,
+        "discount": 10,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-26T23:57:04.073Z"
+      },
+      {
+        "id": "sar_19_1775425651572697",
+        "name": "Bhagalpuri Silk",
+        "price": "₹10,236",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(210deg) saturate(51%);",
+        "stock": 2,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-02-05T21:13:13.603Z"
+      },
+      {
+        "id": "sar_0_1775425651500848",
+        "name": "Royal Paithani Silk",
+        "price": "₹5,075",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(300deg) saturate(67%);",
+        "stock": 10,
+        "discount": 20,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-07T05:41:05.331Z"
+      },
+      {
+        "id": "sar_17_1775425651572345",
+        "name": "Kota Doria Breathable",
+        "price": "₹16,242",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(60deg) saturate(72%);",
+        "stock": 17,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-04-05T15:40:24.562Z"
+      },
+      {
+        "id": "sar_15_1775425651572791",
+        "name": "Pochampally Ikat",
+        "price": "₹7,893",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(120deg) saturate(87%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-03-29T23:10:44.339Z"
       },
       {
         "id": "s2",
@@ -37,15 +176,19 @@
         "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
-        "id": "s3",
-        "name": "Georgette Evening Saree",
-        "price": "RS 180.00",
-        "image": "assets/saree.png",
-        "style": "filter: hue-rotate(90deg);",
-        "stock": 10,
+        "id": "sar_7_1775425651572371",
+        "name": "Tussar Silk Grace",
+        "price": "₹3,452",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(160deg) saturate(68%);",
+        "stock": 1,
         "discount": 0,
-        "badge": "trending",
-        "dateAdded": "2025-01-01T00:00:00.000Z"
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-01T05:19:02.236Z"
       },
       {
         "id": "s4",
@@ -59,6 +202,153 @@
         "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
+        "id": "sar_20_1775425651572225",
+        "name": "Chanderi Handloom",
+        "price": "₹13,341",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(100deg) saturate(75%);",
+        "stock": 14,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-08T11:47:46.259Z"
+      },
+      {
+        "id": "s6",
+        "name": "Royal Crimson Banarasi Saree",
+        "price": "₹12500",
+        "image": "assets/saree_red.png",
+        "style": "",
+        "stock": 5,
+        "discount": 10,
+        "badge": "new",
+        "description": "A stunning high-end deeply maroon and red Banarasi silk saree with intricate gold zari weaving and elegant borders.",
+        "more_images": [
+          "assets/saree.png",
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-04-06T00:00:00.000Z"
+      },
+      {
+        "id": "sar_12_1775425651572978",
+        "name": "Traditional Bandhani",
+        "price": "₹10,205",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(340deg) saturate(84%);",
+        "stock": 30,
+        "discount": 0,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-02-08T14:37:21.929Z"
+      },
+      {
+        "id": "s1",
+        "name": "Banarasi Silk Saree",
+        "price": "RS 250.00",
+        "image": "assets/saree.png",
+        "style": "",
+        "stock": 10,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "sar_22_1775425651572411",
+        "name": "Kasta Maharashtrian",
+        "price": "₹5,862",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg) saturate(88%);",
+        "stock": 24,
+        "discount": 10,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-01-17T18:56:50.029Z"
+      },
+      {
+        "id": "sar_4_1775425651572279",
+        "name": "Handloom Cotton",
+        "price": "₹11,618",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(200deg) saturate(54%);",
+        "stock": 27,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-03-05T13:18:37.769Z"
+      },
+      {
+        "id": "sar_8_1775425651572517",
+        "name": "Net Embroidered Partywear",
+        "price": "₹12,831",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(230deg) saturate(76%);",
+        "stock": 38,
+        "discount": 0,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-01-19T06:34:25.784Z"
+      },
+      {
+        "id": "sar_6_177542565157253",
+        "name": "Sambalpuri Ikat",
+        "price": "₹12,317",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(50deg) saturate(84%);",
+        "stock": 46,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-01-16T10:55:19.311Z"
+      },
+      {
+        "id": "sar_5_1775425651572494",
+        "name": "Zari Woven Patola",
+        "price": "₹6,249",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(120deg) saturate(85%);",
+        "stock": 43,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-01-02T10:07:09.562Z"
+      },
+      {
+        "id": "sar_11_1775425651572681",
+        "name": "Modern Print Crepe",
+        "price": "₹9,719",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(130deg) saturate(63%);",
+        "stock": 5,
+        "discount": 20,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-03-03T18:29:28.685Z"
+      },
+      {
         "id": "s5",
         "name": "Georgette Evening Saree",
         "price": "RS 180.00",
@@ -68,30 +358,259 @@
         "discount": 0,
         "badge": "new",
         "dateAdded": "2026-03-27T00:00:00.000Z"
-      }
-    ],
-    "bedsheets": [
-      {
-        "id": "be1",
-        "name": "Pure Cotton Pattern Bedding",
-        "price": "RS 80.00",
-        "image": "assets/bedsheet.png",
-        "style": "",
-        "stock": 10,
-        "discount": 10,
-        "badge": "trending",
-        "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
-        "id": "be2",
-        "name": "Luxury Silk Sheet Set",
-        "price": "RS 140.00",
-        "image": "assets/bedsheet.png",
-        "style": "filter: sepia(0.5);",
+        "id": "sar_25_1775425651572130",
+        "name": "Swarnachari Golden Print",
+        "price": "₹9,491",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(240deg) saturate(50%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-03-01T14:43:31.217Z"
+      },
+      {
+        "id": "sar_10_1775425651572959",
+        "name": "Kanchipuram Heritage",
+        "price": "₹3,980",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(130deg) saturate(76%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-03-20T20:22:13.688Z"
+      },
+      {
+        "id": "sar_23_1775425651572312",
+        "name": "Bomkai Silk",
+        "price": "₹3,974",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(20deg) saturate(92%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2025-12-16T13:57:53.228Z"
+      },
+      {
+        "id": "sar_27_1775425651572903",
+        "name": "Gadwal Handloom",
+        "price": "₹13,014",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(300deg) saturate(83%);",
+        "stock": 37,
+        "discount": 10,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-02-07T05:34:55.108Z"
+      },
+      {
+        "id": "sar_24_1775425651572455",
+        "name": "Assam Silk Mekhela",
+        "price": "₹8,874",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(160deg) saturate(92%);",
+        "stock": 12,
+        "discount": 30,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-01-07T03:48:41.613Z"
+      },
+      {
+        "id": "s7",
+        "name": "Emerald Premium Kanjeevaram",
+        "price": "₹18999",
+        "image": "assets/saree_green.png",
+        "style": "",
+        "stock": 2,
+        "discount": 0,
+        "badge": "trending",
+        "description": "A beautiful emerald green high-end Kanjeevaram silk saree adorned with classic ethnic motifs and rich golden texture.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2026-04-06T00:00:00.000Z"
+      },
+      {
+        "id": "sar_14_1775425651572926",
+        "name": "Sequence Work Saree",
+        "price": "₹14,014",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(80deg) saturate(60%);",
+        "stock": 11,
+        "discount": 0,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-04-04T15:26:34.801Z"
+      },
+      {
+        "id": "sar_9_1775425651572527",
+        "name": "Velvet Border Georgette",
+        "price": "₹12,141",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(70deg) saturate(55%);",
+        "stock": 17,
+        "discount": 0,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-03-15T08:13:43.284Z"
+      },
+      {
+        "id": "sar_13_1775425651572254",
+        "name": "Organza Floral Pearl",
+        "price": "₹9,610",
+        "image": "assets/saree_green.png",
+        "style": "filter: hue-rotate(70deg) saturate(85%);",
+        "stock": 29,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_red.png"
+        ],
+        "dateAdded": "2025-12-23T00:54:56.434Z"
+      },
+      {
+        "id": "sar_21_1775425651572789",
+        "name": "Dharmavaram Temple",
+        "price": "₹6,154",
+        "image": "assets/saree_red.png",
+        "style": "",
+        "stock": 9,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-23T20:39:24.835Z"
+      },
+      {
+        "id": "s3",
+        "name": "Georgette Evening Saree",
+        "price": "RS 180.00",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(90deg);",
         "stock": 10,
         "discount": 0,
         "badge": "trending",
         "dateAdded": "2025-01-01T00:00:00.000Z"
+      }
+    ],
+    "bedsheets": [
+      {
+        "id": "bed_10_1775425651572208",
+        "name": "Paisley Print Double",
+        "price": "₹9,435",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(40deg) saturate(96%);",
+        "stock": 19,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-02-01T07:47:35.232Z"
+      },
+      {
+        "id": "bed_15_1775425651572809",
+        "name": "Ombre Gradient",
+        "price": "₹14,379",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(210deg) saturate(98%);",
+        "stock": 25,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-03-31T05:47:44.435Z"
+      },
+      {
+        "id": "bed_25_1775425651572420",
+        "name": "Zen Garden Theme",
+        "price": "₹5,977",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(350deg) saturate(58%);",
+        "stock": 20,
+        "discount": 10,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-02-24T23:06:38.093Z"
+      },
+      {
+        "id": "bed_0_1775425651572658",
+        "name": "Egyptian Cotton King size",
+        "price": "₹3,021",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(50deg) saturate(99%);",
+        "stock": 44,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-01-23T18:53:52.667Z"
+      },
+      {
+        "id": "bed_1_1775425651572894",
+        "name": "Percale Hotel Collection",
+        "price": "₹9,850",
+        "image": "assets/bedsheet.png",
+        "style": "filter: hue-rotate(120deg) saturate(68%);",
+        "stock": 9,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-03-20T20:39:53.141Z"
+      },
+      {
+        "id": "bed_7_1775425651572531",
+        "name": "Linen Breathable Summer",
+        "price": "₹5,002",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(180deg) saturate(98%);",
+        "stock": 34,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2025-12-17T07:57:44.811Z"
       },
       {
         "id": "be3",
@@ -105,6 +624,21 @@
         "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
+        "id": "bed_12_1775425651572209",
+        "name": "Abstract Geometric",
+        "price": "₹13,322",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(230deg) saturate(94%);",
+        "stock": 1,
+        "discount": 0,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-02-04T19:09:35.089Z"
+      },
+      {
         "id": "p1774530428827",
         "name": "Kayaan Bedsheet",
         "price": "RS 1200",
@@ -116,26 +650,76 @@
         "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
-        "id": "p1774531902649",
-        "name": "Alisha Bedsheet",
-        "price": "RS 70000",
-        "image": "assets/hwe2.png",
-        "style": "",
-        "stock": 1,
+        "id": "bed_2_1775425651572104",
+        "name": "Bamboo Fiber Cooling",
+        "price": "₹2,544",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(150deg) saturate(55%);",
+        "stock": 8,
         "discount": 0,
         "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-01-05T03:50:13.141Z"
+      },
+      {
+        "id": "bed_14_1775425651572872",
+        "name": "Floral Watercolour",
+        "price": "₹8,607",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(250deg) saturate(97%);",
+        "stock": 23,
+        "discount": 0,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed_floral.png"
+        ],
+        "dateAdded": "2026-01-21T13:16:21.903Z"
+      },
+      {
+        "id": "bed_26_1775425651572519",
+        "name": "Moroccan Tile Print",
+        "price": "₹9,376",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(20deg) saturate(58%);",
+        "stock": 49,
+        "discount": 0,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-01-12T12:45:35.508Z"
+      },
+      {
+        "id": "be2",
+        "name": "Luxury Silk Sheet Set",
+        "price": "RS 140.00",
+        "image": "assets/bedsheet.png",
+        "style": "filter: sepia(0.5);",
+        "stock": 10,
+        "discount": 0,
+        "badge": "trending",
         "dateAdded": "2025-01-01T00:00:00.000Z"
       },
       {
-        "id": "p1774534170254",
-        "name": "Synthetic Bedsheet",
-        "price": "RS 1203",
-        "image": "assets/bedsheet.png",
+        "id": "b_floral_1",
+        "name": "Vintage Floral Block Bedsheet",
+        "price": "₹4500",
+        "image": "assets/bed_floral.png",
         "style": "",
-        "stock": 10,
-        "discount": 0,
-        "badge": "",
-        "dateAdded": "2025-01-01T00:00:00.000Z"
+        "stock": 15,
+        "discount": 15,
+        "badge": "sale",
+        "description": "A premium king size pure cotton bedsheet with elegant floral block print patterns, softly folded for a luxurious aesthetic.",
+        "more_images": [
+          "assets/bedsheet.png",
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-04-06T00:00:00.000Z"
       },
       {
         "id": "p1775421563905",
@@ -151,6 +735,309 @@
           "assets/bedsheets/Screenshot_20251008_161804.png"
         ],
         "dateAdded": "2026-04-05T20:39:18.609Z"
+      },
+      {
+        "id": "bed_4_1775425651572689",
+        "name": "Flannel Winter Warm",
+        "price": "₹9,409",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(310deg) saturate(80%);",
+        "stock": 42,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-02-12T17:15:54.457Z"
+      },
+      {
+        "id": "bed_9_1775425651572280",
+        "name": "Jacquard Royal Pattern",
+        "price": "₹10,282",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(150deg) saturate(94%);",
+        "stock": 28,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-01-02T02:12:55.472Z"
+      },
+      {
+        "id": "bed_20_177542565157241",
+        "name": "Vintage Toile Print",
+        "price": "₹2,955",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(180deg) saturate(79%);",
+        "stock": 1,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-03-14T05:41:28.007Z"
+      },
+      {
+        "id": "bed_13_1775425651572223",
+        "name": "Minimalist Stripe",
+        "price": "₹12,899",
+        "image": "assets/bedsheet.png",
+        "style": "filter: hue-rotate(100deg) saturate(90%);",
+        "stock": 17,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/hwe2.png"
+        ],
+        "dateAdded": "2026-02-21T00:22:53.256Z"
+      },
+      {
+        "id": "bed_6_177542565157292",
+        "name": "Microfiber Solid Color",
+        "price": "₹2,818",
+        "image": "assets/bedsheet.png",
+        "style": "filter: hue-rotate(180deg) saturate(77%);",
+        "stock": 31,
+        "discount": 20,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-04-05T20:23:48.247Z"
+      },
+      {
+        "id": "bed_18_1775425651572314",
+        "name": "Crinkled Texture",
+        "price": "₹6,470",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(140deg) saturate(86%);",
+        "stock": 39,
+        "discount": 20,
+        "badge": "sale",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed_floral.png"
+        ],
+        "dateAdded": "2025-12-12T01:41:39.019Z"
+      },
+      {
+        "id": "bed_22_1775425651572847",
+        "name": "Polka Dot Fun",
+        "price": "₹11,914",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(250deg) saturate(86%);",
+        "stock": 8,
+        "discount": 20,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-03-27T17:32:20.942Z"
+      },
+      {
+        "id": "bed_23_1775425651572682",
+        "name": "Tropical Leaf Print",
+        "price": "₹5,800",
+        "image": "assets/bedsheet.png",
+        "style": "filter: hue-rotate(50deg) saturate(56%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed_floral.png"
+        ],
+        "dateAdded": "2026-01-27T21:03:10.611Z"
+      },
+      {
+        "id": "bed_5_1775425651572256",
+        "name": "Bohemian Mandala Print",
+        "price": "₹15,099",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(100deg) saturate(90%);",
+        "stock": 29,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2025-12-23T12:08:31.633Z"
+      },
+      {
+        "id": "bed_16_1775425651572275",
+        "name": "Traditional Ikat Print",
+        "price": "₹2,367",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(30deg) saturate(92%);",
+        "stock": 40,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-01-27T06:39:57.952Z"
+      },
+      {
+        "id": "bed_11_1775425651572888",
+        "name": "Patchwork Quilted",
+        "price": "₹10,638",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(260deg) saturate(99%);",
+        "stock": 39,
+        "discount": 20,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-03-27T17:05:13.512Z"
+      },
+      {
+        "id": "bed_27_1775425651572396",
+        "name": "Nordic Minimalist",
+        "price": "₹6,010",
+        "image": "assets/bedsheet.png",
+        "style": "filter: hue-rotate(160deg) saturate(90%);",
+        "stock": 10,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed_floral.png"
+        ],
+        "dateAdded": "2026-01-20T21:01:03.853Z"
+      },
+      {
+        "id": "bed_17_1775425651572358",
+        "name": "Embroidered Border",
+        "price": "₹15,520",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(280deg) saturate(66%);",
+        "stock": 22,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-03-23T12:48:20.075Z"
+      },
+      {
+        "id": "bed_24_1775425651572484",
+        "name": "Tribal Art Motif",
+        "price": "₹9,451",
+        "image": "assets/hwe2.png",
+        "style": "filter: hue-rotate(20deg) saturate(82%);",
+        "stock": 21,
+        "discount": 30,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed_floral.png"
+        ],
+        "dateAdded": "2026-03-13T13:56:55.524Z"
+      },
+      {
+        "id": "bed_19_1775425651572375",
+        "name": "Silk Blend Sensual",
+        "price": "₹14,160",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(180deg) saturate(59%);",
+        "stock": 35,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-02-14T05:28:04.494Z"
+      },
+      {
+        "id": "p1774534170254",
+        "name": "Synthetic Bedsheet",
+        "price": "RS 1203",
+        "image": "assets/bedsheet.png",
+        "style": "",
+        "stock": 10,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "bed_3_1775425651572402",
+        "name": "Satin Stripe Luxury",
+        "price": "₹9,110",
+        "image": "assets/bed_floral.png",
+        "style": "filter: hue-rotate(150deg) saturate(81%);",
+        "stock": 15,
+        "discount": 0,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bed1.png"
+        ],
+        "dateAdded": "2026-01-16T20:36:56.475Z"
+      },
+      {
+        "id": "p1774531902649",
+        "name": "Alisha Bedsheet",
+        "price": "RS 70000",
+        "image": "assets/hwe2.png",
+        "style": "",
+        "stock": 1,
+        "discount": 0,
+        "badge": "",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "be1",
+        "name": "Pure Cotton Pattern Bedding",
+        "price": "RS 80.00",
+        "image": "assets/bedsheet.png",
+        "style": "",
+        "stock": 10,
+        "discount": 10,
+        "badge": "trending",
+        "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "bed_21_1775425651572179",
+        "name": "Gingham Checkered",
+        "price": "₹14,462",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(70deg) saturate(74%);",
+        "stock": 47,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-01-04T11:54:18.520Z"
+      },
+      {
+        "id": "bed_8_1775425651572772",
+        "name": "Kids Cartoon Character",
+        "price": "₹13,095",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(340deg) saturate(58%);",
+        "stock": 3,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-02-12T14:30:07.937Z"
       }
     ]
   }

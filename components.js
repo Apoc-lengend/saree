@@ -181,11 +181,71 @@ function updateCartIcon() {
 }
 
 window.siteConfigData = null;
-fetch('data.json').then(r=>r.json()).then(d=>{ 
+fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'}).then(r=>r.json()).then(d=>{ 
     window.siteConfigData = d.site_config; 
     let fab = document.getElementById('whatsapp-fab');
     if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
 }).catch(e=>{});
+
+window.injectPageSchema = function(products) {
+    let oldSchema = document.getElementById('seo-schema');
+    if (oldSchema) oldSchema.remove();
+
+    let schemaData = {
+        "@context": "https://schema.org",
+        "@type": "ItemList",
+        "itemListElement": products.map((p, index) => {
+            const priceNum = parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 0;
+            return {
+                "@type": "ListItem",
+                "position": index + 1,
+                "item": {
+                    "@type": "Product",
+                    "name": p.name,
+                    "image": window.location.origin + window.location.pathname.split('/').slice(0, -1).join('/') + '/' + p.image,
+                    "description": p.description || p.name,
+                    "sku": p.id || p.name.split(' ').join('-').toLowerCase(),
+                    "offers": {
+                        "@type": "Offer",
+                        "priceCurrency": "INR",
+                        "price": priceNum,
+                        "itemCondition": p.stock > 0 ? "https://schema.org/NewCondition" : "https://schema.org/UsedCondition",
+                        "availability": p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+                        "url": window.location.href
+                    }
+                }
+            };
+        })
+    };
+
+    const script = document.createElement('script');
+    script.id = 'seo-schema';
+    script.type = 'application/ld+json';
+    script.text = JSON.stringify(schemaData);
+    document.head.appendChild(script);
+};
+
+window.generatePriceHTML = function(priceString, discount, isModal = false) {
+    const priceNum = parseFloat(String(priceString).replace(/[^0-9.]/g, '')) || 0;
+    const fw = isModal ? '700' : '600';
+    const sz = isModal ? '1.45rem' : '1.10rem';
+    if (discount > 0) {
+        const msrp = Math.round(priceNum / (1 - discount / 100));
+        return `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                    <span class="selling-price" style="font-size:${sz}; color:var(--primary-color); font-weight:${fw}; display:flex; align-items:flex-start;">
+                        <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                    </span>
+                    <span class="original-price" style="font-size:0.8rem; color:#565959; font-weight:normal; text-decoration:none; margin-top:2px;">
+                        M.R.P.: <span style="text-decoration:line-through;">₹${msrp.toLocaleString('en-IN')}</span>
+                    </span>
+                </div>`;
+    }
+    return `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                <span class="selling-price" style="font-size:${sz}; color:var(--primary-color); font-weight:${fw}; display:flex; align-items:flex-start;">
+                    <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                </span>
+            </div>`;
+};
 
 window.buildProductCard = function(product, category = '') {
     const isSaree = category === 'sarees' || window.location.pathname.includes('sarees.html') || product.category === 'sarees';
@@ -193,24 +253,8 @@ window.buildProductCard = function(product, category = '') {
     const stock = product.stock !== undefined ? product.stock : 10;
     const isOutOfStock = stock <= 0;
     const badge = product.badge || '';
-    const priceNum = parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 0;
-    if (discount > 0) {
-        const msrp = Math.round(priceNum / (1 - discount / 100));
-        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
-                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:500; display:flex; align-items:flex-start;">
-                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
-                        </span>
-                        <span class="original-price" style="font-size:0.8rem; color:#565959; font-weight:normal; text-decoration:none; margin-top: 2px;">
-                            M.R.P.: <span style="text-decoration:line-through;">₹${msrp.toLocaleString('en-IN')}</span>
-                        </span>
-                     </div>`;
-    } else {
-        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
-                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:500; display:flex; align-items:flex-start;">
-                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
-                        </span>
-                     </div>`;
-    }
+    
+    let priceHTML = window.generatePriceHTML(product.price, discount, false);
     const leftBadge = discount > 0 ? `<div class="product-badge-wrap"><span class="badge-discount">${discount}% Off</span></div>` : '';
     const labelMap = { new: 'label-new', sale: 'label-sale', trending: 'label-trending' };
     const rightBadge = badge && labelMap[badge] ? `<span class="product-label-badge ${labelMap[badge]}">${badge}</span>` : '';
@@ -221,7 +265,7 @@ window.buildProductCard = function(product, category = '') {
     const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:48px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
     const card = document.createElement('div');
     card.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
-    card.innerHTML = `<div class="product-card-img" style="cursor:pointer;"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}${logoHTML}</div></div>`;
+    card.innerHTML = `<div class="product-card-img" style="cursor:pointer;"><img src="${product.image}" loading="lazy" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}${logoHTML}</div></div>`;
     
     card.querySelector('.product-card-img').addEventListener('click', function(e) {
         if(e.target.closest('button')) return;
@@ -231,13 +275,94 @@ window.buildProductCard = function(product, category = '') {
     return card;
 };
 
+window.copyProductLink = function(id, btnElement) {
+    const url = window.location.origin + window.location.pathname + '#' + id;
+    
+    const showSuccess = () => {
+        if (btnElement) {
+            const originalText = btnElement.innerHTML;
+            btnElement.innerHTML = '&#10003; Copied!';
+            btnElement.style.background = '#d1fae5';
+            btnElement.style.color = '#065f46';
+            setTimeout(() => {
+                btnElement.innerHTML = originalText;
+                btnElement.style.background = '#f3f4f6';
+                btnElement.style.color = '#374151';
+            }, 2000);
+        }
+    };
+
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(url).then(showSuccess).catch(() => fallbackCopy(url));
+    } else {
+        fallbackCopy(url);
+    }
+    
+    function fallbackCopy(text) {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.top = '0';
+        ta.style.left = '0';
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+            document.execCommand('copy');
+            showSuccess();
+        } catch(e) { }
+        document.body.removeChild(ta);
+    }
+};
+
 window.showProductDetails = function(product, isSaree) {
-    let imagesHTML = `<img src="${product.image}" style="width:100%; border-radius:8px; object-fit:cover; margin-bottom:10px;">`;
+    if (history.pushState && product.id) history.pushState(null, null, '#' + product.id);
+    let allImages = [product.image];
     if (product.more_images && product.more_images.length > 0) {
-       imagesHTML = `<div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; scroll-snap-type: x mandatory;">
-           <img src="${product.image}" style="width:80%; max-height:350px; flex-shrink:0; border-radius:8px; object-fit:cover; scroll-snap-align: center;">
-           ${product.more_images.filter(x=>x).map(img => `<img src="${img}" style="width:80%; max-height:350px; flex-shrink:0; border-radius:8px; object-fit:cover; scroll-snap-align: center;">`).join('')}
-       </div>`;
+        allImages = allImages.concat(product.more_images.filter(x=>x));
+    }
+    
+    let _copyBtn = `<button onclick="window.copyProductLink('${product.id}', this)" style="background:#f3f4f6; border:1px solid #d1d5db; border-radius:30px; padding:4px 10px; font-size:0.75rem; cursor:pointer; font-weight:600; color:#374151; display:flex; align-items:center; transition:background 0.2s; margin-left:auto;" onmouseover="this.style.background='#e5e7eb'" onmouseout="this.style.background='#f3f4f6'">&#128279; Copy Link</button>`;
+
+    let imagesHTML = '';
+    if (allImages.length === 1) {
+        imagesHTML = `
+        <img src="${allImages[0]}" loading="lazy" style="width:100%; max-height:400px; border-radius:8px; object-fit:contain; margin-bottom:5px; background:#fcfcfc;">
+        <div style="display:flex; margin-bottom:15px;">${_copyBtn}</div>
+        `;
+    } else {
+        const slides = allImages.map((img, i) => `
+            <div style="width:100%; max-height:400px; flex-shrink:0; scroll-snap-align:center; display:flex; align-items:center; justify-content:center; background:#fcfcfc; border-radius:8px;">
+                <img src="${img}" loading="lazy" style="width:100%; height:100%; max-height:400px; object-fit:contain; border-radius:8px;">
+            </div>
+        `).join('');
+        
+        const dots = allImages.map((_, i) => `<div class="carousel-dot" style="width:8px; height:8px; border-radius:50%; background:${i===0?'var(--primary-color)':'#ccc'}; cursor:pointer; transition:0.2s;" onclick="const t=document.getElementById('product-carousel-track'); t.scrollTo({left:${i}*t.clientWidth, behavior:'smooth'})"></div>`).join('');
+
+        imagesHTML = `
+        <div style="position:relative; width:100%; margin-bottom:5px; border-radius:8px; overflow:hidden;">
+            <button onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)<=0){t.scrollTo({left:t.scrollWidth, behavior:'smooth'})}else{t.scrollBy({left:-t.clientWidth, behavior:'smooth'})}" style="position:absolute; top:50%; left:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s;" onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'">&#10094;</button>
+            
+            <div id="product-carousel-track" style="display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -ms-overflow-style:none; scroll-behavior:smooth;" onscroll="
+                const index = Math.round(this.scrollLeft / this.clientWidth);
+                const dots = document.getElementById('product-carousel-dots').children;
+                for(let i=0; i<dots.length; i++) {
+                    dots[i].style.background = (i === index) ? 'var(--primary-color)' : '#ccc';
+                }
+            ">
+                <style>#product-carousel-track::-webkit-scrollbar { display:none; }</style>
+                ${slides}
+            </div>
+            
+            <button onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)>=Math.round(t.scrollWidth-t.clientWidth)){t.scrollTo({left:0, behavior:'smooth'})}else{t.scrollBy({left:t.clientWidth, behavior:'smooth'})}" style="position:absolute; top:50%; right:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s;" onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'">&#10095;</button>
+        </div>
+        <div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:15px; min-height:30px;">
+            <div id="product-carousel-dots" style="display:flex; justify-content:center; gap:8px;">${dots}</div>
+            <div style="position:absolute; right:0;">
+                ${_copyBtn}
+            </div>
+        </div>
+        `;
     }
 
     const discount = product.discount || 0;
@@ -246,31 +371,19 @@ window.showProductDetails = function(product, isSaree) {
     const rightBadge = badge && labelMap[badge] ? `<span class="product-label-badge ${labelMap[badge]}" style="position:relative; display:inline-block; border-radius:4px; padding:3px 8px; margin-bottom:10px;">${badge}</span>` : '';
     const leftBadge = discount > 0 ? `<span class="badge-discount" style="position:relative; display:inline-block; border-radius:4px; padding:3px 8px; margin-bottom:10px; margin-right:10px;">${discount}% Off</span>` : '';
 
-    const priceNum = parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 0;
-    let priceHTML = '';
-    if (discount > 0) {
-        const msrp = Math.round(priceNum / (1 - discount / 100));
-        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
-                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:700; display:flex; align-items:flex-start;">
-                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
-                        </span>
-                        <span class="original-price" style="font-size:0.85rem; color:#565959; font-weight:normal; text-decoration:none; margin-top: 2px;">
-                            M.R.P.: <span style="text-decoration:line-through;">₹${msrp.toLocaleString('en-IN')}</span>
-                        </span>
-                     </div>`;
-    } else {
-        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
-                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:700; display:flex; align-items:flex-start;">
-                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
-                        </span>
-                     </div>`;
-    }
+    let priceHTML = window.generatePriceHTML(product.price, discount, true);
     const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:54px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
 
     const modalHTML = `
-        <div id="product-details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px);" onclick="this.remove()">
-            <div style="background:white; width:90%; max-width:500px; max-height:90vh; overflow-y:auto; border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3); position:relative;" onclick="event.stopPropagation()">
-                <button onclick="document.getElementById('product-details-modal').remove()" style="position:absolute; top:10px; right:15px; background:white; border:none; font-size:1.5rem; cursor:pointer; color:#333; z-index:10; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);">&times;</button>
+        <div id="product-details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px);" onclick="this.remove(); if(history.pushState) history.pushState(null, null, window.location.pathname);">
+            <style>
+                #product-details-inner::-webkit-scrollbar { width: 6px; }
+                #product-details-inner::-webkit-scrollbar-track { background: transparent; }
+                #product-details-inner::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.2); border-radius: 10px; }
+                #product-details-inner::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.4); }
+            </style>
+            <div id="product-details-inner" style="background:white; width:90%; max-width:500px; max-height:90vh; overflow-y:auto; border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3); position:relative; scrollbar-width:thin; scrollbar-color:rgba(0,0,0,0.2) transparent;" onclick="event.stopPropagation()">
+                <button onclick="document.getElementById('product-details-modal').remove(); if(history.pushState) history.pushState(null, null, window.location.pathname);" style="position:absolute; top:10px; right:15px; background:white; border:none; font-size:1.5rem; cursor:pointer; color:#333; z-index:10; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);">&times;</button>
                 
                 ${imagesHTML}
                 
@@ -595,4 +708,82 @@ document.addEventListener('DOMContentLoaded', () => {
         <style>@keyframes fabFadeIn { to { opacity: 1; } }</style>
     `;
     document.body.insertAdjacentHTML('beforeend', modalsHTML);
+
+    const nameP = document.getElementById('checkout-name');
+    const phoneP = document.getElementById('checkout-phone');
+    const addressP = document.getElementById('checkout-address');
+    if (nameP) {
+        nameP.value = localStorage.getItem('parinay_c_n') || '';
+        nameP.addEventListener('input', e => localStorage.setItem('parinay_c_n', e.target.value));
+    }
+    if (phoneP) {
+        phoneP.value = localStorage.getItem('parinay_c_p') || '';
+        phoneP.addEventListener('input', e => localStorage.setItem('parinay_c_p', e.target.value));
+    }
+    if (addressP) {
+        addressP.value = localStorage.getItem('parinay_c_a') || '';
+        addressP.addEventListener('input', e => localStorage.setItem('parinay_c_a', e.target.value));
+    }
+});
+
+window.addEventListener('storage', function(e) {
+    if (e.key === 'parinay_cart') {
+        try {
+            cartItems = JSON.parse(e.newValue || '[]');
+            updateCartIcon();
+            const cartModal = document.getElementById('cart-modal');
+            if (cartModal && cartModal.style.display !== 'none') openCart();
+        } catch(err) {}
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+        const prodModal = document.getElementById('product-details-modal');
+        if (prodModal) {
+            prodModal.remove();
+            if (history.pushState) history.pushState(null, null, window.location.pathname);
+        }
+        
+        const cartModal = document.getElementById('cart-modal');
+        if (cartModal && cartModal.style.display !== 'none') {
+            if (typeof closeCart === 'function') closeCart();
+        }
+        
+        const cartOverlay = document.getElementById('cart-drawer-overlay');
+        if (cartOverlay) cartOverlay.remove();
+        
+        const searchInput = document.getElementById('nav-search-input');
+        if (searchInput && document.activeElement === searchInput) {
+            searchInput.blur();
+            if (typeof toggleSearch === 'function' && searchInput.style.width !== '0px') toggleSearch();
+        }
+    }
+    
+    if (e.key === 'ArrowLeft') {
+        const t = document.getElementById('product-carousel-track');
+        if (t) {
+            if(Math.round(t.scrollLeft)<=0) t.scrollTo({left:t.scrollWidth, behavior:'smooth'});
+            else t.scrollBy({left:-t.clientWidth, behavior:'smooth'});
+        }
+    }
+    
+    if (e.key === 'ArrowRight') {
+        const t = document.getElementById('product-carousel-track');
+        if (t) {
+            if(Math.round(t.scrollLeft)>=Math.round(t.scrollWidth-t.clientWidth)) t.scrollTo({left:0, behavior:'smooth'});
+            else t.scrollBy({left:t.clientWidth, behavior:'smooth'});
+        }
+    }
+
+    if (e.key === '/' && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        const searchInput = document.getElementById('nav-search-input');
+        if (searchInput) {
+            if(searchInput.style.width === '0px' || searchInput.style.opacity === '0' || !searchInput.style.width) {
+               if(typeof toggleSearch === 'function') toggleSearch();
+            }
+            searchInput.focus();
+        }
+    }
 });

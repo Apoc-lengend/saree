@@ -24,18 +24,52 @@
         <div class="product-grid" id="products-grid"></div>
     </section>
     <script>
+        let allProducts = [];
+        let currentlyShown = 0;
+        const PAGE_SIZE = 12;
+
         async function loadData() {
             try {
-                const response = await fetch('data.json');
+                const response = await fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'});
                 const data = await response.json();
                 const hero = document.getElementById('dynamic-hero');
                 hero.style.background = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${data.site_config.bedsheets_cover}') center/cover`;
                 document.getElementById('dynamic-title').innerText = data.site_config.bedsheets_title;
                 document.getElementById('dynamic-subtitle').innerText = data.site_config.bedsheets_subtitle;
-                const grid = document.getElementById('products-grid');
-                grid.innerHTML = '';
-                data.products.bedsheets.forEach(product => grid.appendChild(buildProductCard(product)));
+                allProducts = data.products.bedsheets || [];
+                document.getElementById('products-grid').innerHTML = '';
+                if (typeof window.injectPageSchema === 'function') window.injectPageSchema(allProducts);
+                loadMore();
+                
+                if (window.location.hash) {
+                    const hashId = window.location.hash.substring(1);
+                    const specificProd = allProducts.find(p => p.id === hashId);
+                    if (specificProd && typeof window.showProductDetails === 'function') {
+                        window.showProductDetails(specificProd, false);
+                    }
+                }
             } catch (error) { console.error('Error loading data:', error); }
+        }
+
+        function loadMore() {
+            const grid = document.getElementById('products-grid');
+            const nextBatch = allProducts.slice(currentlyShown, currentlyShown + PAGE_SIZE);
+            nextBatch.forEach(product => grid.appendChild(buildProductCard(product)));
+            currentlyShown += nextBatch.length;
+            
+            let btn = document.getElementById('load-more-btn');
+            if (currentlyShown < allProducts.length) {
+                if (!btn) {
+                    btn = document.createElement('button');
+                    btn.id = 'load-more-btn';
+                    btn.innerText = 'Load More';
+                    btn.style.cssText = 'display:block; margin: 3rem auto; padding: 0.8rem 2.5rem; background:var(--primary-color); color:white; border:none; border-radius:30px; cursor:pointer; font-weight:bold; outline:none; font-size:1.1rem;';
+                    btn.onclick = loadMore;
+                    grid.parentNode.appendChild(btn);
+                }
+            } else if (btn) {
+                btn.remove();
+            }
         }
         document.addEventListener('DOMContentLoaded', loadData);
     </script>

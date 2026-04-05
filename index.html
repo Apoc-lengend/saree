@@ -101,7 +101,7 @@
     <script>
         async function loadHomeData() {
             try {
-                const response = await fetch('data.json');
+                const response = await fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'});
                 const data = await response.json();
                 const hero = document.getElementById('home');
                 hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.hero_cover}')`;

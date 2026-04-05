@@ -37,7 +37,7 @@
             if (!query) { heading.innerText = 'Search Products'; meta.innerText = 'Enter a term in the search box above.'; return; }
             heading.innerText = `Results for "${query}"`;
             try {
-                const data = await (await fetch('data.json')).json();
+                const data = await (await fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'})).json();
                 let matches = [];
                 Object.keys(data.products).forEach(cat => {
                     data.products[cat].forEach(p => {
