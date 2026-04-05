@@ -56,15 +56,6 @@
                 <div class="form-group">
                     <label>Bedsheets Cover URL</label>
                     <input type="text" id="cfg-bedsheets-cover" onchange="app.updateConfig('bedsheets_cover', this.value)">
-                </div>
-                <div class="form-group">
-                    <label>Blankets Cover URL</label>
-                    <input type="text" id="cfg-blankets-cover" onchange="app.updateConfig('blankets_cover', this.value)">
-                </div>
-                <div class="form-group">
-                    <label>Pillows Cover URL</label>
-                    <input type="text" id="cfg-pillows-cover" onchange="app.updateConfig('pillows_cover', this.value)">
-                </div>
                 <div class="form-group">
                     <label>Delivery Rate</label>
                     <input type="text" id="cfg-delivery-value" placeholder="e.g. Free Delivery or 50" onchange="app.updateConfig('delivery_value', this.value)">
@@ -85,8 +76,6 @@
                     <select id="add-category">
                         <option value="sarees">Sarees</option>
                         <option value="bedsheets">Bedsheets</option>
-                        <option value="blankets">Blankets</option>
-                        <option value="pillows">Pillows</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -115,8 +104,16 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Image URL</label>
-                    <input type="text" id="add-image" placeholder="assets/saree.png">
+                    <label>Front Image</label>
+                    <input type="file" id="add-image" accept="image/*">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="add-desc" placeholder="Product description..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>More Images (multiple allowed)</label>
+                    <input type="file" id="add-more-images" multiple accept="image/*">
                 </div>
                 <button class="btn btn-small" onclick="app.addProduct()">Add Product</button>
             </div>
@@ -128,8 +125,6 @@
                     <select id="manage-category" onchange="app.renderProducts()">
                         <option value="sarees">View Sarees</option>
                         <option value="bedsheets">View Bedsheets</option>
-                        <option value="blankets">View Blankets</option>
-                        <option value="pillows">View Pillows</option>
                     </select>
                 </div>
                 <div id="product-list" style="max-height: 400px; overflow-y: auto;">

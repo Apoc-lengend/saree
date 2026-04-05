@@ -20,13 +20,6 @@ const translations = {
     "View Sarees": "साड़ियाँ देखें",
     "Premium Bedsheets": "प्रीमियम बेडशीट्स",
     "Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk bedsheets.": "हमारे अत्यधिक आरामदायक, लंबे समय तक चलने वाले प्रीमियम कॉटन और सिल्क बेडशीट के साथ अपने शयनकक्ष अभयारण्य को अपग्रेड करें।",
-    "View Bedsheets": "बेडशीट देखें",
-    "Plush Pillows": "आलीशान तकिए",
-    "Rest your head on our exquisite collection of ultra-soft, ergonomically designed pillows for a perfect night's sleep.": "रात की अच्छी नींद के लिए हमारे उत्कृष्ट संग्रह के अति-मुलायम, एर्गोनॉमिक रूप से डिज़ाइन किए गए तकियों पर अपना सिर टिकाएं।",
-    "View Pillows": "तकिए देखें",
-    "Luxury Blankets": "लक्जरी कंबल",
-    "Wrap yourself in warmth with our elegantly textured, lightweight luxury blankets designed for modern aesthetics.": "आधुनिक सौंदर्यशास्त्र के लिए डिज़ाइन किए गए हमारे सुंदर बनावट वाले, हल्के लक्जरी कंबलों की गर्माहट में खुद को लपेटें।",
-    "View Blankets": "कंबल देखें",
     "Why Choose Us": "हमें क्यों चुनें",
     "The Parinay Saree Promise": "परिणय साड़ी का वादा",
     "Premium Quality": "प्रीमियम गुणवत्ता",
@@ -47,12 +40,8 @@ const translations = {
     "Explore our wide range of premium textiles.": "प्रीमियम वस्त्रों की हमारी विस्तृत चयन का अन्वेषण करें।",
     "Sarees": "साड़ियाँ",
     "Bedsheets": "बेडशीट्स",
-    "Pillows": "तकिए",
-    "Blankets": "कंबल",
     "Pure silk, georgette, and intricately designed traditional sarees.": "शुद्ध रेशम, जॉर्जेट, और जटिल रूप से डिज़ाइन की गई पारंपरिक साड़ियाँ।",
     "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.": "अल्ट्रा-सॉफ्ट, मिस्र के सूती धागों के साथ अपने अभयारण्य को अपग्रेड करें।",
-    "Ergonomically designed for a perfect night's sleep.": "रात की एक उत्तम नींद के लिए एर्गोनॉमिक रूप से डिज़ाइन किया गया।",
-    "Elegantly textured, lightweight warmth for modern living.": "आधुनिक जीवन के लिए सुरुचिपूर्ण ढंग से बनावट, हल्के वजन की गर्मी।",
 
     // Products
     "Banarasi Silk Saree": "बनारसी सिल्क साड़ी",
@@ -61,12 +50,6 @@ const translations = {
     "Pure Cotton Pattern Bedding": "प्योर कॉटन पैटर्न बेडिंग",
     "Luxury Silk Sheet Set": "लक्ज़री सिल्क शीट सेट",
     "Breathable Linen Bedsheet": "हवादार लिनन बेडशीट",
-    "Memory Foam Pillow": "मेमोरी फोम पिलो",
-    "Premium Down Pillow": "प्रीमियम डाउन पिलो",
-    "Designer Throw Pillow": "डिज़ाइनर थ्रो पिलो",
-    "Merino Wool Blanket": "मेरिनो वूल ब्लैंकेट",
-    "Soft Fleece Throw": "सॉफ्ट फ्लीस थ्रो",
-    "Pure Cashmere Blanket": "प्योर कश्मीरी ब्लैंकेट",
 
     // Controls
     "Add to Cart": "कार्ट में डालें"

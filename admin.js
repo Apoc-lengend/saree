@@ -31,7 +31,14 @@ const app = {
             this.fileSha = fileData.sha;
 
             // Handle Base64 decode safely
-            const jsonText = decodeURIComponent(escape(window.atob(fileData.content.replace(/\n/g, ''))));
+            let jsonText = decodeURIComponent(escape(window.atob(fileData.content.replace(/\s/g, ''))));
+            
+            // Clean up invisible characters or BOMs around the JSON payload
+            const startIdx = jsonText.indexOf('{');
+            if (startIdx > 0) jsonText = jsonText.substring(startIdx);
+            const endIdx = jsonText.lastIndexOf('}');
+            if (endIdx !== -1) jsonText = jsonText.substring(0, endIdx + 1);
+
             this.data = JSON.parse(jsonText);
 
             // Switch UI
@@ -52,8 +59,6 @@ const app = {
         document.getElementById('cfg-hero-cover').value = this.data.site_config.hero_cover || '';
         document.getElementById('cfg-sarees-cover').value = this.data.site_config.sarees_cover || '';
         document.getElementById('cfg-bedsheets-cover').value = this.data.site_config.bedsheets_cover || '';
-        document.getElementById('cfg-blankets-cover').value = this.data.site_config.blankets_cover || '';
-        document.getElementById('cfg-pillows-cover').value = this.data.site_config.pillows_cover || '';
         document.getElementById('cfg-delivery-value').value = this.data.site_config.delivery_value || 'Free Delivery';
         document.getElementById('cfg-whatsapp').value = this.data.site_config.whatsapp_number || '919876543210';
     },
@@ -92,6 +97,8 @@ const app = {
                                     <option value="trending" ${prod.badge === 'trending' ? 'selected' : ''}>🟣 Trending</option>
                                 </select>
                             </label>
+                            <label>Desc: <input type="text" style="width:120px; padding:3px; border:1px solid #ccc; border-radius:3px;" value="${prod.description || ''}" onchange="app.updateProduct('${category}', ${index}, 'description', this.value)"></label>
+                            <label>More Img: <input type="text" style="width:120px; padding:3px; border:1px solid #ccc; border-radius:3px;" value="${(prod.more_images || []).join(', ')}" onchange="app.updateProduct('${category}', ${index}, 'more_images', this.value.split(',').map(s=>s.trim()).filter(s=>s))"></label>
                         </div>
                     </div>
                 </div>
@@ -101,21 +108,78 @@ const app = {
         });
     },
 
-    addProduct() {
+    async compressAndUpload(file, category) {
+        return new Promise((resolve, reject) => {
+            const maxKB = 99;
+            const processFile = async (base64Data) => {
+                const b64 = base64Data.split(',')[1];
+                const path = `assets/${category}/${file.name.replace(/\s+/g, '-')}`;
+                let sha = null;
+                try {
+                    const getRes = await fetch(`https://api.github.com/repos/${app.auth.username}/${app.auth.repo}/contents/${path}`, {
+                         headers: { 'Authorization': `token ${app.auth.token}` }
+                    });
+                    if (getRes.ok) sha = (await getRes.json()).sha;
+                } catch(e) {}
+
+                const body = { message: `Upload ${file.name}`, content: b64 };
+                if (sha) body.sha = sha;
+
+                const putRes = await fetch(`https://api.github.com/repos/${app.auth.username}/${app.auth.repo}/contents/${path}`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `token ${app.auth.token}`, 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+                if (!putRes.ok) reject('Failed to upload ' + file.name);
+                else resolve(path);
+            };
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                if (file.size <= maxKB * 1024) { processFile(e.target.result); return; }
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width; let height = img.height;
+                    const maxDim = 1200;
+                    if (width > maxDim || height > maxDim) {
+                        if (width > height) { height = Math.round((height * maxDim) / width); width = maxDim; }
+                        else { width = Math.round((width * maxDim) / height); height = maxDim; }
+                    }
+                    canvas.width = width; canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    let quality = 0.8;
+                    let compressedUrl = canvas.toDataURL('image/jpeg', quality);
+                    while(compressedUrl.length * 0.75 > maxKB * 1024 && quality > 0.3) {
+                        quality -= 0.1;
+                        compressedUrl = canvas.toDataURL('image/jpeg', quality);
+                    }
+                    processFile(compressedUrl);
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    },
+
+    async addProduct() {
         const category = document.getElementById('add-category').value;
         const name = document.getElementById('add-name').value;
         let price = document.getElementById('add-price').value;
-        const image = document.getElementById('add-image').value;
+        const mainImageFile = document.getElementById('add-image').files[0];
+        const moreImageFiles = document.getElementById('add-more-images').files;
         const stock = parseInt(document.getElementById('add-stock').value) || 0;
         const discount = parseInt(document.getElementById('add-discount').value) || 0;
         const badge = document.getElementById('add-badge').value;
+        const description = document.getElementById('add-desc').value;
         const dateAdded = new Date().toISOString();
 
-        if (!name || !price || !image) {
-            alert('Please fill out Name, Price, and Image URL.');
+        if (!name || !price || !mainImageFile) {
+            alert('Please fill out Name, Price, and select a Front Image.');
             return;
         }
-        
+
         const priceNum = parseFloat(price.replace(/[^0-9.]/g, ''));
         if (isNaN(priceNum)) {
             alert('Please enter a valid numerical price.');
@@ -123,8 +187,30 @@ const app = {
         }
         price = '₹' + priceNum;
 
+        const btn = document.querySelector('button[onclick="app.addProduct()"]');
+        if (btn) { btn.innerText = "Uploading..."; btn.disabled = true; }
+
+        let image = '';
+        let more_images = [];
+        try {
+            this.showToast('Uploading main image...');
+            image = await this.compressAndUpload(mainImageFile, category);
+            
+            for (let i = 0; i < moreImageFiles.length; i++) {
+                this.showToast(`Uploading extra image ${i+1}/${moreImageFiles.length}...`);
+                const extraPath = await this.compressAndUpload(moreImageFiles[i], category);
+                more_images.push(extraPath);
+            }
+        } catch(e) {
+            alert('Error uploading files: ' + e);
+            if (btn) { btn.innerText = "Add Product"; btn.disabled = false; }
+            return;
+        }
+        
+        if (btn) { btn.innerText = "Add Product"; btn.disabled = false; }
+
         const newId = 'p' + Date.now();
-        this.data.products[category].push({ id: newId, name, price, image, style: '', stock, discount, badge, dateAdded });
+        this.data.products[category].push({ id: newId, name, price, image, style: '', stock, discount, badge, description, more_images, dateAdded });
 
         // Reset form
         document.getElementById('add-name').value = '';
@@ -133,6 +219,9 @@ const app = {
         document.getElementById('add-stock').value = '10';
         document.getElementById('add-discount').value = '0';
         document.getElementById('add-badge').value = '';
+        document.getElementById('add-desc').value = '';
+        document.getElementById('add-more-images').value = '';
+
 
         // Update list if showing same category
         if (document.getElementById('manage-category').value === category) {

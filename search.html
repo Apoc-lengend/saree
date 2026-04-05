@@ -41,7 +41,7 @@
                 let matches = [];
                 Object.keys(data.products).forEach(cat => {
                     data.products[cat].forEach(p => {
-                        if (p.name.toLowerCase().includes(query) || cat.toLowerCase().includes(query)) matches.push(p);
+                        if (p.name.toLowerCase().includes(query) || cat.toLowerCase().includes(query)) matches.push({...p, category: cat});
                     });
                 });
                 grid.innerHTML = '';

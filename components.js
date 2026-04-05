@@ -3,7 +3,7 @@ class SiteNavbar extends HTMLElement {
         this.innerHTML = `
             <nav class="navbar" id="navbar">
                 <a href="index.html" class="logo">
-                    <img src="assets/ps-logo.png" alt="Parinay Saree Logo" onerror="this.style.display='none'" style="height:46px; object-fit:contain; border-radius:4px;">
+                    <img src="assets/ps-logo.png" alt="Parinay Saree Logo" onerror="this.style.display='none'" style="height:64px; object-fit:contain; border-radius:4px;">
                     <span class="logo-text">Parinay <span>Saree</span></span>
                 </a>
                 <button id="mobile-menu-btn" onclick="toggleMobileMenu()" style="display:none; background:none; border:none; cursor:pointer; color:var(--primary-color);">
@@ -187,18 +187,29 @@ fetch('data.json').then(r=>r.json()).then(d=>{
     if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
 }).catch(e=>{});
 
-window.buildProductCard = function(product) {
+window.buildProductCard = function(product, category = '') {
+    const isSaree = category === 'sarees' || window.location.pathname.includes('sarees.html') || product.category === 'sarees';
     const discount = product.discount || 0;
     const stock = product.stock !== undefined ? product.stock : 10;
     const isOutOfStock = stock <= 0;
     const badge = product.badge || '';
     const priceNum = parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 0;
-    let priceHTML = '';
     if (discount > 0) {
         const msrp = Math.round(priceNum / (1 - discount / 100));
-        priceHTML = `<span class="original-price">₹${msrp.toLocaleString('en-IN')}</span><span class="selling-price">₹${priceNum.toLocaleString('en-IN')}</span>`;
+        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:500; display:flex; align-items:flex-start;">
+                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                        </span>
+                        <span class="original-price" style="font-size:0.8rem; color:#565959; font-weight:normal; text-decoration:none; margin-top: 2px;">
+                            M.R.P.: <span style="text-decoration:line-through;">₹${msrp.toLocaleString('en-IN')}</span>
+                        </span>
+                     </div>`;
     } else {
-        priceHTML = `<span class="selling-price">₹${priceNum.toLocaleString('en-IN')}</span>`;
+        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:500; display:flex; align-items:flex-start;">
+                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                        </span>
+                     </div>`;
     }
     const leftBadge = discount > 0 ? `<div class="product-badge-wrap"><span class="badge-discount">${discount}% Off</span></div>` : '';
     const labelMap = { new: 'label-new', sale: 'label-sale', trending: 'label-trending' };
@@ -207,10 +218,88 @@ window.buildProductCard = function(product) {
         <div class="overlay-container" data-product-name="${product.name.replace(/"/g, '&quot;')}" data-price="${product.price.replace(/"/g, '&quot;')}" data-img="${product.image.replace(/"/g, '&quot;')}">
             ${window.getProductCardOverlayHTML(product.name, product.price, product.image)}
         </div>`;
+    const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:48px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
     const card = document.createElement('div');
     card.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
-    card.innerHTML = `<div class="product-card-img"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}</div></div>`;
+    card.innerHTML = `<div class="product-card-img" style="cursor:pointer;"><img src="${product.image}" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}${logoHTML}</div></div>`;
+    
+    card.querySelector('.product-card-img').addEventListener('click', function(e) {
+        if(e.target.closest('button')) return;
+        window.showProductDetails(product, isSaree);
+    });
+    
     return card;
+};
+
+window.showProductDetails = function(product, isSaree) {
+    let imagesHTML = `<img src="${product.image}" style="width:100%; border-radius:8px; object-fit:cover; margin-bottom:10px;">`;
+    if (product.more_images && product.more_images.length > 0) {
+       imagesHTML = `<div style="display:flex; overflow-x:auto; gap:10px; padding-bottom:10px; scroll-snap-type: x mandatory;">
+           <img src="${product.image}" style="width:80%; max-height:350px; flex-shrink:0; border-radius:8px; object-fit:cover; scroll-snap-align: center;">
+           ${product.more_images.filter(x=>x).map(img => `<img src="${img}" style="width:80%; max-height:350px; flex-shrink:0; border-radius:8px; object-fit:cover; scroll-snap-align: center;">`).join('')}
+       </div>`;
+    }
+
+    const discount = product.discount || 0;
+    const badge = product.badge || '';
+    const labelMap = { new: 'label-new', sale: 'label-sale', trending: 'label-trending' };
+    const rightBadge = badge && labelMap[badge] ? `<span class="product-label-badge ${labelMap[badge]}" style="position:relative; display:inline-block; border-radius:4px; padding:3px 8px; margin-bottom:10px;">${badge}</span>` : '';
+    const leftBadge = discount > 0 ? `<span class="badge-discount" style="position:relative; display:inline-block; border-radius:4px; padding:3px 8px; margin-bottom:10px; margin-right:10px;">${discount}% Off</span>` : '';
+
+    const priceNum = parseFloat(String(product.price).replace(/[^0-9.]/g, '')) || 0;
+    let priceHTML = '';
+    if (discount > 0) {
+        const msrp = Math.round(priceNum / (1 - discount / 100));
+        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:700; display:flex; align-items:flex-start;">
+                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                        </span>
+                        <span class="original-price" style="font-size:0.85rem; color:#565959; font-weight:normal; text-decoration:none; margin-top: 2px;">
+                            M.R.P.: <span style="text-decoration:line-through;">₹${msrp.toLocaleString('en-IN')}</span>
+                        </span>
+                     </div>`;
+    } else {
+        priceHTML = `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+                        <span class="selling-price" style="font-size:1.6rem; color:var(--primary-color); font-weight:700; display:flex; align-items:flex-start;">
+                            <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
+                        </span>
+                     </div>`;
+    }
+    const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:54px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
+
+    const modalHTML = `
+        <div id="product-details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px);" onclick="this.remove()">
+            <div style="background:white; width:90%; max-width:500px; max-height:90vh; overflow-y:auto; border-radius:12px; padding:20px; box-shadow:0 10px 30px rgba(0,0,0,0.3); position:relative;" onclick="event.stopPropagation()">
+                <button onclick="document.getElementById('product-details-modal').remove()" style="position:absolute; top:10px; right:15px; background:white; border:none; font-size:1.5rem; cursor:pointer; color:#333; z-index:10; border-radius:50%; width:30px; height:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 5px rgba(0,0,0,0.1);">&times;</button>
+                
+                ${imagesHTML}
+                
+                <div style="padding:10px 0;">
+                    <div style="display:flex; align-items:center;">
+                        ${leftBadge} ${rightBadge}
+                    </div>
+                    <h2 style="font-family:'Playfair Display', serif; color:var(--primary-color); margin-bottom:10px; font-size:1.4rem;">${product.name}</h2>
+                    
+                    <div style="background:#fdf8f2; padding:15px; border-radius:8px; border-left:4px solid var(--accent-color); margin-bottom:15px;">
+                        <p style="color:#555; font-size:0.95rem; line-height:1.5; white-space:pre-wrap;">${product.description || 'Premium quality fabric crafted with perfection and care. Beautifully woven patterns exuding elegance and tradition.'}</p>
+                    </div>
+                    
+                    <div class="price-row" style="display:flex; align-items:center; gap:0.5rem; flex-wrap:wrap; margin-bottom:20px;">
+                        ${priceHTML}
+                        ${logoHTML}
+                    </div>
+                    
+                    ${product.stock > 0 ? `
+                        <button class="checkout-btn" onclick="addToCart('${product.name.replace(/'/g, '\\\'')}', '${product.price.replace(/'/g, '\\\'')}', '${product.image.replace(/'/g, '\\\'')}'); document.getElementById('product-details-modal').remove(); openCart();" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3);">Add to Cart</button>
+                    ` : `
+                        <button class="checkout-btn" disabled style="width:100%; border:none; background:#ccc; color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Out of Stock</button>
+                    `}
+                </div>
+            </div>
+        </div>
+    `;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+
 };
 
 function openCart() {
@@ -223,21 +312,28 @@ function openCart() {
         let qty = item.quantity || 1;
         subtotal += item.price * qty;
         listEl.innerHTML += `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; border-bottom:1px solid #eee; padding-bottom:8px;">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <img src="${item.image}" style="width:50px; height:50px; border-radius:6px; object-fit:cover; box-shadow:0 2px 5px rgba(0,0,0,0.1);">
-                    <div>
-                        <span style="font-weight:600; font-size: 0.95rem;">${item.name}</span>
-                        <div style="display:flex; align-items:center; gap:8px; margin-top:4px;">
-                            <button onclick="updateCartQty(${index}, -1)" style="padding:2px 8px; cursor:pointer; border:1px solid #ccc; background:#f9f9f9; border-radius:4px;">-</button>
-                            <span style="font-weight:bold; font-size:0.9rem;">${qty}</span>
-                            <button onclick="updateCartQty(${index}, 1)" style="padding:2px 8px; cursor:pointer; border:1px solid #ccc; background:#f9f9f9; border-radius:4px;">+</button>
+            <div class="cart-item-wrapper" style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:16px; border-bottom:1px solid #eee; padding-bottom:16px;">
+                <div style="display:flex; align-items:flex-start; gap:12px;">
+                    <img src="${item.image}" style="width:70px; height:70px; border-radius:4px; object-fit:cover; box-shadow:0 2px 4px rgba(0,0,0,0.05);">
+                    <div style="padding-top:2px;">
+                        <div style="font-weight:600; font-size:0.9rem; line-height:1.2; margin-bottom:6px; color:#111;">${item.name}</div>
+                        <div class="d-hide-m" style="font-size:0.8rem; color:#666; margin-bottom:10px;">Rs. ${item.price.toLocaleString('en-IN')}.00</div>
+                        <div style="display:flex; align-items:center; gap:0;">
+                            <div style="border:1px solid #ccc; border-radius:2px; display:flex; align-items:center;">
+                                <button onclick="updateCartQty(${index}, -1)" style="padding:4px 10px; cursor:pointer; border:none; background:transparent; font-size:1.1rem; color:#555;">-</button>
+                                <span style="font-weight:600; font-size:0.85rem; padding:0 8px; min-width:24px; text-align:center;">${qty}</span>
+                                <button onclick="updateCartQty(${index}, 1)" style="padding:4px 10px; cursor:pointer; border:none; background:transparent; font-size:1.1rem; color:#555;">+</button>
+                            </div>
+                            <button class="m-hide-d" onclick="removeFromCart(${index})" style="background:#ef4444; color:white; border:none; padding:3px 7px; cursor:pointer; margin-left:8px; border-radius:4px; font-weight:bold; font-size:0.8rem;">X</button>
+                            <button class="d-hide-m" onclick="removeFromCart(${index})" style="background:transparent; color:#888; border:none; padding:4px 8px; cursor:pointer; margin-left:12px; font-size:1.1rem;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                            </button>
                         </div>
                     </div>
                 </div>
                 <div style="text-align:right;">
-                    <span style="color:var(--primary-color); font-weight:bold; white-space:nowrap;">₹${(item.price * qty).toLocaleString('en-IN')}</span>
-                    <button onclick="removeFromCart(${index})" style="background:#ef4444; color:white; border:none; padding:3px 7px; cursor:pointer; margin-left:8px; border-radius:4px; font-weight:bold; font-size:0.8rem;">X</button>
+                    <div class="m-hide-d" style="color:var(--primary-color); font-weight:bold; white-space:nowrap;">₹${(item.price * qty).toLocaleString('en-IN')}</div>
+                    <div class="d-hide-m" style="color:#111; font-weight:600; font-size:0.95rem; white-space:nowrap;">Rs. ${(item.price * qty).toLocaleString('en-IN')}.00</div>
                 </div>
             </div>`;
     });
@@ -260,6 +356,8 @@ function openCart() {
     document.getElementById('cart-gst').innerText = '₹' + gst.toLocaleString('en-IN');
     document.getElementById('cart-delivery').innerText = deliveryText;
     document.getElementById('cart-total').innerText = '₹' + total.toLocaleString('en-IN');
+    let dCartTotal = document.getElementById('d-cart-total');
+    if (dCartTotal) dCartTotal.innerText = 'Rs. ' + total.toLocaleString('en-IN') + '.00';
     modal.style.display = 'flex';
 }
 
@@ -342,19 +440,87 @@ function confirmOrder() {
 document.addEventListener('DOMContentLoaded', () => {
     updateCartIcon();
     const modalsHTML = `
-        <div id="cart-modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(45,26,16,0.6); z-index:2000; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
-            <div style="background:white; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; color: #333; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
-                <h2 style="margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem; color:var(--primary-color); font-family:'Playfair Display', serif;">Your Order Cart</h2>
-                <div id="cart-items-list" style="max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem; padding-right:5px;"></div>
-                <div style="border-top: 2px solid #eee; padding-top: 1rem;">
-                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-weight:500;"><span>Subtotal:</span> <span id="cart-subtotal">₹0</span></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>GST (5%):</span> <span id="cart-gst">₹0</span></p>
-                    <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>Delivery:</span> <span id="cart-delivery" style="color:#25D366; font-weight:700;">Free Delivery</span></p>
-                    <h3 style="display:flex; justify-content:space-between; margin-top:0.8rem; color:var(--primary-color); font-size:1.4rem;"><span>Total:</span> <span id="cart-total">₹0</span></h3>
+        <style>
+            .m-hide-d { display: inline-flex; }
+            .d-hide-m { display: none; }
+            .cart-backdrop {
+                position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+                background: rgba(45,26,16,0.6); z-index: 2000;
+                backdrop-filter: blur(4px);
+                display: none; align-items: center; justify-content: center;
+            }
+            .cart-container {
+                background: white; border-radius: 12px;
+                max-width: 500px; width: 90%; color: #333;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+                padding: 2rem;
+                display: flex; flex-direction: column;
+                max-height: 90vh;
+            }
+            .cart-header-title {
+                margin-bottom: 1rem; border-bottom: 2px solid #eee; padding-bottom: 0.5rem;
+                color: var(--primary-color); font-family: 'Playfair Display', serif; font-size: 1.5rem;
+                display: flex; justify-content: space-between; align-items: center;
+            }
+            .cart-items-wrapper-d { max-height: 300px; overflow-y: auto; margin-bottom: 1.5rem; padding-right: 5px; }
+            .cart-buttons-wrapper { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
+            .keep-shopping-btn { background: #f9fafb; color:#333; border: 1px solid #ccc; }
+            .checkout-btn { background: var(--primary-color); color: white; border: none; box-shadow: 0 4px 10px rgba(123,19,56,0.3); }
+
+            @media (min-width: 769px) {
+                .m-hide-d { display: none !important; }
+                .d-hide-m { display: flex !important; }
+                .cart-backdrop { justify-content: flex-end; align-items: flex-start; }
+                .cart-container {
+                    width: 440px; max-width: 440px; height: 100vh; max-height: 100vh;
+                    border-radius: 0; padding: 2rem; margin: 0;
+                    box-shadow: -10px 0 40px rgba(0,0,0,0.1);
+                    animation: slideInRight 0.3s forwards;
+                }
+                .cart-header-title {
+                    color: #111; font-family: 'Outfit', sans-serif; font-size: 1.4rem; font-weight: 700;
+                    border-bottom: none; margin-bottom: 0.5rem; padding-bottom: 0;
+                }
+                .cart-items-wrapper-d { flex: 1; margin-bottom: 1rem; max-height: none; }
+                .cart-footer-container-d { padding-top: 1.5rem; margin-top: auto; }
+                .cart-buttons-wrapper { flex-direction: column; gap: 0; margin-top: 1rem; }
+                .checkout-btn { width: 100%; background: #2f0854; padding: 1rem; border-radius: 2px; font-size: 1rem; display: flex; justify-content: center; box-shadow: none; font-weight: 700; text-transform: none; }
+                .checkout-btn:hover { background: #160429; }
+            }
+            @keyframes slideInRight { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        </style>
+        <div id="cart-modal" class="cart-backdrop">
+            <div class="cart-container">
+                <div class="cart-header-title">
+                    <span class="m-hide-d">Your Order Cart</span>
+                    <span class="d-hide-m" style="font-size:1.4rem;">Your cart</span>
+                    <button class="d-hide-m" onclick="closeCart()" style="background:transparent; border:none; font-size:1.6rem; cursor:pointer; color:#777; font-weight:300;">&times;</button>
                 </div>
-                <div style="display:flex; justify-content:flex-end; gap: 1rem; margin-top: 2rem;">
-                    <button onclick="closeCart()" style="padding: 0.8rem 1.5rem; border:1px solid #ccc; background:#f9fafb; cursor:pointer; border-radius:6px; font-weight:600; font-family:inherit;">Keep Shopping</button>
-                    <button onclick="openCheckout()" style="padding: 0.8rem 1.5rem; background:var(--primary-color); color:white; border:none; cursor:pointer; border-radius:6px; font-weight:bold; box-shadow:0 4px 10px rgba(123,19,56,0.3); font-family:inherit;">Checkout Now</button>
+                <div class="d-hide-m" style="justify-content:space-between; font-size:0.75rem; color:#888; font-weight:600; letter-spacing:1px; margin-bottom:1rem; border-bottom:1px solid #eee; padding-bottom:0.8rem;">
+                    <span>PRODUCT</span>
+                    <span>TOTAL</span>
+                </div>
+                <div id="cart-items-list" class="cart-items-wrapper-d"></div>
+                
+                <div class="cart-footer-container-d">
+                    <div class="m-hide-d" style="flex-direction:column; width:100%;">
+                        <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; font-weight:500;"><span>Subtotal:</span> <span id="cart-subtotal">₹0</span></p>
+                        <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>GST (5%):</span> <span id="cart-gst">₹0</span></p>
+                        <p style="display:flex; justify-content:space-between; margin-bottom:0.5rem; color:#6b7280; font-weight:500;"><span>Delivery:</span> <span id="cart-delivery" style="color:#25D366; font-weight:700;">Free Delivery</span></p>
+                        <h3 style="display:flex; justify-content:space-between; margin-top:0.8rem; color:var(--primary-color); font-size:1.4rem;"><span>Total:</span> <span id="cart-total">₹0</span></h3>
+                    </div>
+                    
+                    <div class="d-hide-m" style="flex-direction:column; width:100%;">
+                       <div style="display:flex; justify-content:space-between; margin-bottom:0.4rem; font-size:1.1rem; color:#111; font-weight:600;">
+                           <span>Estimated total</span> <span id="d-cart-total">Rs. 0</span>
+                       </div>
+                       <p style="font-size:0.85rem; color:#666;">Taxes, discounts and <span style="text-decoration:underline;">shipping</span> calculated at checkout.</p>
+                    </div>
+
+                    <div class="cart-buttons-wrapper">
+                        <button class="m-hide-d keep-shopping-btn" onclick="closeCart()" style="padding: 0.8rem 1.5rem; border-radius:6px; cursor:pointer; font-family:inherit; font-weight:600;">Keep Shopping</button>
+                        <button class="checkout-btn" onclick="openCheckout()" style="padding: 0.8rem 1.5rem; cursor:pointer; font-family:inherit; font-weight:bold; border-radius:4px;">Check out</button>
+                    </div>
                 </div>
             </div>
         </div>
