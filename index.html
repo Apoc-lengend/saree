@@ -2,11 +2,20 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta charset="UTF-8">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parinay Saree - Premium Sarees & Home Linens</title>
     <meta name="description"
         content="Discover exquisite designer sarees and luxurious bedsheets. Elegance woven into every fabric at Parinay Saree.">
+    <!-- Open Graph / WhatsApp / Social Sharing -->
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="Parinay Saree">
+    <meta property="og:title"       content="Parinay Saree - Premium Sarees &amp; Home Linens">
+    <meta property="og:description" content="Discover exquisite designer sarees and luxurious bedsheets. Elegance woven into every fabric at Parinay Saree.">
+    <meta property="og:url"         content="https://parinaysaree.in/">
+    <meta property="og:image"       content="assets/saree.png">
+    <meta name="twitter:card"       content="summary_large_image">
     <!-- Google Fonts for Modern Typography -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -43,7 +52,7 @@
             <!-- Saree Collection -->
             <div class="card" onclick="window.location.href='sarees.html'">
                 <div class="card-img-wrapper">
-                    <img src="assets/saree.png" alt="Designer Traditional Sarees Collection">
+                    <img src="assets/saree.png" loading="lazy" alt="Designer Traditional Sarees Collection">
                 </div>
                 <div class="card-info">
                     <h3>Designer Sarees</h3>
@@ -57,7 +66,7 @@
             <!-- Bedsheets Collection -->
             <div class="card" onclick="window.location.href='bedsheets.html'">
                 <div class="card-img-wrapper">
-                    <img src="assets/bedsheet.png" alt="Premium Modern Bedsheets Collection">
+                    <img src="assets/bedsheet.png" loading="lazy" alt="Premium Modern Bedsheets Collection">
                 </div>
                 <div class="card-info">
                     <h3>Premium Bedsheets</h3>
@@ -99,18 +108,13 @@
 
     <!-- Simple Script for Dynamic Content -->
     <script>
-        async function loadHomeData() {
-            try {
-                const response = await fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'});
-                const data = await response.json();
-                const hero = document.getElementById('home');
-                hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.hero_cover}')`;
-                
-                document.getElementById('dynamic-hero-title').innerText = data.site_config.hero_title;
-                document.getElementById('dynamic-hero-subtitle').innerText = data.site_config.hero_subtitle;
-            } catch(e) { console.error('Error loading data', e); }
+        function applyHomeData(data) {
+            const hero = document.getElementById('home');
+            hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.hero_cover}')`;
+            document.getElementById('dynamic-hero-title').innerText = data.site_config.hero_title;
+            document.getElementById('dynamic-hero-subtitle').innerText = data.site_config.hero_subtitle;
         }
-        document.addEventListener('DOMContentLoaded', loadHomeData);
+        document.addEventListener('DOMContentLoaded', () => window.loadAppView(applyHomeData));
     </script>
 </body>
 

@@ -4,10 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bedsheets - Parinay Saree</title>
+    <meta name="description" content="Explore premium cotton and silk bedsheets — luxurious textures and modern designs for your bedroom.">
+    <!-- Open Graph / WhatsApp / Social Sharing -->
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="Parinay Saree">
+    <meta property="og:title"       content="Premium Bedsheets - Parinay Saree">
+    <meta property="og:description" content="Explore premium cotton and silk bedsheets — luxurious textures and modern designs for your bedroom.">
+    <meta property="og:url"         content="https://parinaysaree.in/bedsheets.html">
+    <meta property="og:image"       content="assets/bedsheet.png">
+    <meta name="twitter:card"       content="summary_large_image">
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <style>.hero { height: 50vh; min-height: 350px; background-size: cover; background-position: center; }</style>
+    <style>
+        .hero { height: 50vh; min-height: 350px; background-size: cover; background-position: center; }
+
+        /* ── Sort / Filter Bar ── */
+        #filter-bar {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 14px 20px; background: #fffaf6;
+            border-bottom: 1px solid #f0e8df; position: sticky; top: 60px; z-index: 100;
+        }
+        #filter-bar label { font-size: 0.82rem; font-weight: 700; color: #7B1338; white-space: nowrap; }
+        #filter-bar select {
+            padding: 6px 28px 6px 10px; border: 1.5px solid #ddd; border-radius: 20px;
+            font-family: inherit; font-size: 0.82rem; color: #333; background: white;
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237B1338' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center;
+            transition: border-color 0.2s;
+        }
+        #filter-bar select:focus { outline: none; border-color: var(--primary-color); }
+        #product-count { font-size: 0.8rem; color: #888; margin-left: auto; white-space: nowrap; }
+
+        /* ── Back to Top ── */
+        #back-to-top {
+            position: fixed; bottom: 100px; right: 28px; width: 44px; height: 44px;
+            background: var(--primary-color); color: white; border: none; border-radius: 50%;
+            font-size: 1.3rem; cursor: pointer; z-index: 9998;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(123,19,56,0.35);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; }
+        #back-to-top:hover { transform: translateY(-3px); }
+
+        /* ── Carousel focus ring ── */
+        #product-carousel-track button:focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
     <script src="components.js"></script>
     <script src="translations.js"></script>
     <script src="language.js"></script>
@@ -20,58 +68,38 @@
             <p id="dynamic-subtitle">Loading...</p>
         </div>
     </header>
-    <section class="collections" style="padding-top: 3rem; padding-bottom: 4rem;">
+
+    <!-- Sort / Filter Bar -->
+    <div id="filter-bar">
+        <label for="sort-select">Sort:</label>
+        <select id="sort-select" onchange="applyFilters()">
+            <option value="default">Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+        </select>
+        <label for="badge-filter" style="margin-left:8px;">Badge:</label>
+        <select id="badge-filter" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="new">New</option>
+            <option value="sale">Sale</option>
+            <option value="trending">Trending</option>
+        </select>
+        <span id="product-count"></span>
+    </div>
+
+    <section class="collections" style="padding-top: 2rem; padding-bottom: 4rem;">
         <div class="product-grid" id="products-grid"></div>
     </section>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8679;</button>
+
     <script>
-        let allProducts = [];
-        let currentlyShown = 0;
-        const PAGE_SIZE = 12;
-
-        async function loadData() {
-            try {
-                const response = await fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'});
-                const data = await response.json();
-                const hero = document.getElementById('dynamic-hero');
-                hero.style.background = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${data.site_config.bedsheets_cover}') center/cover`;
-                document.getElementById('dynamic-title').innerText = data.site_config.bedsheets_title;
-                document.getElementById('dynamic-subtitle').innerText = data.site_config.bedsheets_subtitle;
-                allProducts = data.products.bedsheets || [];
-                document.getElementById('products-grid').innerHTML = '';
-                if (typeof window.injectPageSchema === 'function') window.injectPageSchema(allProducts);
-                loadMore();
-                
-                if (window.location.hash) {
-                    const hashId = window.location.hash.substring(1);
-                    const specificProd = allProducts.find(p => p.id === hashId);
-                    if (specificProd && typeof window.showProductDetails === 'function') {
-                        window.showProductDetails(specificProd, false);
-                    }
-                }
-            } catch (error) { console.error('Error loading data:', error); }
-        }
-
-        function loadMore() {
-            const grid = document.getElementById('products-grid');
-            const nextBatch = allProducts.slice(currentlyShown, currentlyShown + PAGE_SIZE);
-            nextBatch.forEach(product => grid.appendChild(buildProductCard(product)));
-            currentlyShown += nextBatch.length;
-            
-            let btn = document.getElementById('load-more-btn');
-            if (currentlyShown < allProducts.length) {
-                if (!btn) {
-                    btn = document.createElement('button');
-                    btn.id = 'load-more-btn';
-                    btn.innerText = 'Load More';
-                    btn.style.cssText = 'display:block; margin: 3rem auto; padding: 0.8rem 2.5rem; background:var(--primary-color); color:white; border:none; border-radius:30px; cursor:pointer; font-weight:bold; outline:none; font-size:1.1rem;';
-                    btn.onclick = loadMore;
-                    grid.parentNode.appendChild(btn);
-                }
-            } else if (btn) {
-                btn.remove();
-            }
-        }
-        document.addEventListener('DOMContentLoaded', loadData);
+        window.initProductCollection('bedsheets', {
+            cover: 'bedsheets_cover',
+            title: 'bedsheets_title',
+            subtitle: 'bedsheets_subtitle'
+        });
     </script>
     <site-footer></site-footer>
 </body>

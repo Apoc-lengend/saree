@@ -38,24 +38,59 @@
                 <h1 style="margin:0;color:var(--primary);">Parinay Saree Admin Dashboard</h1>
                 <p style="margin:0.2rem 0;color:var(--second);">Editing <span id="repo-display"></span></p>
             </div>
-            <button class="btn btn-small" onclick="app.saveChanges()">Commit Changes to GitHub</button>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+                <button class="btn btn-small" onclick="window.open('index.html', '_blank')"
+                    style="background:#f0f0f0; color:#333; border: 1px solid #ccc; font-weight: bold;"
+                    title="Open live website in new tab">
+                    🌐 Live Site
+                </button>
+                <button class="btn btn-small" onclick="app.previewChanges()"
+                    style="background:#276749;"
+                    title="Preview your current edits on the live pages before committing">
+                    👁 Preview Changes
+                </button>
+                <button class="btn btn-small" onclick="app.cleanupOrphanImages()"
+                    style="background:#975a16;"
+                    title="Scan GitHub for uploaded images not referenced by any product">
+                    🧹 Cleanup Images
+                </button>
+                <button class="btn btn-small" onclick="app.exportProductList()"
+                    style="background:#4a5568;"
+                    title="Export the currently viewed product list as a PDF">
+                    📄 Export PDF
+                </button>
+                <button class="btn btn-small" onclick="app.saveChanges()">Commit Changes to GitHub</button>
+            </div>
         </div>
 
         <!-- Cover Photos Config -->
+        <!-- Native Metric Dashboard Overlay -->
+        <div class="panel" style="background:#f4f6f8; border-left:4px solid #7B1338; margin-bottom:20px;">
+            <div id="metric-dashboard" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(150px, 1fr)); gap:15px;">
+                <!-- Populated by JS -->
+            </div>
+        </div>
+
         <div class="panel">
             <h3>Website Cover Photos</h3>
             <div class="grid-2">
                 <div class="form-group">
-                    <label id="cfg-hero-label" for="cfg-hero-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Cover</label>
+                    <label id="cfg-hero-label" for="cfg-hero-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Cover</label>
                     <input type="file" id="cfg-hero-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('hero_cover', this.files[0], 'cfg-hero-label')">
+                    <input type="text" id="cfg-hero-title" placeholder="Hero Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('hero_title', this.value)">
+                    <textarea id="cfg-hero-subtitle" placeholder="Hero Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('hero_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
-                    <label id="cfg-sarees-label" for="cfg-sarees-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Saree Cover</label>
+                    <label id="cfg-sarees-label" for="cfg-sarees-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Saree Cover</label>
                     <input type="file" id="cfg-sarees-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('sarees_cover', this.files[0], 'cfg-sarees-label')">
+                    <input type="text" id="cfg-sarees-title" placeholder="Sarees Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('sarees_title', this.value)">
+                    <textarea id="cfg-sarees-subtitle" placeholder="Sarees Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('sarees_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
-                    <label id="cfg-bed-label" for="cfg-bedsheets-cover" style="display:inline-block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Bedsheet Cover</label>
+                    <label id="cfg-bed-label" for="cfg-bedsheets-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Bedsheet Cover</label>
                     <input type="file" id="cfg-bedsheets-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('bedsheets_cover', this.files[0], 'cfg-bed-label')">
+                    <input type="text" id="cfg-bedsheets-title" placeholder="Bedsheets Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('bedsheets_title', this.value)">
+                    <textarea id="cfg-bedsheets-subtitle" placeholder="Bedsheets Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('bedsheets_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Delivery Rate</label>
@@ -89,11 +124,19 @@
                 </div>
                 <div class="form-group">
                     <label>Stock Quantity</label>
-                    <input type="number" id="add-stock" placeholder="e.g. 10" value="10">
+                    <input type="number" id="add-stock" placeholder="e.g. 10" value="1">
                 </div>
                 <div class="form-group">
                     <label>Discount (%)</label>
                     <input type="number" id="add-discount" placeholder="e.g. 15 (leave 0 if none)" value="0">
+                </div>
+                <div class="form-group">
+                    <label>Status</label>
+                    <div style="display:flex; gap:15px; margin-top:5px; font-size:0.9rem;">
+                        <label><input type="radio" name="add-status" value="live" checked> 🟢 Live</label>
+                        <label><input type="radio" name="add-status" value="hidden"> 🟡 Hidden</label>
+                        <label><input type="radio" name="add-status" value="archived"> 🔴 Archived</label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>Badge Label</label>
@@ -124,15 +167,88 @@
             <!-- Product Manager -->
             <div class="panel">
                 <h3>Manage Products</h3>
-                <div class="form-group">
-                    <select id="manage-category" onchange="app.renderProducts()">
+                <div class="form-group" style="display:flex; gap:10px; align-items:center; margin-bottom: 10px;">
+                    <select id="manage-category" onchange="app.resetAndRender()" style="flex:1;">
                         <option value="sarees">View Sarees</option>
                         <option value="bedsheets">View Bedsheets</option>
                     </select>
+                    <button class="btn btn-small" onclick="app.openPreferencesModal()" style="padding:10px; background:#4a5568; margin-top:0;">Preference</button>
                 </div>
-                <div id="product-list" style="height: 850px; overflow-y: auto; padding-right:10px;">
+
+                <div style="display:flex; gap:10px; margin-bottom:15px; flex-wrap:wrap;">
+                    <div style="flex: 2; position: relative;">
+                        <span style="position: absolute; left: 10px; top: 10px; color: #888;">🔍</span>
+                        <input type="text" id="manage-search" placeholder="Search by product name..." oninput="app.renderProducts()" style="width: 100%; padding: 10px 10px 10px 32px; border:1px solid #ccc; border-radius:4px; box-sizing: border-box; font-size: 0.9rem;">
+                    </div>
+                    <select id="manage-sort" onchange="app.renderProducts()" style="flex: 1; padding: 10px; border:1px solid #ccc; border-radius:4px; font-size: 0.9rem;">
+                        <option value="default">Sort: Default Order</option>
+                        <option value="newest">Sort: Recently Added First</option>
+                        <option value="oldest">Sort: Oldest First</option>
+                    </select>
+                </div>
+
+                <!-- Status Filter Tabs -->
+                <div id="status-tabs" style="display:flex; gap:0; margin-bottom:12px; border-radius:6px; overflow:hidden; border:1px solid #ddd;">
+                    <button onclick="app.setStatusTab('all')" data-tab="all"
+                        style="flex:1; padding:8px 4px; border:none; cursor:pointer; font-size:0.8rem; font-weight:700;
+                               background:#7B1338; color:white; border-right:1px solid rgba(255,255,255,0.2);">
+                        All <span id="tab-count-all" style="font-weight:400;font-size:0.75rem;opacity:0.85;"></span>
+                    </button>
+                    <button onclick="app.setStatusTab('live')" data-tab="live"
+                        style="flex:1; padding:8px 4px; border:none; cursor:pointer; font-size:0.8rem; font-weight:700;
+                               background:#f0f0f0; color:#444; border-right:1px solid #ddd;">
+                        🟢 Live <span id="tab-count-live" style="font-weight:400;font-size:0.75rem;"></span>
+                    </button>
+                    <button onclick="app.setStatusTab('hidden')" data-tab="hidden"
+                        style="flex:1; padding:8px 4px; border:none; cursor:pointer; font-size:0.8rem; font-weight:700;
+                               background:#f0f0f0; color:#444; border-right:1px solid #ddd;">
+                        🟡 Hidden <span id="tab-count-hidden" style="font-weight:400;font-size:0.75rem;"></span>
+                    </button>
+                    <button onclick="app.setStatusTab('archived')" data-tab="archived"
+                        style="flex:1; padding:8px 4px; border:none; cursor:pointer; font-size:0.8rem; font-weight:700;
+                               background:#f0f0f0; color:#444;">
+                        🔴 Archived <span id="tab-count-archived" style="font-weight:400;font-size:0.75rem;"></span>
+                    </button>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-bottom:15px; background:#f9f9f9; padding:10px; border-radius:4px; border:1px solid #ddd; align-items:center; flex-wrap:wrap;">
+                    <label style="display:flex;align-items:center;gap:6px;font-size:0.82rem;font-weight:700;cursor:pointer;">
+                        <input type="checkbox" id="bulk-select-all" onchange="app.toggleBulkSelectAll(this.checked)"> Select All
+                    </label>
+                    <select id="bulk-action" style="padding:6px;flex:1;font-size:0.8rem;border-radius:4px;min-width:170px;margin-left:auto;border:1px solid #ccc;">
+                        <option value="">── Bulk Actions ──</option>
+                        <optgroup label="Visibility">
+                            <option value="set_live">🟢 Set Status: Live</option>
+                            <option value="set_hidden">🟡 Set Status: Hidden</option>
+                            <option value="set_archived">🔴 Set Status: Archived</option>
+                        </optgroup>
+                        <optgroup label="Discounts">
+                            <option value="discount_10">🏷 Apply 10% Discount</option>
+                            <option value="discount_20">🏷 Apply 20% Discount</option>
+                            <option value="discount_25">🏷 Apply 25% Discount</option>
+                            <option value="discount_50">🏷 Apply 50% Discount</option>
+                            <option value="remove_discount">✖ Remove Discount</option>
+                        </optgroup>
+                        <optgroup label="Badges">
+                            <option value="set_badge_new">🟢 Set Badge: New</option>
+                            <option value="set_badge_sale">🔴 Set Badge: Sale</option>
+                            <option value="set_badge_trending">🟣 Set Badge: Trending</option>
+                            <option value="remove_badge">✖ Remove Badge</option>
+                        </optgroup>
+                        <optgroup label="Inventory">
+                            <option value="set_stock_zero">📦 Mark Out of Stock (0)</option>
+                        </optgroup>
+                        <optgroup label="Danger">
+                            <option value="delete">🗑 Bulk Delete</option>
+                        </optgroup>
+                    </select>
+                    <button class="btn btn-small" onclick="app.executeBulkAction()" style="padding:6px 15px;margin-top:0;">Apply</button>
+                </div>
+
+                <div id="product-list" style="height: 750px; overflow-y: auto; padding-right:10px;">
                     <!-- Rendered by JS -->
                 </div>
+                <button id="load-more-btn" onclick="app.loadMoreProducts()" style="width:100%; padding:10px; margin-top:10px; background:#4a5568; color:white; border:none; border-radius:4px; cursor:pointer; font-weight:bold; display:none;">Load Next 20 Products</button>
             </div>
         </div>
     </div>

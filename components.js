@@ -117,13 +117,49 @@ function toggleMobileMenu() {
 
 let cartItems = JSON.parse(localStorage.getItem('parinay_cart')) || [];
 
+window.showFrontendAlert = function(msg, isSuccess = false) {
+    let old = document.getElementById('frontend-alert-modal');
+    if (old) old.remove();
+
+    let m = document.createElement('div');
+    m.id = 'frontend-alert-modal';
+    m.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(45,26,16,0.6); display:flex; align-items:center; justify-content:center; z-index:99999; backdrop-filter:blur(3px);';
+    m.onclick = function(e) { if(e.target === m) m.remove(); };
+    m.innerHTML = `
+        <div style="background:white; padding:30px; border-radius:12px; max-width:340px; width:90%; text-align:center; box-shadow:0 10px 40px rgba(0,0,0,0.3); transform:scale(1); transition:transform 0.3s; animation: parinayFadeIn 0.3s ease-out;" onclick="event.stopPropagation()">
+            <div style="font-size:3rem; margin-bottom:15px;">${isSuccess ? '✅' : '⚠️'}</div>
+            <h3 style="font-family:'Playfair Display', serif; color:var(--primary-color); margin-bottom:10px;">Notice</h3>
+            <p style="color:#444; font-size:1rem; margin-bottom:25px; line-height:1.5; font-weight:500;">${msg}</p>
+            <button onclick="document.getElementById('frontend-alert-modal').remove()" style="background:var(--primary-color); color:white; border:none; padding:10px 35px; border-radius:30px; font-weight:bold; font-size:1rem; cursor:pointer; box-shadow:0 4px 10px rgba(123,19,56,0.2);">OK</button>
+        </div>
+    `;
+    document.body.appendChild(m);
+};
+
+window.getProductStock = function(name) {
+    if(!window.siteData || !window.siteData.products) return 100;
+    for (let category in window.siteData.products) {
+        let p = window.siteData.products[category].find(p => p.name === name);
+        if (p) return typeof p.stock !== 'undefined' ? p.stock : 10;
+    }
+    return 100;
+};
+
 function addToCart(name, priceStr, imageSrc) {
+    let maxStock = window.getProductStock(name);
+    let existing = cartItems.find(i => i.name === name);
+    let currentQty = existing ? (existing.quantity || 1) : 0;
+    
+    if (currentQty >= maxStock) {
+        window.showFrontendAlert('Maximum stock limit reached for this item.');
+        return;
+    }
+
     let priceNum = parseFloat(priceStr.replace(/[^0-9.]/g, ''));
     if (isNaN(priceNum)) priceNum = 0;
     
-    let existing = cartItems.find(i => i.name === name);
     if(existing) {
-        existing.quantity = (existing.quantity || 1) + 1;
+        existing.quantity = currentQty + 1;
     } else {
         cartItems.push({ name, price: priceNum, priceStr: '₹' + priceNum.toLocaleString('en-IN'), image: imageSrc || 'assets/saree.png', quantity: 1 });
     }
@@ -155,6 +191,30 @@ window.getProductCardOverlayHTML = function(productName, priceStr, imageSrc) {
     }
 };
 
+window.getModalCartBtnHTML = function(productName, priceStr, imageSrc, stock) {
+    let existing = cartItems.find(i => i.name === productName);
+    let qty = existing ? existing.quantity : 0;
+    let safeName = String(productName).replace(/'/g,"\\\\'");
+    let priceSafe = String(priceStr).replace(/'/g,"\\\\'");
+    let imgSafe = String(imageSrc).replace(/'/g,"\\\\'");
+
+    if (stock <= 0) {
+        return `<button class="checkout-btn" disabled style="width:100%; border:none; background:#ccc; color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Out of Stock</button>`;
+    }
+
+    if (qty > 0) {
+        return `
+            <div style="display:flex; justify-content:space-between; align-items:center; background:#fcfcfc; border:2px solid var(--primary-color); border-radius:8px; padding:10px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
+                <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', -1, true)" style="background:transparent; color:var(--primary-color); border:none; font-weight:bold; font-size:1.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; padding:0 10px;">-</button>
+                <span style="font-weight:900; font-size:1.4rem; color:var(--heading-color);">${qty} <span style="font-size:0.9rem; font-weight:600; color:#666;">in cart</span></span>
+                <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', 1, true)" style="background:transparent; color:var(--primary-color); border:none; font-weight:bold; font-size:1.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; padding:0 10px;">+</button>
+            </div>
+            <button onclick="openCart(); document.getElementById('product-details-modal').remove();" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3); margin-top:12px;">Go to Checkout ➜</button>`;
+    } else {
+        return `<button class="checkout-btn" onclick="addToCart('${safeName}', '${priceSafe}', '${imgSafe}')" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3);">Add to Cart</button>`;
+    }
+};
+
 window.updateCartQtyByName = function(name, change, silent = false) {
     let index = cartItems.findIndex(i => i.name === name);
     if (index !== -1) {
@@ -178,14 +238,46 @@ function updateCartIcon() {
         let i = container.getAttribute('data-img');
         container.innerHTML = window.getProductCardOverlayHTML(n, p, i);
     });
+
+    document.querySelectorAll('.modal-cart-container').forEach(container => {
+        let n = container.getAttribute('data-product-name');
+        let p = container.getAttribute('data-price');
+        let i = container.getAttribute('data-img');
+        let s = parseInt(container.getAttribute('data-stock')) || 0;
+        container.innerHTML = window.getModalCartBtnHTML(n, p, i, s);
+    });
+}
+
+// ─── CENTRALIZED HELPERS ──────────────────────────────────────────────────
+
+// Brand logo paths — single source of truth, used by buildProductCard & showProductDetails
+const PS_LOGO      = 'assets/ps-logo-compressed.png';
+const SKYLOOM_LOGO = 'assets/skyloom-logo.png';
+
+// Compute delivery cost from site config. Returns { cost: number, text: string }
+function getDeliveryCost() {
+    const dv = (window.siteConfigData && window.siteConfigData.delivery_value) ? window.siteConfigData.delivery_value : '';
+    const num = parseFloat(dv);
+    if (!isNaN(num) && num > 0) return { cost: num, text: '₹' + num.toLocaleString('en-IN') };
+    return { cost: 0, text: dv || 'Free Delivery' };
 }
 
 window.siteConfigData = null;
-fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'}).then(r=>r.json()).then(d=>{ 
-    window.siteConfigData = d.site_config; 
-    let fab = document.getElementById('whatsapp-fab');
-    if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
-}).catch(e=>{});
+window.siteData = null; // Full data object — shared so product pages avoid a second fetch
+
+// Skip this fetch entirely on the admin page — admin manages its own authenticated fetch
+if (!window.location.pathname.includes('admin')) {
+    fetch('data.json?v=' + new Date().getTime(), {cache: 'no-store'})
+        .then(r => r.json())
+        .then(d => {
+            window.siteConfigData = d.site_config;
+            window.siteData = d;
+            let fab = document.getElementById('whatsapp-fab');
+            if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
+            // Fire event so any page script waiting on this data can proceed
+            window.dispatchEvent(new Event('siteDataReady'));
+        }).catch(e => {});
+}
 
 window.injectPageSchema = function(products) {
     let oldSchema = document.getElementById('seo-schema');
@@ -262,7 +354,9 @@ window.buildProductCard = function(product, category = '') {
         <div class="overlay-container" data-product-name="${product.name.replace(/"/g, '&quot;')}" data-price="${product.price.replace(/"/g, '&quot;')}" data-img="${product.image.replace(/"/g, '&quot;')}">
             ${window.getProductCardOverlayHTML(product.name, product.price, product.image)}
         </div>`;
-    const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:48px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
+    const logoHTML = isSaree
+        ? `<img src="${PS_LOGO}" style="height:48px; margin-left:auto; object-fit:contain;" alt="Parinay Saree brand logo">`
+        : `<img src="${SKYLOOM_LOGO}" style="height:65px; margin-left:auto; object-fit:contain;" alt="Skyloom brand logo">`;
     const card = document.createElement('div');
     card.className = 'product-card' + (isOutOfStock ? ' out-of-stock' : '');
     card.innerHTML = `<div class="product-card-img" style="cursor:pointer;"><img src="${product.image}" loading="lazy" alt="${product.name}" style="${product.style || ''}">${leftBadge}${rightBadge}${overlayWrapper}</div><div class="product-card-info"><h3 title="${product.name}">${product.name}</h3><div class="price-row">${priceHTML}${logoHTML}</div></div>`;
@@ -341,7 +435,12 @@ window.showProductDetails = function(product, isSaree) {
 
         imagesHTML = `
         <div style="position:relative; width:100%; margin-bottom:5px; border-radius:8px; overflow:hidden;">
-            <button onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)<=0){t.scrollTo({left:t.scrollWidth, behavior:'smooth'})}else{t.scrollBy({left:-t.clientWidth, behavior:'smooth'})}" style="position:absolute; top:50%; left:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s;" onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'">&#10094;</button>
+            <button tabindex="0" aria-label="Previous image"
+                onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)<=0){t.scrollTo({left:t.scrollWidth, behavior:'smooth'})}else{t.scrollBy({left:-t.clientWidth, behavior:'smooth'})}"
+                style="position:absolute; top:50%; left:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:2px solid transparent; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s, border-color 0.2s;"
+                onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'"
+                onfocus="this.style.borderColor='var(--primary-color)'; this.style.outline='none';"
+                onblur="this.style.borderColor='transparent'">&#10094;</button>
             
             <div id="product-carousel-track" style="display:flex; overflow-x:auto; scroll-snap-type:x mandatory; scrollbar-width:none; -ms-overflow-style:none; scroll-behavior:smooth;" onscroll="
                 const index = Math.round(this.scrollLeft / this.clientWidth);
@@ -354,7 +453,12 @@ window.showProductDetails = function(product, isSaree) {
                 ${slides}
             </div>
             
-            <button onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)>=Math.round(t.scrollWidth-t.clientWidth)){t.scrollTo({left:0, behavior:'smooth'})}else{t.scrollBy({left:t.clientWidth, behavior:'smooth'})}" style="position:absolute; top:50%; right:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:none; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s;" onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'">&#10095;</button>
+            <button tabindex="0" aria-label="Next image"
+                onclick="const t=document.getElementById('product-carousel-track'); if(Math.round(t.scrollLeft)>=Math.round(t.scrollWidth-t.clientWidth)){t.scrollTo({left:0, behavior:'smooth'})}else{t.scrollBy({left:t.clientWidth, behavior:'smooth'})}"
+                style="position:absolute; top:50%; right:10px; transform:translateY(-50%); background:rgba(255,255,255,0.9); border:2px solid transparent; width:36px; height:36px; border-radius:50%; font-size:1.2rem; cursor:pointer; color:#333; z-index:2; box-shadow:0 2px 5px rgba(0,0,0,0.2); display:flex; align-items:center; justify-content:center; transition:background 0.2s, border-color 0.2s;"
+                onmouseover="this.style.background='white'" onmouseout="this.style.background='rgba(255,255,255,0.9)'"
+                onfocus="this.style.borderColor='var(--primary-color)'; this.style.outline='none';"
+                onblur="this.style.borderColor='transparent'">&#10095;</button>
         </div>
         <div style="position:relative; display:flex; justify-content:center; align-items:center; margin-bottom:15px; min-height:30px;">
             <div id="product-carousel-dots" style="display:flex; justify-content:center; gap:8px;">${dots}</div>
@@ -372,7 +476,9 @@ window.showProductDetails = function(product, isSaree) {
     const leftBadge = discount > 0 ? `<span class="badge-discount" style="position:relative; display:inline-block; border-radius:4px; padding:3px 8px; margin-bottom:10px; margin-right:10px;">${discount}% Off</span>` : '';
 
     let priceHTML = window.generatePriceHTML(product.price, discount, true);
-    const logoHTML = isSaree ? `<img src="assets/ps-logo-compressed.png" style="height:54px; margin-left:auto; object-fit:contain;" alt="Logo">` : '';
+    const logoHTML = isSaree
+        ? `<img src="${PS_LOGO}" style="height:54px; margin-left:auto; object-fit:contain;" alt="Parinay Saree brand logo">`
+        : `<img src="${SKYLOOM_LOGO}" style="height:80px; margin-left:auto; object-fit:contain;" alt="Skyloom brand logo">`;
 
     const modalHTML = `
         <div id="product-details-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:3000; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(5px);" onclick="this.remove(); if(history.pushState) history.pushState(null, null, window.location.pathname);">
@@ -402,11 +508,9 @@ window.showProductDetails = function(product, isSaree) {
                         ${logoHTML}
                     </div>
                     
-                    ${product.stock > 0 ? `
-                        <button class="checkout-btn" onclick="addToCart('${product.name.replace(/'/g, '\\\'')}', '${product.price.replace(/'/g, '\\\'')}', '${product.image.replace(/'/g, '\\\'')}'); document.getElementById('product-details-modal').remove(); openCart();" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3);">Add to Cart</button>
-                    ` : `
-                        <button class="checkout-btn" disabled style="width:100%; border:none; background:#ccc; color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; text-transform:uppercase; letter-spacing:1px;">Out of Stock</button>
-                    `}
+                    <div class="modal-cart-container" data-product-name="${product.name.replace(/"/g, '&quot;')}" data-price="${product.price}" data-img="${product.image}" data-stock="${product.stock}">
+                        ${window.getModalCartBtnHTML(product.name, product.price, product.image, product.stock)}
+                    </div>
                 </div>
             </div>
         </div>
@@ -451,17 +555,7 @@ function openCart() {
             </div>`;
     });
 
-    let deliveryCost = 0;
-    let deliveryText = 'Free Delivery';
-    if (window.siteConfigData && window.siteConfigData.delivery_value) {
-        let dv = window.siteConfigData.delivery_value;
-        if (!isNaN(parseFloat(dv)) && parseFloat(dv) > 0) {
-            deliveryCost = parseFloat(dv);
-            deliveryText = '₹' + deliveryCost.toLocaleString('en-IN');
-        } else {
-            deliveryText = dv;
-        }
-    }
+    const { cost: deliveryCost, text: deliveryText } = getDeliveryCost();
 
     let gst = subtotal * 0.05;
     let total = subtotal + gst + deliveryCost;
@@ -484,6 +578,15 @@ function openCart() {
 function updateCartQty(index, change, silent = false) {
     let item = cartItems[index];
     if (!item.quantity) item.quantity = 1;
+    
+    if (change > 0) {
+        let maxStock = window.getProductStock(item.name);
+        if (item.quantity + change > maxStock) {
+            window.showFrontendAlert('Maximum stock limit reached for this item.');
+            return;
+        }
+    }
+
     item.quantity += change;
     if (item.quantity <= 0) {
         cartItems.splice(index, 1);
@@ -533,17 +636,7 @@ function confirmOrder() {
         orderText += `- ${item.name} x${qty} (₹${(item.price * qty).toLocaleString('en-IN')})%0A`;
     });
 
-    let deliveryCost = 0;
-    let deliveryText = 'Free Delivery';
-    if (window.siteConfigData && window.siteConfigData.delivery_value) {
-        let dv = window.siteConfigData.delivery_value;
-        if (!isNaN(parseFloat(dv)) && parseFloat(dv) > 0) {
-            deliveryCost = parseFloat(dv);
-            deliveryText = '₹' + deliveryCost.toLocaleString('en-IN');
-        } else {
-            deliveryText = dv;
-        }
-    }
+    const { cost: deliveryCost, text: deliveryText } = getDeliveryCost();
 
     let gst = subtotal * 0.05;
     let total = subtotal + gst + deliveryCost;
@@ -750,9 +843,6 @@ document.addEventListener('keydown', function(e) {
             if (typeof closeCart === 'function') closeCart();
         }
         
-        const cartOverlay = document.getElementById('cart-drawer-overlay');
-        if (cartOverlay) cartOverlay.remove();
-        
         const searchInput = document.getElementById('nav-search-input');
         if (searchInput && document.activeElement === searchInput) {
             searchInput.blur();
@@ -787,3 +877,127 @@ document.addEventListener('keydown', function(e) {
         }
     }
 });
+
+// ─── UNIFIED PAGE LOGIC ──────────────────────────────────────────────────
+window.loadAppView = function(applyCallback) {
+    const isPreview = new URLSearchParams(window.location.search).get('preview') === '1';
+    if (isPreview) {
+        try {
+            const raw = localStorage.getItem('parinay_preview_data');
+            if (raw) {
+                const data = JSON.parse(raw);
+                const banner = document.createElement('div');
+                banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#d69e2e;color:#1a1a1a;text-align:center;padding:8px 16px;font-size:0.85rem;font-weight:700;z-index:99999;letter-spacing:0.02em;';
+                banner.innerHTML = '⚠️ PREVIEW MODE — These changes are <u>not published</u> yet. Commit from the admin panel to go live. <button onclick="this.parentElement.remove()" style="margin-left:12px;background:transparent;border:1px solid currentColor;border-radius:4px;padding:1px 8px;cursor:pointer;font-weight:700;">✕</button>';
+                document.body.prepend(banner);
+                applyCallback(data);
+                return;
+            }
+        } catch(e) { console.error('Preview error:', e); }
+    }
+    if (window.siteData) {
+        applyCallback(window.siteData);
+    } else {
+        window.addEventListener('siteDataReady', () => applyCallback(window.siteData), { once: true });
+    }
+};
+
+window.initProductCollection = function(categoryStr, keys) {
+    let allProducts = [];
+    let filteredProducts = [];
+    let currentlyShown = 0;
+    const PAGE_SIZE = 12;
+
+    function getPrice(p) { return parseFloat(String(p.price).replace(/[^0-9.]/g, '')) || 0; }
+
+    function updateCount() {
+        const el = document.getElementById('product-count');
+        if (!el) return;
+        const shown = Math.min(currentlyShown, filteredProducts.length);
+        const total = filteredProducts.length;
+        el.textContent = total > 0 ? `Showing ${shown} of ${total} products` : 'No products found';
+    }
+
+    function loadMore() {
+        const grid = document.getElementById('products-grid');
+        const nextBatch = filteredProducts.slice(currentlyShown, currentlyShown + PAGE_SIZE);
+        nextBatch.forEach(product => grid.appendChild(window.buildProductCard(product, categoryStr)));
+        currentlyShown += nextBatch.length;
+        updateCount();
+
+        let btn = document.getElementById('load-more-btn');
+        if (currentlyShown < filteredProducts.length) {
+            if (!btn) {
+                btn = document.createElement('button');
+                btn.id = 'load-more-btn';
+                btn.innerText = 'Load More';
+                btn.style.cssText = 'display:block; margin: 3rem auto; padding: 0.8rem 2.5rem; background:var(--primary-color); color:white; border:none; border-radius:30px; cursor:pointer; font-weight:bold; outline:none; font-size:1.1rem;';
+                btn.onclick = loadMore;
+                grid.parentNode.appendChild(btn);
+            }
+        } else if (btn) {
+            btn.remove();
+        }
+    }
+
+    function applyFilters() {
+        const sort  = document.getElementById('sort-select').value;
+        const badge = document.getElementById('badge-filter').value;
+
+        let result = [...allProducts];
+        if (badge !== 'all') result = result.filter(p => p.badge === badge);
+
+        if (sort === 'price-asc')  result.sort((a, b) => getPrice(a) - getPrice(b));
+        if (sort === 'price-desc') result.sort((a, b) => getPrice(b) - getPrice(a));
+
+        filteredProducts = result;
+        currentlyShown = 0;
+
+        const grid = document.getElementById('products-grid');
+        grid.innerHTML = '';
+        const oldBtn = document.getElementById('load-more-btn');
+        if (oldBtn) oldBtn.remove();
+        updateCount();
+        loadMore();
+    }
+
+    window.applyFilters = applyFilters;
+    
+    function applyData(data) {
+        const hero = document.getElementById('dynamic-hero');
+        if (hero) hero.style.background = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('${data.site_config[keys.cover]}') center/cover`;
+        if (document.getElementById('dynamic-title')) document.getElementById('dynamic-title').innerText = data.site_config[keys.title];
+        if (document.getElementById('dynamic-subtitle')) document.getElementById('dynamic-subtitle').innerText = data.site_config[keys.subtitle];
+        
+        const rawProducts = data.products[categoryStr] || [];
+        allProducts = rawProducts.filter(p => !p.status || p.status === 'live');
+        if (typeof window.injectPageSchema === 'function') window.injectPageSchema(allProducts);
+        applyFilters();
+        
+        if (window.location.hash) {
+            const hashId = window.location.hash.substring(1);
+            const specificProd = rawProducts.find(p => p.id === hashId);
+            if (specificProd) {
+                const stat = specificProd.status || 'live';
+                if (stat === 'archived') {
+                    window.showFrontendAlert('This item is currently out of stock.');
+                    window.location.hash = '';
+                } else if (stat === 'hidden') {
+                    window.showFrontendAlert('This is an upcoming item & not yet available.');
+                    window.location.hash = '';
+                } else {
+                    if (typeof window.showProductDetails === 'function') {
+                        window.showProductDetails(specificProd, categoryStr === 'sarees');
+                    }
+                }
+            }
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => window.loadAppView(applyData));
+
+    window.addEventListener('scroll', () => {
+        const btn = document.getElementById('back-to-top');
+        if (btn) btn.classList.toggle('visible', window.scrollY > 400);
+    }, { passive: true });
+};
