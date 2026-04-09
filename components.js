@@ -204,12 +204,14 @@ window.getModalCartBtnHTML = function(productName, priceStr, imageSrc, stock) {
 
     if (qty > 0) {
         return `
-            <div style="display:flex; justify-content:space-between; align-items:center; background:#fcfcfc; border:2px solid var(--primary-color); border-radius:8px; padding:10px 20px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', -1, true)" style="background:transparent; color:var(--primary-color); border:none; font-weight:bold; font-size:1.8rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; padding:0 10px;">-</button>
-                <span style="font-weight:900; font-size:1.4rem; color:var(--heading-color);">${qty} <span style="font-size:0.9rem; font-weight:600; color:#666;">in cart</span></span>
-                <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', 1, true)" style="background:transparent; color:var(--primary-color); border:none; font-weight:bold; font-size:1.6rem; cursor:pointer; display:flex; align-items:center; justify-content:center; line-height:1; padding:0 10px;">+</button>
+            <div style="display:flex; justify-content:center; align-items:center; background:#f9f9f9; border-radius:8px; padding:15px; margin-bottom:12px;">
+                <div style="display:flex; align-items:center; gap:16px;">
+                    <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', -1, true)" style="background:var(--primary-color); color:white; border:none; padding:4px 14px; font-weight:bold; font-size:1.2rem; border-radius:6px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);">-</button>
+                    <span style="font-weight:900; font-size:1.1rem; color:var(--heading-color); min-width:24px; text-align:center;">${qty}</span>
+                    <button onclick="event.stopPropagation(); updateCartQtyByName('${safeName}', 1, true)" style="background:var(--primary-color); color:white; border:none; padding:4px 14px; font-weight:bold; font-size:1.2rem; border-radius:6px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.2);">+</button>
+                </div>
             </div>
-            <button onclick="openCart(); document.getElementById('product-details-modal').remove();" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3); margin-top:12px;">Go to Checkout ➜</button>`;
+            <button onclick="openCart(); document.getElementById('product-details-modal').remove();" style="width:100%; border:none; background:var(--primary-color); color:white; padding:12px; border-radius:6px; font-size:0.9rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3);">Go to Checkout ➜</button>`;
     } else {
         return `<button class="checkout-btn" onclick="addToCart('${safeName}', '${priceSafe}', '${imgSafe}')" style="width:100%; border:none; background:var(--primary-color); color:white; padding:15px; border-radius:6px; font-size:1.15rem; font-weight:bold; cursor:pointer; text-transform:uppercase; letter-spacing:1px; box-shadow:0 4px 15px rgba(123,19,56,0.3);">Add to Cart</button>`;
     }
