@@ -13,6 +13,21 @@ const app = {
         this.hasUnsavedChanges = true;
     },
 
+    async _ghFetch(path, options = {}) {
+        const url = new URL(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/${path}`);
+        if (options.bust) {
+            url.searchParams.append('timestamp', Date.now());
+            options.cache = 'no-store';
+            delete options.bust;
+        }
+        if (!options.headers) options.headers = {};
+        options.headers['Authorization'] = `token ${this.auth.token}`;
+        if (options.method && options.method !== 'GET') {
+            options.headers['Content-Type'] = 'application/json';
+        }
+        return fetch(url.toString(), options);
+    },
+
     showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg;
@@ -903,6 +918,17 @@ const app = {
         const contentBase64 = window.btoa(unescape(encodeURIComponent(jsonText)));
 
         try {
+            // ALWAYS fetch the latest SHA right before committing to avoid 409 Conflict
+            try {
+                const shaRes = await this._ghFetch('data.json', { bust: true });
+                if (shaRes.ok) {
+                    const shaData = await shaRes.json();
+                    this.fileSha = shaData.sha;
+                }
+            } catch (e) {
+                console.warn('Failed to fetch latest sha before commit', e);
+            }
+
             const res = await this._ghFetch('data.json', {
                 method: 'PUT',
                 body: JSON.stringify({
