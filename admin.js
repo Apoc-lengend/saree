@@ -898,21 +898,148 @@ const app = {
 
     // ─── COMMIT TO GITHUB ─────────────────────────────────────────────────────
 
-    async saveChanges() {
-        let diffSummary = "";
-        try {
-            const oldData = JSON.parse(this.originalDataText || "{}");
-            const getCounts = (d) => {
-                const s = d.products?.sarees || [];
-                const b = d.products?.bedsheets || [];
-                return { s: s.length, b: b.length, total: s.length + b.length };
-            };
-            const cntOld = getCounts(oldData);
-            const cntNew = getCounts(this.data);
-            diffSummary = `\nSarees Total: ${cntOld.s} → ${cntNew.s}\nBedsheets Total: ${cntOld.b} → ${cntNew.b}\nTotal Catalog: ${cntOld.total} → ${cntNew.total}\n`;
-        } catch(e){}
+    _generateDiffHTML() {
+        let oldData = {};
+        try { oldData = JSON.parse(this.originalDataText || "{}"); } catch(e){}
+        let html = '';
+        let hasChanges = false;
 
-        if (!confirm(`Ready to publish your website edits?\n\nReview Changes Highlights:${diffSummary}\nClick OK to commit to GitHub.`)) return;
+        const oldCfg = oldData.site_config || {};
+        const newCfg = this.data.site_config || {};
+        const cfgChanges = [];
+        for (let k in newCfg) { 
+            if (newCfg[k] !== oldCfg[k]) {
+                const readableKey = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+                cfgChanges.push(`<li><b>${readableKey}</b> updated</li>`);
+            } 
+        }
+        if (cfgChanges.length > 0) {
+            html += `
+                <div style="margin-bottom:12px;">
+                    <span style="color:#276749;font-weight:bold;font-size:1.05rem;">⚙️ Site Settings</span>
+                    <ul style="margin:4px 0 0 24px;color:#555;font-size:0.85rem;line-height:1.4;">
+                        ${cfgChanges.join('')}
+                    </ul>
+                </div>`;
+            hasChanges = true;
+        }
+
+        const categories = Object.keys(this.data.products || {});
+        for (const cat of categories) {
+            const oldList = oldData.products?.[cat] || [];
+            const newList = this.data.products?.[cat] || [];
+            
+            const oldMap = new Map(oldList.filter(p=>p).map((p, i) => [p.id, { p, index: i }]));
+            const newMap = new Map(newList.filter(p=>p).map((p, i) => [p.id, { p, index: i }]));
+            
+            const addedNames = [];
+            const removedNames = [];
+            const editedNames = [];
+            const reorderedNames = [];
+            
+            for (const [newId, newVal] of newMap.entries()) {
+                if (!oldMap.has(newId)) {
+                    addedNames.push(newVal.p.name);
+                } else {
+                    const oldVal = oldMap.get(newId);
+                    const isEdited = JSON.stringify(oldVal.p) !== JSON.stringify(newVal.p);
+                    const isReordered = oldVal.index !== newVal.index;
+                    
+                    if (isEdited) editedNames.push(newVal.p.name);
+                    else if (isReordered) reorderedNames.push(newVal.p.name);
+                }
+            }
+            
+            for (const [oldId, oldVal] of oldMap.entries()) {
+                if (!newMap.has(oldId)) {
+                    removedNames.push(oldVal.p.name);
+                }
+            }
+            
+            if (addedNames.length > 0 || removedNames.length > 0 || editedNames.length > 0 || reorderedNames.length > 0) {
+                hasChanges = true;
+                const badges = [];
+                if (addedNames.length > 0) badges.push(`<span style="color:#276749;background:#e6fffa;padding:3px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">+${addedNames.length} Added</span>`);
+                if (removedNames.length > 0) badges.push(`<span style="color:#c53030;background:#fff5f5;padding:3px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">-${removedNames.length} Removed</span>`);
+                if (editedNames.length > 0) badges.push(`<span style="color:#d69e2e;background:#fffff0;border:1px solid #fefcbf;padding:2px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">✎ ${editedNames.length} Edited</span>`);
+                if (reorderedNames.length > 0) badges.push(`<span style="color:#2b6cb0;background:#ebf8ff;border:1px solid #bee3f8;padding:2px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">⇅ ${reorderedNames.length} Reordered</span>`);
+                
+                const catName = cat.charAt(0).toUpperCase() + cat.slice(1);
+                html += `<div style="margin-bottom:12px;">
+                            <div style="display:flex;align-items:center;margin-bottom:6px;gap:8px;">
+                                <span style="font-weight:bold;color:#444;font-size:1.05rem;">📦 ${catName}</span>
+                                ${badges.join(' ')}
+                            </div>
+                            <ul style="margin:0 0 0 24px;color:#555;font-size:0.85rem;line-height:1.4;">`;
+                            
+                const truncateObj = (arr, prefix) => {
+                    if (arr.length === 0) return '';
+                    if (arr.length <= 3) return `<li style="margin-bottom:2px;"><span style="display:inline-block;width:75px;font-weight:600;color:#7B1338;">${prefix}:</span> ${arr.join(', ')}</li>`;
+                    return `<li style="margin-bottom:2px;"><span style="display:inline-block;width:75px;font-weight:600;color:#7B1338;">${prefix}:</span> ${arr.slice(0,3).join(', ')} ... <i>and ${arr.length - 3} more</i></li>`;
+                };
+                
+                html += truncateObj(addedNames, 'Added');
+                html += truncateObj(editedNames, 'Edited');
+                html += truncateObj(reorderedNames, 'Reordered');
+                html += truncateObj(removedNames, 'Removed');
+                
+                html += `</ul></div>`;
+            }
+        }
+        
+        if (!hasChanges) return `<div style="color:#777;font-style:italic;">No changes detected since last commit.</div>`;
+        return html;
+    },
+
+    async _confirmCommit() {
+        return new Promise(resolve => {
+            const old = document.getElementById('commit-confirm-modal');
+            if (old) old.remove();
+
+            const diffHTML = this._generateDiffHTML();
+            const modal = document.createElement('div');
+            modal.id = 'commit-confirm-modal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.65);z-index:99999;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px);animation:fadeIn 0.2s ease-out;';
+            modal.innerHTML = `
+                <div style="background:white;padding:30px;border-radius:16px;width:90%;max-width:440px;box-shadow:0 25px 50px -12px rgba(0,0,0,0.5);transform:scale(0.95);animation:scaleUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;" onclick="event.stopPropagation()">
+                    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;border-bottom:2px solid #f0f0f0;padding-bottom:15px;">
+                        <h2 style="margin:0;color:#7B1338;font-family:'Playfair Display',serif;font-size:1.6rem;">Publish Changes</h2>
+                    </div>
+                    <p style="color:#555;font-size:0.95rem;margin-bottom:15px;line-height:1.5;">You are about to push the current site updates to the live server. Please review your modifications below:</p>
+                    <div style="background:#fafafa;border:1px solid #e8e8e8;border-radius:10px;padding:15px;margin-bottom:25px;min-height:60px;">
+                        ${diffHTML}
+                    </div>
+                    <div style="display:flex;gap:12px;">
+                        <button id="commit-cancel" style="flex:1;padding:12px;background:#f5f5f5;border:1px solid #ddd;border-radius:8px;cursor:pointer;font-weight:600;color:#555;font-size:1rem;transition:all 0.2s;">Cancel</button>
+                        <button id="commit-confirm" style="flex:1;padding:12px;background:#7B1338;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:700;font-size:1rem;box-shadow:0 4px 12px rgba(123,19,56,0.25);transition:all 0.2s;">Yes, Publish Now</button>
+                    </div>
+                </div>
+                <style>
+                    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+                    @keyframes scaleUp { from { transform:scale(0.95);opacity:0; } to { transform:scale(1);opacity:1; } }
+                    #commit-cancel:hover { background:#e8e8e8; }
+                    #commit-confirm:hover { background:#5a0d28; transform:translateY(-2px); box-shadow:0 6px 16px rgba(123,19,56,0.35); }
+                </style>
+            `;
+            
+            modal.onclick = () => { modal.remove(); resolve(false); };
+            document.body.appendChild(modal);
+
+            document.getElementById('commit-cancel').onclick = () => { modal.remove(); resolve(false); };
+            document.getElementById('commit-confirm').onclick = () => {
+                const btn = document.getElementById('commit-confirm');
+                btn.innerHTML = 'Publishing...';
+                btn.style.opacity = '0.8';
+                btn.style.pointerEvents = 'none';
+                document.getElementById('commit-cancel').style.pointerEvents = 'none';
+                resolve({ proceed: true, modal: modal });
+            };
+        });
+    },
+
+    async saveChanges() {
+        const confirmResult = await this._confirmCommit();
+        if (!confirmResult || !confirmResult.proceed) return;
 
         const jsonText = JSON.stringify(this.data, null, 2);
         const contentBase64 = window.btoa(unescape(encodeURIComponent(jsonText)));
@@ -938,7 +1065,7 @@ const app = {
                 })
             });
 
-            if (!res.ok) throw new Error('Failed to commit to GitHub. Token may have expired.');
+            if (!res.ok) throw new Error('Failed to commit to GitHub.');
 
             const resData = await res.json();
             this.fileSha = resData.content.sha;
@@ -946,8 +1073,11 @@ const app = {
             this.hasUnsavedChanges = false;
             // Clear preview data after a successful commit — site is now live
             localStorage.removeItem('parinay_preview_data');
+            
+            confirmResult.modal.remove();
             this.showToast('✅ Live site updated! GitHub Pages will deploy in ~1 minute.');
         } catch (err) {
+            confirmResult.modal.remove();
             alert(err.message);
         }
     },
