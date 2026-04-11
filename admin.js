@@ -5,6 +5,7 @@ const app = {
     currentPage: 1,
     pageSize: 20,
     selectedIndices: new Set(),
+    pendingDeletions: new Set(),
     activeStatusTab: 'all',
     hasUnsavedChanges: false,
     originalDataText: null,
@@ -43,7 +44,14 @@ const app = {
             options.body = JSON.stringify(body);
         }
         const res = await fetch(url, options);
-        if (!res.ok) throw new Error(`GitHub API Error: ${res.statusText}`);
+        if (!res.ok) {
+            let errMsg = res.statusText;
+            try { 
+                const errData = await res.json(); 
+                if (errData.message) errMsg = errData.message;
+            } catch(e) {}
+            throw new Error(`GitHub API Error: ${errMsg}`);
+        }
         return res.json();
     },
 
@@ -904,21 +912,14 @@ const app = {
                 if (inUse) break;
             }
         }
-        if (inUse) return;
+        if (inUse) {
+            this.pendingDeletions.delete(path);
+            return;
+        }
 
-        try {
-            const getRes = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/${path}`, {
-                headers: { 'Authorization': `token ${this.auth.token}` }
-            });
-            if (!getRes.ok) return;
-            const fileMeta = await getRes.json();
-            await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/${path}`, {
-                method: 'DELETE',
-                headers: { 'Authorization': `token ${this.auth.token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: `Deleted unused asset: ${path}`, sha: fileMeta.sha })
-            });
-            console.log('Deleted ghost asset:', path);
-        } catch (e) { console.warn('Asset deletion skipped:', e); }
+        this.pendingDeletions.add(path);
+        this.markChanged();
+        console.log('Queued ghost asset for deletion:', path);
     },
 
     // ─── REMOVE SINGLE PRODUCT ───────────────────────────────────────────────
@@ -1137,6 +1138,16 @@ const app = {
                 });
             }
 
+            // Append pending deletions as null sha objects to remove them in this tree
+            for (const path of this.pendingDeletions) {
+                tree.push({
+                    path: path,
+                    mode: '100644',
+                    type: 'blob',
+                    sha: null
+                });
+            }
+
             // 5. Post the new tree to GitHub
             const treeData = await this._ghAPI('git/trees', 'POST', {
                 base_tree: baseTreeSha,
@@ -1159,6 +1170,7 @@ const app = {
             this.originalDataText = JSON.stringify(this.data);
             this.hasUnsavedChanges = false;
             this.hasUnsavedTranslations = false;
+            this.pendingDeletions.clear();
             localStorage.removeItem('parinay_preview_data');
             localStorage.removeItem('parinay_preview_translations');
             
@@ -1263,12 +1275,12 @@ const app = {
         }
 
         const list = orphans.map(p => `  • ${p}`).join('\n');
-        if (!confirm(`Found ${orphans.length} orphan image(s) not referenced by any product:\n\n${list}\n\nDelete all permanently from GitHub?`)) return;
+        if (!confirm(`Found ${orphans.length} orphan image(s) not referenced by any product:\n\n${list}\n\nQueue these for deletion? They will be permanently removed when you Commit Changes.`)) return;
 
-        this.showToast(`Deleting ${orphans.length} orphan(s)…`);
-        // Reuse existing deleteFileFromGitHub — it handles SHA fetch, DELETE, and the safety check
+        this.showToast(`Queueing ${orphans.length} orphan(s)…`);
+        // Reuse existing deleteFileFromGitHub — it handles the safety check
         for (const path of orphans) await this.deleteFileFromGitHub(path);
-        this.showToast(`🧹 Done! Orphan cleanup complete.`);
+        this.showToast(`🧹 Done! Orphans queued. Press Commit Changes to finalize.`);
     },
 
     // ─── EXPORT PRODUCT LIST AS PDF ───────────────────────────────────────────
