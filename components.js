@@ -4,6 +4,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     deferredPrompt = e;
     
+    // Only show install banner on homepage
+    const p = window.location.pathname;
+    const isHome = p.endsWith('index.html') || p.endsWith('/') || p === '';
+    if (!isHome) return;
+    
     if (!document.getElementById('pwa-install-banner')) {
         const banner = document.createElement('div');
         banner.id = 'pwa-install-banner';
