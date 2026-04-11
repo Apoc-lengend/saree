@@ -1,4 +1,41 @@
 // ─── PROGRESSIVE WEB APP (PWA) SETUP ──────────────────────────────────────
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    
+    if (!document.getElementById('pwa-install-banner')) {
+        const banner = document.createElement('div');
+        banner.id = 'pwa-install-banner';
+        banner.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--primary-color, #7B1338); color:white; padding:12px 24px; border-radius:30px; font-weight:bold; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:10000; display:flex; align-items:center; gap:15px; cursor:pointer; font-family:sans-serif; animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space:nowrap;';
+        
+        banner.innerHTML = `
+            <span style="font-size:1.3rem;">📲</span>
+            <span>Install Parinay App</span>
+            <span id="pwa-close" style="font-size:1.5rem; margin-left:10px; opacity:0.7; pointer-events:auto;">&times;</span>
+        `;
+        
+        const closeStyle = document.createElement('style');
+        closeStyle.innerHTML = `@keyframes popUp { 0% { bottom: -50px; opacity: 0; transform: translateX(-50%) scale(0.9); } 100% { bottom: 20px; opacity: 1; transform: translateX(-50%) scale(1); } }`;
+        document.head.appendChild(closeStyle);
+        document.body.appendChild(banner);
+
+        banner.onclick = async (evt) => {
+            if (evt.target.id === 'pwa-close') {
+                banner.remove();
+                return;
+            }
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') console.log('User installed PWA');
+                deferredPrompt = null;
+                banner.remove();
+            }
+        };
+    }
+});
+
 if ('serviceWorker' in navigator && window.location.protocol === 'https:' && !window.location.pathname.includes('admin.html')) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.warn('PWA registration failed:', err));
