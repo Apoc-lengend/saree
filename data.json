@@ -523,21 +523,6 @@
     ],
     "bedsheets": [
       {
-        "id": "bed_8_1775425651572772",
-        "name": "Kids Cartoon Character",
-        "price": "₹13,095",
-        "image": "assets/bed1.png",
-        "style": "filter: hue-rotate(340deg) saturate(58%);",
-        "stock": 3,
-        "discount": 0,
-        "badge": "",
-        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
-        "more_images": [
-          "assets/bedsheet.png"
-        ],
-        "dateAdded": "2026-02-12T14:30:07.937Z"
-      },
-      {
         "id": "p1775421563905",
         "name": "Silk Bedsheets",
         "price": "₹1200",
@@ -551,7 +536,7 @@
           "assets/bedsheets/Screenshot_20251008_161804.png"
         ],
         "dateAdded": "2026-04-05T20:39:18.609Z",
-        "status": "live"
+        "status": "archived"
       },
       {
         "id": "bed_10_1775425651572208",
