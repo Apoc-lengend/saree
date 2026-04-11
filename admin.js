@@ -28,6 +28,24 @@ const app = {
         return fetch(url.toString(), options);
     },
 
+    async _ghAPI(endpoint, method = 'GET', body = null) {
+        const url = `https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/${endpoint}`;
+        const options = {
+            method,
+            headers: {
+                'Authorization': `token ${this.auth.token}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        };
+        if (body) {
+            options.headers['Content-Type'] = 'application/json';
+            options.body = JSON.stringify(body);
+        }
+        const res = await fetch(url, options);
+        if (!res.ok) throw new Error(`GitHub API Error: ${res.statusText}`);
+        return res.json();
+    },
+
     showToast(msg) {
         const t = document.getElementById('toast');
         t.innerText = msg;
@@ -1041,44 +1059,84 @@ const app = {
         const confirmResult = await this._confirmCommit();
         if (!confirmResult || !confirmResult.proceed) return;
 
-        const jsonText = JSON.stringify(this.data, null, 2);
-        const contentBase64 = window.btoa(unescape(encodeURIComponent(jsonText)));
-
         try {
-            // ALWAYS fetch the latest SHA right before committing to avoid 409 Conflict
-            try {
-                const shaRes = await this._ghFetch('data.json', { bust: true });
-                if (shaRes.ok) {
-                    const shaData = await shaRes.json();
-                    this.fileSha = shaData.sha;
+            // 1. Get repository info to find default branch
+            const repoInfo = await this._ghAPI('');
+            const branch = repoInfo.default_branch || 'main';
+
+            // 2. Get latest commit SHA
+            const refData = await this._ghAPI(`git/refs/heads/${branch}`);
+            const commitSha = refData.object.sha;
+
+            // 3. Get base tree SHA
+            const commitData = await this._ghAPI(`git/commits/${commitSha}`);
+            const baseTreeSha = commitData.tree.sha;
+
+            // 4. Build new tree items
+            const jsonText = JSON.stringify(this.data, null, 2);
+            const tree = [{
+                path: 'data.json',
+                mode: '100644',
+                type: 'blob',
+                content: jsonText
+            }];
+
+            function escapeHTML(str) {
+                if (!str) return '';
+                return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+            }
+            const siteUrl = `https://${this.auth.username}.github.io/${this.auth.repo}`;
+
+            for (const cat in this.data.products) {
+                const arr = this.data.products[cat] || [];
+                for (const p of arr) {
+                    if (!p || p.status !== 'live') continue;
+                    const cleanName = escapeHTML(p.name);
+                    const cleanDesc = escapeHTML(p.description || cleanName);
+                    // Pure static HTML template optimized exactly for WhatsApp link unfurling
+                    const html = `<!DOCTYPE html><html><head>
+                        <meta charset="utf-8">
+                        <title>${cleanName} - Parinay Saree</title>
+                        <meta property="og:title" content="${cleanName}">
+                        <meta property="og:description" content="${cleanDesc}">
+                        <meta property="og:image" content="${siteUrl}/${p.image}">
+                        <meta property="og:url" content="${siteUrl}/p/${p.id}.html">
+                        <meta property="og:type" content="product">
+                        <meta name="twitter:card" content="summary_large_image">
+                        <script>window.location.replace("../search.html?q=" + encodeURIComponent("${cleanName}"));</script>
+                    </head><body><p>Redirecting to product...</p></body></html>`;
+                    tree.push({ path: `p/${p.id}.html`, mode: '100644', type: 'blob', content: html });
                 }
-            } catch (e) {
-                console.warn('Failed to fetch latest sha before commit', e);
             }
 
-            const res = await this._ghFetch('data.json', {
-                method: 'PUT',
-                body: JSON.stringify({
-                    message: 'Admin Dashboard: Updated website content',
-                    content: contentBase64,
-                    sha: this.fileSha
-                })
+            // 5. Post the new tree to GitHub
+            const treeData = await this._ghAPI('git/trees', 'POST', {
+                base_tree: baseTreeSha,
+                tree: tree
             });
 
-            if (!res.ok) throw new Error('Failed to commit to GitHub.');
+            // 6. Create the commit
+            const newCommit = await this._ghAPI('git/commits', 'POST', {
+                message: 'Admin Dashboard: Updated catalog and generated SEO endpoints',
+                tree: treeData.sha,
+                parents: [commitSha]
+            });
 
-            const resData = await res.json();
-            this.fileSha = resData.content.sha;
+            // 7. Update the branch reference
+            await this._ghAPI(`git/refs/heads/${branch}`, 'PATCH', {
+                sha: newCommit.sha,
+                force: false
+            });
+
             this.originalDataText = JSON.stringify(this.data);
             this.hasUnsavedChanges = false;
-            // Clear preview data after a successful commit — site is now live
             localStorage.removeItem('parinay_preview_data');
             
             confirmResult.modal.remove();
             this.showToast('✅ Live site updated! GitHub Pages will deploy in ~1 minute.');
         } catch (err) {
             confirmResult.modal.remove();
-            alert(err.message);
+            alert('Commit failed: ' + err.message);
         }
     },
 
