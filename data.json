@@ -15,6 +15,21 @@
   "products": {
     "sarees": [
       {
+        "id": "sar_15_1775425651572791",
+        "name": "Pochampally Ikat",
+        "price": "₹7,893",
+        "image": "assets/saree.png",
+        "style": "filter: hue-rotate(120deg) saturate(87%);",
+        "stock": 39,
+        "discount": 0,
+        "badge": "new",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree_green.png"
+        ],
+        "dateAdded": "2026-03-29T23:10:44.339Z"
+      },
+      {
         "id": "sar_18_1775425651572351",
         "name": "Linen Jamdani",
         "price": "₹4,059",
@@ -148,21 +163,6 @@
           "assets/saree.png"
         ],
         "dateAdded": "2026-04-05T15:40:24.562Z"
-      },
-      {
-        "id": "sar_15_1775425651572791",
-        "name": "Pochampally Ikat",
-        "price": "₹7,893",
-        "image": "assets/saree.png",
-        "style": "filter: hue-rotate(120deg) saturate(87%);",
-        "stock": 39,
-        "discount": 0,
-        "badge": "new",
-        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
-        "more_images": [
-          "assets/saree_green.png"
-        ],
-        "dateAdded": "2026-03-29T23:10:44.339Z"
       },
       {
         "id": "s2",
