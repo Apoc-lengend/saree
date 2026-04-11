@@ -967,7 +967,15 @@ document.addEventListener('keydown', function(e) {
 
 // ─── UNIFIED PAGE LOGIC ──────────────────────────────────────────────────
 window.loadAppView = function(applyCallback) {
-    const isPreview = new URLSearchParams(window.location.search).get('preview') === '1';
+    let isPreview = new URLSearchParams(window.location.search).get('preview') === '1';
+    
+    if (isPreview) {
+        sessionStorage.setItem('parinay_is_preview', '1');
+        window.history.replaceState(null, '', window.location.pathname + window.location.hash);
+    } else if (sessionStorage.getItem('parinay_is_preview') === '1') {
+        isPreview = true;
+    }
+
     if (isPreview) {
         try {
             const raw = localStorage.getItem('parinay_preview_data');
@@ -979,7 +987,7 @@ window.loadAppView = function(applyCallback) {
                 }
                 const banner = document.createElement('div');
                 banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#d69e2e;color:#1a1a1a;text-align:center;padding:8px 16px;font-size:0.85rem;font-weight:700;z-index:99999;letter-spacing:0.02em;';
-                banner.innerHTML = '⚠️ PREVIEW MODE — These changes are <u>not published</u> yet. Commit from the admin panel to go live. <button onclick="this.parentElement.remove()" style="margin-left:12px;background:transparent;border:1px solid currentColor;border-radius:4px;padding:1px 8px;cursor:pointer;font-weight:700;">✕</button>';
+                banner.innerHTML = '⚠️ PREVIEW MODE — These changes are <u>not published</u> yet. Commit from the admin panel to go live. <button onclick="sessionStorage.removeItem(&apos;parinay_is_preview&apos;); window.location.reload();" style="margin-left:12px;background:transparent;border:1px solid currentColor;border-radius:4px;padding:1px 8px;cursor:pointer;font-weight:bold;">✕ Exit</button>';
                 document.body.prepend(banner);
                 applyCallback(data);
                 return;

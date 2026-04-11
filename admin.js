@@ -1504,7 +1504,12 @@ app.loadTranslations = async function() {
     }
 };
 
-app.openTranslationsModal = function() {
+app.openTranslationsModal = async function() {
+    // Aggressively re-fetch translations from GitHub so CLI pushes or external forces instantly sync
+    if (!this.hasUnsavedTranslations) {
+        await this.loadTranslations();
+    }
+
     let m = document.getElementById('admin-trans-modal');
     if (m) m.remove();
     m = document.createElement('div');
