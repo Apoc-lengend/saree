@@ -1091,7 +1091,7 @@ const app = {
             for (const cat in this.data.products) {
                 const arr = this.data.products[cat] || [];
                 for (const p of arr) {
-                    if (!p || p.status !== 'live') continue;
+                    if (!p) continue;
                     const cleanName = escapeHTML(p.name);
                     const cleanDesc = escapeHTML(p.description || cleanName);
                     // Pure static HTML template optimized exactly for WhatsApp link unfurling

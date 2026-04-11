@@ -1008,11 +1008,7 @@ window.initProductCollection = function(categoryStr, keys) {
             const specificProd = rawProducts.find(p => p.id === hashId);
             if (specificProd) {
                 const stat = specificProd.status || 'live';
-                if (stat === 'archived') {
-                    window.showFrontendAlert('This item is currently out of stock.');
-                    window.location.hash = '';
-                } else if (stat === 'hidden') {
-                    window.showFrontendAlert('This is an upcoming item & not yet available.');
+                if (stat === 'archived' || stat === 'hidden') {
                     window.location.hash = '';
                 } else {
                     if (typeof window.showProductDetails === 'function') {
