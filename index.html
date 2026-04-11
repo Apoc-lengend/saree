@@ -58,11 +58,11 @@
             <!-- Saree Collection -->
             <div class="card" onclick="window.location.href='sarees.html'">
                 <div class="card-img-wrapper">
-                    <img src="assets/saree.png" loading="lazy" alt="Designer Traditional Sarees Collection">
+                    <img id="dynamic-home-sarees-img" src="assets/saree.png" loading="lazy" alt="Designer Traditional Sarees Collection">
                 </div>
                 <div class="card-info">
-                    <h3>Designer Sarees</h3>
-                    <p>Experience the rich heritage and delicate craftsmanship of our authentically woven
+                    <h3 id="dynamic-home-sarees-title">Designer Sarees</h3>
+                    <p id="dynamic-home-sarees-subtitle">Experience the rich heritage and delicate craftsmanship of our authentically woven
                         traditional
                         and modern sarees.</p>
                     <a href="sarees.html" class="btn-secondary">View Sarees</a>
@@ -72,11 +72,11 @@
             <!-- Bedsheets Collection -->
             <div class="card" onclick="window.location.href='bedsheets.html'">
                 <div class="card-img-wrapper">
-                    <img src="assets/bedsheet.png" loading="lazy" alt="Premium Modern Bedsheets Collection">
+                    <img id="dynamic-home-bedsheets-img" src="assets/bedsheet.png" loading="lazy" alt="Premium Modern Bedsheets Collection">
                 </div>
                 <div class="card-info">
-                    <h3>Premium Bedsheets</h3>
-                    <p>Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk
+                    <h3 id="dynamic-home-bedsheets-title">Premium Bedsheets</h3>
+                    <p id="dynamic-home-bedsheets-subtitle">Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk
                         bedsheets.</p>
                     <a href="bedsheets.html" class="btn-secondary">View Bedsheets</a>
                 </div>
@@ -87,23 +87,23 @@
     <!-- Features / About Section -->
     <section id="about" class="features">
         <div class="section-title">
-            <h2>Why Choose Us</h2>
-            <p>The Parinay Saree Promise</p>
+            <h2 id="dynamic-about-title">Why Choose Us</h2>
+            <p id="dynamic-about-subtitle">The Parinay Saree Promise</p>
         </div>
         <div class="features-grid">
             <div class="feature-item">
-                <h4>Premium Quality</h4>
-                <p>We source only the finest fabrics and materials to ensure long-lasting durability, supreme comfort,
+                <h4 id="dynamic-about-f1-title">Premium Quality</h4>
+                <p id="dynamic-about-f1-desc">We source only the finest fabrics and materials to ensure long-lasting durability, supreme comfort,
                     and luxurious texture.</p>
             </div>
             <div class="feature-item">
-                <h4>Authentic Craftsmanship</h4>
-                <p>Every saree and linen piece is crafted by skilled artisans, keeping traditional methods alive in
+                <h4 id="dynamic-about-f2-title">Authentic Craftsmanship</h4>
+                <p id="dynamic-about-f2-desc">Every saree and linen piece is crafted by skilled artisans, keeping traditional methods alive in
                     modern designs.</p>
             </div>
             <div class="feature-item">
-                <h4>Sustainable Practices</h4>
-                <p>We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across
+                <h4 id="dynamic-about-f3-title">Sustainable Practices</h4>
+                <p id="dynamic-about-f3-desc">We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across
                     our entire supply chain.</p>
             </div>
         </div>
@@ -115,10 +115,30 @@
     <!-- Simple Script for Dynamic Content -->
     <script>
         function applyHomeData(data) {
+            const c = data.site_config || {};
             const hero = document.getElementById('home');
-            hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${data.site_config.hero_cover}')`;
-            document.getElementById('dynamic-hero-title').innerText = data.site_config.hero_title;
-            document.getElementById('dynamic-hero-subtitle').innerText = data.site_config.hero_subtitle;
+            hero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('${c.hero_cover}')`;
+            document.getElementById('dynamic-hero-title').innerText = c.hero_title || '';
+            document.getElementById('dynamic-hero-subtitle').innerText = c.hero_subtitle || '';
+            
+            // Home Collection Cards
+            if(c.home_sarees_cover) document.getElementById('dynamic-home-sarees-img').src = c.home_sarees_cover;
+            if(c.home_sarees_title) document.getElementById('dynamic-home-sarees-title').innerText = c.home_sarees_title;
+            if(c.home_sarees_subtitle) document.getElementById('dynamic-home-sarees-subtitle').innerText = c.home_sarees_subtitle;
+            
+            if(c.home_bedsheets_cover) document.getElementById('dynamic-home-bedsheets-img').src = c.home_bedsheets_cover;
+            if(c.home_bedsheets_title) document.getElementById('dynamic-home-bedsheets-title').innerText = c.home_bedsheets_title;
+            if(c.home_bedsheets_subtitle) document.getElementById('dynamic-home-bedsheets-subtitle').innerText = c.home_bedsheets_subtitle;
+
+            // About Section
+            if(c.about_title) document.getElementById('dynamic-about-title').innerText = c.about_title;
+            if(c.about_subtitle) document.getElementById('dynamic-about-subtitle').innerText = c.about_subtitle;
+            if(c.about_f1_title) document.getElementById('dynamic-about-f1-title').innerText = c.about_f1_title;
+            if(c.about_f1_desc) document.getElementById('dynamic-about-f1-desc').innerText = c.about_f1_desc;
+            if(c.about_f2_title) document.getElementById('dynamic-about-f2-title').innerText = c.about_f2_title;
+            if(c.about_f2_desc) document.getElementById('dynamic-about-f2-desc').innerText = c.about_f2_desc;
+            if(c.about_f3_title) document.getElementById('dynamic-about-f3-title').innerText = c.about_f3_title;
+            if(c.about_f3_desc) document.getElementById('dynamic-about-f3-desc').innerText = c.about_f3_desc;
         }
         document.addEventListener('DOMContentLoaded', () => window.loadAppView(applyHomeData));
     </script>

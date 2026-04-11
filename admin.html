@@ -44,6 +44,11 @@
                     title="Open live website in new tab">
                     🌐 Live Site
                 </button>
+                <button class="btn btn-small" onclick="app.openTranslationsModal()"
+                    style="background:#5a67d8;"
+                    title="Manage dual-language dictionary">
+                    🌍 Translations
+                </button>
                 <button class="btn btn-small" onclick="app.previewChanges()"
                     style="background:#276749;"
                     title="Preview your current edits on the live pages before committing">
@@ -93,12 +98,52 @@
                     <textarea id="cfg-bedsheets-subtitle" placeholder="Bedsheets Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('bedsheets_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
+                    <label id="cfg-home-sarees-label" for="cfg-home-sarees-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Saree Cover</label>
+                    <input type="file" id="cfg-home-sarees-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_sarees_cover', this.files[0], 'cfg-home-sarees-label')">
+                    <input type="text" id="cfg-home-sarees-title" placeholder="Hero Saree Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_sarees_title', this.value)">
+                    <textarea id="cfg-home-sarees-subtitle" placeholder="Hero Saree Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_sarees_subtitle', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label id="cfg-home-bedsheets-label" for="cfg-home-bedsheets-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Bedsheet Cover</label>
+                    <input type="file" id="cfg-home-bedsheets-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_bedsheets_cover', this.files[0], 'cfg-home-bedsheets-label')">
+                    <input type="text" id="cfg-home-bedsheets-title" placeholder="Hero Bedsheet Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_bedsheets_title', this.value)">
+                    <textarea id="cfg-home-bedsheets-subtitle" placeholder="Hero Bedsheet Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_bedsheets_subtitle', this.value)"></textarea>
+                </div>
+                <div class="form-group">
                     <label>Delivery Rate</label>
                     <input type="text" id="cfg-delivery-value" placeholder="e.g. Free Delivery or 50" onchange="app.updateConfig('delivery_value', this.value)">
                 </div>
                 <div class="form-group">
                     <label>WhatsApp Number</label>
                     <input type="text" id="cfg-whatsapp" placeholder="e.g. 919876543210" onchange="app.updateConfig('whatsapp_number', this.value)">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h3>About Section Text</h3>
+            <div class="form-group">
+                <label>About Title & Subtitle</label>
+                <div style="display:flex; gap:10px; margin-top:5px;">
+                    <input type="text" id="cfg-about-title" placeholder="Title (e.g. Why Choose Us)" style="flex:1; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_title', this.value)">
+                    <input type="text" id="cfg-about-subtitle" placeholder="Subtitle" style="flex:1; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_subtitle', this.value)">
+                </div>
+            </div>
+            <div class="grid-2">
+                <div class="form-group">
+                    <label>Feature 1</label>
+                    <input type="text" id="cfg-about-f1-title" placeholder="Feature 1 Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f1_title', this.value)">
+                    <textarea id="cfg-about-f1-desc" placeholder="Feature 1 Description" rows="3" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f1_desc', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Feature 2</label>
+                    <input type="text" id="cfg-about-f2-title" placeholder="Feature 2 Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f2_title', this.value)">
+                    <textarea id="cfg-about-f2-desc" placeholder="Feature 2 Description" rows="3" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f2_desc', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Feature 3</label>
+                    <input type="text" id="cfg-about-f3-title" placeholder="Feature 3 Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f3_title', this.value)">
+                    <textarea id="cfg-about-f3-desc" placeholder="Feature 3 Description" rows="3" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('about_f3_desc', this.value)"></textarea>
                 </div>
             </div>
         </div>

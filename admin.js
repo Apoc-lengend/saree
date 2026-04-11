@@ -98,6 +98,8 @@ const app = {
             document.getElementById('dashboard-screen').style.display = 'block';
             document.getElementById('repo-display').innerText = `${this.auth.username}/${this.auth.repo}`;
 
+            await this.loadTranslations();
+
             this.populateConfig();
             this.resetAndRender(); // calls renderProducts → updateMetrics internally
             this.showToast('Successfully connected!');
@@ -171,6 +173,23 @@ const app = {
         document.getElementById('cfg-sarees-subtitle').value = c.sarees_subtitle || '';
         document.getElementById('cfg-bedsheets-title').value = c.bedsheets_title || '';
         document.getElementById('cfg-bedsheets-subtitle').value = c.bedsheets_subtitle || '';
+
+        document.getElementById('cfg-home-sarees-label').innerHTML = '📁 Hero Saree Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_sarees_cover || 'Not set') + '</small>';
+        document.getElementById('cfg-home-sarees-title').value = c.home_sarees_title || '';
+        document.getElementById('cfg-home-sarees-subtitle').value = c.home_sarees_subtitle || '';
+
+        document.getElementById('cfg-home-bedsheets-label').innerHTML = '📁 Hero Bedsheet Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_bedsheets_cover || 'Not set') + '</small>';
+        document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || '';
+        document.getElementById('cfg-home-bedsheets-subtitle').value = c.home_bedsheets_subtitle || '';
+
+        document.getElementById('cfg-about-title').value = c.about_title || '';
+        document.getElementById('cfg-about-subtitle').value = c.about_subtitle || '';
+        document.getElementById('cfg-about-f1-title').value = c.about_f1_title || '';
+        document.getElementById('cfg-about-f1-desc').value = c.about_f1_desc || '';
+        document.getElementById('cfg-about-f2-title').value = c.about_f2_title || '';
+        document.getElementById('cfg-about-f2-desc').value = c.about_f2_desc || '';
+        document.getElementById('cfg-about-f3-title').value = c.about_f3_title || '';
+        document.getElementById('cfg-about-f3-desc').value = c.about_f3_desc || '';
     },
 
     updateConfig(key, value) {
@@ -1446,6 +1465,258 @@ const app = {
         printWindow.document.close();
     }
 
+};
+
+app.translationsFileSha = null;
+app.translationsData = {};
+
+app.loadTranslations = async function() {
+    try {
+        const res = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/translations.js?timestamp=${Date.now()}`, {
+            headers: { 'Authorization': `token ${this.auth.token}` },
+            cache: 'no-store'
+        });
+        if (res.ok) {
+            const fileData = await res.json();
+            this.translationsFileSha = fileData.sha;
+            let jsText = decodeURIComponent(escape(window.atob(fileData.content.replace(/\\s/g, ''))));
+            
+            let start = jsText.indexOf('{');
+            let end = jsText.lastIndexOf('}');
+            if (start !== -1 && end !== -1) {
+                let jsonText = jsText.substring(start, end + 1);
+                this.translationsData = new Function(`return ${jsonText}`)();
+            }
+        }
+    } catch(e) {
+        console.error('Failed to load translations', e);
+    }
+};
+
+app.openTranslationsModal = function() {
+    let m = document.getElementById('admin-trans-modal');
+    if (m) m.remove();
+    m = document.createElement('div');
+    m.id = 'admin-trans-modal';
+    m.style.cssText = 'position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); z-index:9999; display:flex; align-items:center; justify-content:center; backdrop-filter:blur(3px); font-family:outfit, sans-serif;';
+    m.onclick = (e) => { if (e.target === m) m.remove(); };
+
+    m.innerHTML = `
+        <div style="background:white; width:90%; max-width:800px; height:80vh; max-height:800px; border-radius:12px; padding:25px; display:flex; flex-direction:column; box-shadow:0 15px 40px rgba(0,0,0,0.25);" onclick="event.stopPropagation()">
+            <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #eee; padding-bottom:15px; margin-bottom:15px;">
+                <h2 style="margin:0; color:#5a67d8;">Manage Translations</h2>
+                <div style="display:flex; gap:10px;">
+                    <button class="btn btn-small" onclick="app.addNewTranslation()" style="background:#48bb78; margin:0; padding:6px 12px; font-weight:bold;">+ Add New</button>
+                    <button class="btn btn-small" onclick="app.saveTranslationsToGitHub()" style="background:#5a67d8; margin:0; padding:6px 12px; font-weight:bold;">Save & Publish</button>
+                    <button style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#777;" onclick="document.getElementById('admin-trans-modal').remove()">&times;</button>
+                </div>
+            </div>
+            
+            <p style="margin-top:0; font-size:0.85rem; color:#666; margin-bottom:10px;">Edits to this dictionary will instantly sync translated text for any identical English text found on your live site frontend elements.</p>
+            
+            <div style="display:flex; gap:10px; margin-bottom:15px;">
+                <span style="font-size:1.2rem; color:#888; align-self:center;">🔍</span>
+                <input type="text" id="trans-search" placeholder="Search English or Hindi word..." oninput="app.renderTranslationsList()" style="flex:1; padding:10px; border:1px solid #ccc; border-radius:4px; font-size:0.95rem;">
+            </div>
+
+            <div id="trans-list-container" style="overflow-y:auto; flex:1; padding-right:10px; display:flex; flex-direction:column; gap:8px;">
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(m);
+    this.renderTranslationsList();
+};
+
+app.getDynamicAppStrings = function() {
+    let strings = new Set();
+    const textBaseKeys = [
+        'hero_title', 'hero_subtitle', 'sarees_title', 'sarees_subtitle',
+        'bedsheets_title', 'bedsheets_subtitle', 'home_sarees_title', 'home_sarees_subtitle',
+        'home_bedsheets_title', 'home_bedsheets_subtitle', 'about_title', 'about_subtitle',
+        'about_f1_title', 'about_f1_desc', 'about_f2_title', 'about_f2_desc', 'about_f3_title', 'about_f3_desc'
+    ];
+    
+    if (this.data && this.data.site_config) {
+        textBaseKeys.forEach(k => {
+            let val = this.data.site_config[k];
+            if (val && typeof val === 'string' && val.trim().length > 0) {
+                strings.add(val.trim());
+            }
+        });
+    }
+    
+    if (this.data && this.data.products) {
+        Object.keys(this.data.products).forEach(cat => {
+            (this.data.products[cat] || []).forEach(p => {
+                if (p.name && typeof p.name === 'string' && p.name.trim().length > 0) strings.add(p.name.trim());
+                if (p.description && typeof p.description === 'string' && p.description.trim().length > 0) strings.add(p.description.trim());
+            });
+        });
+    }
+    return Array.from(strings);
+};
+
+app.renderTranslationsList = function() {
+    let container = document.getElementById('trans-list-container');
+    if (!container) return;
+    
+    // Auto-save any ongoing input edits
+    this._syncTranslationInputs();
+
+    let sQ = (document.getElementById('trans-search')?.value || '').toLowerCase();
+    
+    // Get all existing keys from dict and dynamic app data
+    let allKeys = new Set(Object.keys(this.translationsData));
+    let dynamicStrings = this.getDynamicAppStrings();
+    dynamicStrings.forEach(s => allKeys.add(s));
+    
+    let sortedKeys = Array.from(allKeys).sort((a,b) => {
+        let aVal = this.translationsData[a] || '';
+        let bVal = this.translationsData[b] || '';
+        
+        // Push unassigned to the very top
+        if (!aVal && bVal) return -1;
+        if (aVal && !bVal) return 1;
+        
+        // Otherwise alphabetize
+        return a.localeCompare(b);
+    });
+
+    let html = '';
+    for (let key of sortedKeys) {
+        let val = this.translationsData[key] || '';
+        if (sQ && !key.toLowerCase().includes(sQ) && !val.toLowerCase().includes(sQ)) continue;
+        
+        // Escape for input forms
+        let safeKey = key.replace(/"/g, '&quot;');
+        let safeVal = val.replace(/"/g, '&quot;');
+        
+        let bgStyle = val ? '#f9f9f9' : '#fff5f5';  // Highlight missing translation
+        let borderStyle = val ? '1px solid #eee' : '1px solid #fc8181';
+        let phColor = val ? '#aaa' : '#e53e3e';
+        let valStyle = val ? 'border:1px solid #ccc;' : 'border:2px solid #fc8181; box-shadow:0 0 4px rgba(252,129,129,0.5);';
+
+        html += `
+            <div style="display:flex; gap:10px; align-items:center; background:${bgStyle}; padding:8px; border-radius:6px; border:${borderStyle};">
+                <!-- Lock the key input if it's coming directly from the website's active dynamic strings so users don't break the sync pointer accidentally -->
+                <input type="text" value="${safeKey}" class="trans-key-input" style="flex:1; padding:8px; border:1px solid #ccc; border-radius:4px; font-size:0.9rem; font-weight:bold; background:transparent;" placeholder="English Text">
+                <input type="text" value="${safeVal}" class="trans-val-input" style="flex:1; padding:8px; border-radius:4px; font-size:0.9rem; ${valStyle}" placeholder="Add Hindi translation..." dir="auto">
+                <button onclick="app.deleteTranslation('${safeKey}')" style="background:#e53e3e; color:white; border:none; border-radius:4px; padding:8px 14px; cursor:pointer; font-weight:bold;" title="Remove Override/Key">🗑</button>
+            </div>
+        `;
+    }
+    
+    if (html === '' && sortedKeys.length > 0) {
+       html = '<div style="padding:20px; text-align:center; color:#888;">No matches found for search query.</div>';
+    } else if (html === '') {
+       html = '<div style="padding:20px; text-align:center; color:#888;">No text found to translate.</div>';
+    }
+    
+    container.innerHTML = html;
+};
+
+app._syncTranslationInputs = function() {
+    let kInputs = document.querySelectorAll('.trans-key-input');
+    let vInputs = document.querySelectorAll('.trans-val-input');
+    if(kInputs.length === 0) return;
+    
+    let newData = {};
+    for (let i = 0; i < kInputs.length; i++) {
+        let key = kInputs[i].value.trim();
+        let val = vInputs[i].value.trim();
+        if (key) newData[key] = val;
+    }
+    
+    // We only merge keys that are currently "visible" in the DOM into our data state,
+    // plus keep any keys that weren't in the DOM (because of search filtering).
+    let sQ = (document.getElementById('trans-search')?.value || '').toLowerCase();
+    if(sQ) {
+       for (let k in this.translationsData) {
+           let v = this.translationsData[k];
+           // If key wasn't in search result, keep it un-changed
+           if (!k.toLowerCase().includes(sQ) && !v.toLowerCase().includes(sQ)) {
+               newData[k] = v; 
+           }
+       }
+    }
+    this.translationsData = newData;
+};
+
+app.addNewTranslation = function() {
+    this._syncTranslationInputs();
+    let safeKey = 'New English Text ' + Math.floor(Math.random()*1000);
+    this.translationsData[safeKey] = 'New Hindi Translation';
+    
+    // Clear search so the new translation is visible
+    let search = document.getElementById('trans-search');
+    if (search) search.value = '';
+    
+    this.renderTranslationsList();
+    setTimeout(() => {
+        let c = document.getElementById('trans-list-container');
+        if (c) c.scrollTop = c.scrollHeight;
+    }, 50);
+};
+
+app.deleteTranslation = function(key) {
+    if(confirm('Delete translation for "' + key + '"?')) {
+        this._syncTranslationInputs();
+        let unescapedKey = key.replace(/&quot;/g, '"');
+        delete this.translationsData[unescapedKey];
+        this.renderTranslationsList();
+    }
+};
+
+app.saveTranslationsToGitHub = async function() {
+    this._syncTranslationInputs();
+    
+    try {
+        let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslationsToGitHub()"]');
+        if (btn) {
+            btn._oldText = btn.innerText;
+            btn.innerText = 'Publishing...';
+            btn.disabled = true;
+        }
+
+        const jsText = `const translations = ${JSON.stringify(this.translationsData, null, 4)};\n`;
+        
+        function utf8ToBase64(str) {
+            return window.btoa(unescape(encodeURIComponent(str)));
+        }
+
+        const encodedContent = utf8ToBase64(jsText);
+        
+        let reqBody = {
+            message: 'Update translations via admin panel',
+            content: encodedContent
+        };
+        if (this.translationsFileSha) reqBody.sha = this.translationsFileSha;
+        
+        await this._ghAPI('contents/translations.js', 'PUT', reqBody);
+
+        await this.loadTranslations();
+
+        if (btn) {
+            btn.innerText = 'Published!';
+            setTimeout(() => {
+                btn.innerText = btn._oldText;
+                btn.disabled = false;
+                let m = document.getElementById('admin-trans-modal');
+                if (m) m.remove();
+            }, 1000);
+        }
+
+        this.showToast('Translations published to live site!');
+    } catch(e) {
+        alert('Failed to publish translations. Check console logs.');
+        console.error(e);
+        let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslationsToGitHub()"]');
+        if (btn) {
+            btn.innerText = btn._oldText;
+            btn.disabled = false;
+        }
+    }
 };
 
 window.addEventListener('beforeunload', function (e) {
