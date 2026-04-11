@@ -467,6 +467,9 @@ body {
     cursor: pointer;
     position: relative;
     border: 1px solid rgba(0,0,0,0.04);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
 }
 
 .product-card:hover {
@@ -558,6 +561,9 @@ body {
 /* Product Info */
 .product-card-info {
     padding: 0.8rem 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 .product-card-info h3 {
@@ -576,9 +582,10 @@ body {
 
 .product-card-info .price-row {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     gap: 0.5rem;
     flex-wrap: nowrap;
+    margin-top: auto;
 }
 
 .product-card-info .selling-price {

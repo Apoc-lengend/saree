@@ -29,7 +29,8 @@ const app = {
     },
 
     async _ghAPI(endpoint, method = 'GET', body = null) {
-        const url = `https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/${endpoint}`;
+        let urlPath = endpoint ? `/${endpoint}` : '';
+        const url = `https://api.github.com/repos/${this.auth.username}/${this.auth.repo}${urlPath}`;
         const options = {
             method,
             headers: {
@@ -1103,7 +1104,7 @@ const app = {
                         <meta property="og:url" content="${siteUrl}/p/${p.id}.html">
                         <meta property="og:type" content="product">
                         <meta name="twitter:card" content="summary_large_image">
-                        <script>window.location.replace("../search.html?q=" + encodeURIComponent("${cleanName}"));</script>
+                        <script>window.location.replace("../${cat}.html#${p.id}");</script>
                     </head><body><p>Redirecting to product...</p></body></html>`;
                     tree.push({ path: `p/${p.id}.html`, mode: '100644', type: 'blob', content: html });
                 }

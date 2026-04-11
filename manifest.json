@@ -2,7 +2,7 @@
   "name": "Parinay Saree",
   "short_name": "Parinay",
   "description": "Exclusive Sarees & Bedsheets",
-  "start_url": "./",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#7B1338",

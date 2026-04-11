@@ -1,11 +1,4 @@
 // ─── PROGRESSIVE WEB APP (PWA) SETUP ──────────────────────────────────────
-if (!document.querySelector('link[rel="manifest"]')) {
-    const manifestLink = document.createElement('link');
-    manifestLink.rel = 'manifest';
-    manifestLink.href = 'manifest.json';
-    document.head.appendChild(manifestLink);
-}
-
 if ('serviceWorker' in navigator && window.location.protocol === 'https:' && !window.location.pathname.includes('admin.html')) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('./sw.js').catch(err => console.warn('PWA registration failed:', err));
@@ -338,9 +331,10 @@ window.generatePriceHTML = function(priceString, discount, isModal = false) {
     const priceNum = parseFloat(String(priceString).replace(/[^0-9.]/g, '')) || 0;
     const fw = isModal ? '700' : '600';
     const sz = isModal ? '1.45rem' : '1.10rem';
+    const minH = isModal ? 'auto' : '44px';
     if (discount > 0) {
         const msrp = Math.round(priceNum / (1 - discount / 100));
-        return `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+        return `<div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; min-height:${minH}; line-height:1.2;">
                     <span class="selling-price" style="font-size:${sz}; color:var(--primary-color); font-weight:${fw}; display:flex; align-items:flex-start;">
                         <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
                     </span>
@@ -349,7 +343,7 @@ window.generatePriceHTML = function(priceString, discount, isModal = false) {
                     </span>
                 </div>`;
     }
-    return `<div style="display:flex; flex-direction:column; align-items:flex-start; line-height:1.2;">
+    return `<div style="display:flex; flex-direction:column; align-items:flex-start; justify-content:flex-start; min-height:${minH}; line-height:1.2;">
                 <span class="selling-price" style="font-size:${sz}; color:var(--primary-color); font-weight:${fw}; display:flex; align-items:flex-start;">
                     <span style="font-size:0.55em; margin-top:0.3em; margin-right:0.1em; font-weight:400;">₹</span><span>${priceNum.toLocaleString('en-IN')}</span>
                 </span>
@@ -387,7 +381,13 @@ window.buildProductCard = function(product, category = '') {
 };
 
 window.copyProductLink = function(id, btnElement) {
-    const url = window.location.origin + window.location.pathname + '#' + id;
+    let basePath = window.location.pathname;
+    if (basePath.endsWith('.html')) {
+        basePath = basePath.substring(0, basePath.lastIndexOf('/'));
+    } else if (basePath.endsWith('/')) {
+        basePath = basePath.substring(0, basePath.length - 1);
+    }
+    const url = window.location.origin + basePath + '/p/' + id + '.html';
     
     const showSuccess = () => {
         if (btnElement) {
