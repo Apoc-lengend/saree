@@ -1232,7 +1232,15 @@ const app = {
                 (prod.more_images || []).forEach(img => { if (img) referenced.add(img); });
             }
         }
-
+        // Fetch file listings from static files to protect hardcoded images
+        const staticFiles = ['index.html', 'styles.css', 'components.js', 'sarees.html', 'bedsheets.html'];
+        for (const sf of staticFiles) {
+            try {
+                const txt = await (await fetch(sf + '?t=' + Date.now())).text();
+                const matches = txt.match(/assets\/[a-zA-Z0-9_\\-\\.\\/]+/g);
+                if (matches) matches.forEach(m => referenced.add(m));
+            } catch(e) {}
+        }
         // Fetch file listings from all asset subfolders
         const folders = ['assets/sarees', 'assets/bedsheets', 'assets/banners'];
         const orphans = [];
@@ -1418,7 +1426,7 @@ const app = {
             const badgeClass = { new: 'badge-new', sale: 'badge-sale', trending: 'badge-trending' }[badge] || '';
             const badgeHTML = badge ? `<span class="badge-pill ${badgeClass}">${badge}</span>` : '-';
             const imgSrc = p.image || '';
-            const productUrl = `${baseUrl}${categoryPage}#${p.id || ''}`;
+            const productUrl = `${baseUrl}p/${p.id || ''}.html`;
             
             const linkHTML = status === 'live' 
                 ? `<a href="${productUrl}" target="_blank" style="color:#7B1338;text-decoration:none;font-weight:600;font-size:11px;">Visit Site ↗</a>` 
