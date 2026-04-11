@@ -15,6 +15,21 @@
   "products": {
     "sarees": [
       {
+        "id": "sar_0_1775425651500848",
+        "name": "Royal Paithani Silk",
+        "price": "₹5,075",
+        "image": "assets/saree_red.png",
+        "style": "filter: hue-rotate(300deg) saturate(67%);",
+        "stock": 10,
+        "discount": 20,
+        "badge": "trending",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/saree.png"
+        ],
+        "dateAdded": "2026-02-07T05:41:05.331Z"
+      },
+      {
         "id": "sar_15_1775425651572791",
         "name": "Pochampally Ikat",
         "price": "₹7,893",
@@ -133,21 +148,6 @@
           "assets/saree_red.png"
         ],
         "dateAdded": "2026-02-05T21:13:13.603Z"
-      },
-      {
-        "id": "sar_0_1775425651500848",
-        "name": "Royal Paithani Silk",
-        "price": "₹5,075",
-        "image": "assets/saree_red.png",
-        "style": "filter: hue-rotate(300deg) saturate(67%);",
-        "stock": 10,
-        "discount": 20,
-        "badge": "trending",
-        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
-        "more_images": [
-          "assets/saree.png"
-        ],
-        "dateAdded": "2026-02-07T05:41:05.331Z"
       },
       {
         "id": "sar_17_1775425651572345",
