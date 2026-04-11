@@ -174,22 +174,22 @@ const app = {
         document.getElementById('cfg-bedsheets-title').value = c.bedsheets_title || '';
         document.getElementById('cfg-bedsheets-subtitle').value = c.bedsheets_subtitle || '';
 
-        document.getElementById('cfg-home-sarees-label').innerHTML = '📁 Hero Saree Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_sarees_cover || 'Not set') + '</small>';
-        document.getElementById('cfg-home-sarees-title').value = c.home_sarees_title || '';
-        document.getElementById('cfg-home-sarees-subtitle').value = c.home_sarees_subtitle || '';
+        document.getElementById('cfg-home-sarees-label').innerHTML = '📁 Hero Saree Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_sarees_cover || 'assets/saree.png') + '</small>';
+        document.getElementById('cfg-home-sarees-title').value = c.home_sarees_title || 'Designer Sarees';
+        document.getElementById('cfg-home-sarees-subtitle').value = c.home_sarees_subtitle || 'Experience the rich heritage and delicate craftsmanship of our authentically woven traditional and modern sarees.';
 
-        document.getElementById('cfg-home-bedsheets-label').innerHTML = '📁 Hero Bedsheet Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_bedsheets_cover || 'Not set') + '</small>';
-        document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || '';
-        document.getElementById('cfg-home-bedsheets-subtitle').value = c.home_bedsheets_subtitle || '';
+        document.getElementById('cfg-home-bedsheets-label').innerHTML = '📁 Hero Bedsheet Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_bedsheets_cover || 'assets/bedsheet.png') + '</small>';
+        document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || 'Premium Bedsheets';
+        document.getElementById('cfg-home-bedsheets-subtitle').value = c.home_bedsheets_subtitle || 'Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk bedsheets.';
 
-        document.getElementById('cfg-about-title').value = c.about_title || '';
-        document.getElementById('cfg-about-subtitle').value = c.about_subtitle || '';
-        document.getElementById('cfg-about-f1-title').value = c.about_f1_title || '';
-        document.getElementById('cfg-about-f1-desc').value = c.about_f1_desc || '';
-        document.getElementById('cfg-about-f2-title').value = c.about_f2_title || '';
-        document.getElementById('cfg-about-f2-desc').value = c.about_f2_desc || '';
-        document.getElementById('cfg-about-f3-title').value = c.about_f3_title || '';
-        document.getElementById('cfg-about-f3-desc').value = c.about_f3_desc || '';
+        document.getElementById('cfg-about-title').value = c.about_title || 'Why Choose Us';
+        document.getElementById('cfg-about-subtitle').value = c.about_subtitle || 'The Parinay Saree Promise';
+        document.getElementById('cfg-about-f1-title').value = c.about_f1_title || 'Premium Quality';
+        document.getElementById('cfg-about-f1-desc').value = c.about_f1_desc || 'We source only the finest fabrics and materials to ensure long-lasting durability, supreme comfort, and luxurious texture.';
+        document.getElementById('cfg-about-f2-title').value = c.about_f2_title || 'Authentic Craftsmanship';
+        document.getElementById('cfg-about-f2-desc').value = c.about_f2_desc || 'Every saree and linen piece is crafted by skilled artisans, keeping traditional methods alive in modern designs.';
+        document.getElementById('cfg-about-f3-title').value = c.about_f3_title || 'Sustainable Practices';
+        document.getElementById('cfg-about-f3-desc').value = c.about_f3_desc || 'We are committed to eco-friendly production, minimizing waste, and supporting ethical labor across our entire supply chain.';
     },
 
     updateConfig(key, value) {
