@@ -523,6 +523,36 @@
     ],
     "bedsheets": [
       {
+        "id": "p1775421563905",
+        "name": "Silk Bedsheets",
+        "price": "₹1200",
+        "image": "assets/bedsheets/Screenshot_20251031_212414.png",
+        "style": "",
+        "stock": 10,
+        "discount": 20,
+        "badge": "new",
+        "description": "",
+        "more_images": [
+          "assets/bedsheets/Screenshot_20251008_161804.png"
+        ],
+        "dateAdded": "2026-04-05T20:39:18.609Z"
+      },
+      {
+        "id": "bed_8_1775425651572772",
+        "name": "Kids Cartoon Character",
+        "price": "₹13,095",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(340deg) saturate(58%);",
+        "stock": 3,
+        "discount": 0,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-02-12T14:30:07.937Z"
+      },
+      {
         "id": "bed_10_1775425651572208",
         "name": "Paisley Print Double",
         "price": "₹9,435",
@@ -720,21 +750,6 @@
           "assets/bed1.png"
         ],
         "dateAdded": "2026-04-06T00:00:00.000Z"
-      },
-      {
-        "id": "p1775421563905",
-        "name": "Silk Bedsheets",
-        "price": "₹1200",
-        "image": "assets/bedsheets/Screenshot_20251031_212414.png",
-        "style": "",
-        "stock": 10,
-        "discount": 20,
-        "badge": "new",
-        "description": "",
-        "more_images": [
-          "assets/bedsheets/Screenshot_20251008_161804.png"
-        ],
-        "dateAdded": "2026-04-05T20:39:18.609Z"
       },
       {
         "id": "bed_4_1775425651572689",
@@ -1023,21 +1038,6 @@
           "assets/bedsheet.png"
         ],
         "dateAdded": "2026-01-04T11:54:18.520Z"
-      },
-      {
-        "id": "bed_8_1775425651572772",
-        "name": "Kids Cartoon Character",
-        "price": "₹13,095",
-        "image": "assets/bed1.png",
-        "style": "filter: hue-rotate(340deg) saturate(58%);",
-        "stock": 3,
-        "discount": 0,
-        "badge": "",
-        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
-        "more_images": [
-          "assets/bedsheet.png"
-        ],
-        "dateAdded": "2026-02-12T14:30:07.937Z"
       }
     ]
   }
