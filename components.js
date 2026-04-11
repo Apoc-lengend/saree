@@ -1,3 +1,18 @@
+// ─── PROGRESSIVE WEB APP (PWA) SETUP ──────────────────────────────────────
+if (!document.querySelector('link[rel="manifest"]')) {
+    const manifestLink = document.createElement('link');
+    manifestLink.rel = 'manifest';
+    manifestLink.href = 'manifest.json';
+    document.head.appendChild(manifestLink);
+}
+
+if ('serviceWorker' in navigator && window.location.protocol === 'https:' && !window.location.pathname.includes('admin.html')) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js').catch(err => console.warn('PWA registration failed:', err));
+    });
+}
+
+// ─── COMPONENTS DEFINITION ────────────────────────────────────────────────
 class SiteNavbar extends HTMLElement {
     connectedCallback() {
         this.innerHTML = `
@@ -927,18 +942,27 @@ window.initProductCollection = function(categoryStr, keys) {
         currentlyShown += nextBatch.length;
         updateCount();
 
-        let btn = document.getElementById('load-more-btn');
+        let trigger = document.getElementById('scroll-trigger');
         if (currentlyShown < filteredProducts.length) {
-            if (!btn) {
-                btn = document.createElement('button');
-                btn.id = 'load-more-btn';
-                btn.innerText = 'Load More';
-                btn.style.cssText = 'display:block; margin: 3rem auto; padding: 0.8rem 2.5rem; background:var(--primary-color); color:white; border:none; border-radius:30px; cursor:pointer; font-weight:bold; outline:none; font-size:1.1rem;';
-                btn.onclick = loadMore;
-                grid.parentNode.appendChild(btn);
+            if (!trigger) {
+                trigger = document.createElement('div');
+                trigger.id = 'scroll-trigger';
+                trigger.style.cssText = 'height: 50px; margin: 2rem auto; width: 100%; display: flex; justify-content: center; align-items: center; color: var(--text-muted); opacity: 0.7;';
+                trigger.innerHTML = '<span class="spinner" style="display:inline-block; width:24px; height:24px; border:3px solid rgba(0,0,0,0.1); border-radius:50%; border-top-color:var(--primary-color); animation:spin 1s ease-in-out infinite;"></span><style>@keyframes spin{to{transform:rotate(360deg);}}</style>';
+                grid.parentNode.appendChild(trigger);
+                
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        loadMore();
+                    }
+                }, { rootMargin: '200px' });
+                observer.observe(trigger);
+                
+                trigger._observer = observer;
             }
-        } else if (btn) {
-            btn.remove();
+        } else if (trigger) {
+            if (trigger._observer) trigger._observer.disconnect();
+            trigger.remove();
         }
     }
 
@@ -957,8 +981,11 @@ window.initProductCollection = function(categoryStr, keys) {
 
         const grid = document.getElementById('products-grid');
         grid.innerHTML = '';
-        const oldBtn = document.getElementById('load-more-btn');
-        if (oldBtn) oldBtn.remove();
+        const oldTrigger = document.getElementById('scroll-trigger');
+        if (oldTrigger) {
+            if (oldTrigger._observer) oldTrigger._observer.disconnect();
+            oldTrigger.remove();
+        }
         updateCount();
         loadMore();
     }
