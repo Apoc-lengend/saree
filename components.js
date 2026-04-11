@@ -320,7 +320,16 @@ if (!window.location.pathname.includes('admin')) {
             window.siteConfigData = d.site_config;
             window.siteData = d;
             let fab = document.getElementById('whatsapp-fab');
-            if (fab) fab.href = `https://wa.me/${d.site_config.whatsapp_number || '919876543210'}`;
+            if (fab) {
+                const num = d.site_config.whatsapp_number || '919876543210';
+                const waMeUrl = `https://wa.me/${num}`;
+                if (/Android/i.test(navigator.userAgent)) {
+                    fab.href = `intent://send?phone=${num}#Intent;package=com.whatsapp;scheme=whatsapp;S.browser_fallback_url=${encodeURIComponent(waMeUrl)};end;`;
+                    fab.removeAttribute('target');
+                } else {
+                    fab.href = waMeUrl;
+                }
+            }
             // Fire event so any page script waiting on this data can proceed
             window.dispatchEvent(new Event('siteDataReady'));
         }).catch(e => {});
@@ -700,8 +709,12 @@ function confirmOrder() {
     updateCartIcon();
     closeCheckout();
     let whatsappNum = (window.siteConfigData && window.siteConfigData.whatsapp_number) ? window.siteConfigData.whatsapp_number : '919876543210';
-    let whatsappUrl = `https://wa.me/${whatsappNum}?text=${orderText}`;
-    window.open(whatsappUrl, '_blank');
+    let waMeUrl = `https://wa.me/${whatsappNum}?text=${orderText}`;
+    if (/Android/i.test(navigator.userAgent)) {
+        window.location.href = `intent://send?phone=${whatsappNum}&text=${orderText}#Intent;package=com.whatsapp;scheme=whatsapp;S.browser_fallback_url=${encodeURIComponent(waMeUrl)};end;`;
+    } else {
+        window.open(waMeUrl, '_blank');
+    }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
