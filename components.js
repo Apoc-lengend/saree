@@ -968,6 +968,10 @@ window.loadAppView = function(applyCallback) {
             const raw = localStorage.getItem('parinay_preview_data');
             if (raw) {
                 const data = JSON.parse(raw);
+                const rawTrans = localStorage.getItem('parinay_preview_translations');
+                if (rawTrans && typeof translations !== 'undefined') {
+                    try { Object.assign(translations, JSON.parse(rawTrans)); } catch (e) {}
+                }
                 const banner = document.createElement('div');
                 banner.style.cssText = 'position:fixed;top:0;left:0;width:100%;background:#d69e2e;color:#1a1a1a;text-align:center;padding:8px 16px;font-size:0.85rem;font-weight:700;z-index:99999;letter-spacing:0.02em;';
                 banner.innerHTML = '⚠️ PREVIEW MODE — These changes are <u>not published</u> yet. Commit from the admin panel to go live. <button onclick="this.parentElement.remove()" style="margin-left:12px;background:transparent;border:1px solid currentColor;border-radius:4px;padding:1px 8px;cursor:pointer;font-weight:700;">✕</button>';

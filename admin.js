@@ -1113,7 +1113,6 @@ const app = {
                     if (!p) continue;
                     const cleanName = escapeHTML(p.name);
                     const cleanDesc = escapeHTML(p.description || cleanName);
-                    // Pure static HTML template optimized exactly for WhatsApp link unfurling
                     const html = `<!DOCTYPE html><html><head>
                         <meta charset="utf-8">
                         <title>${cleanName} - Parinay Saree</title>
@@ -1127,6 +1126,15 @@ const app = {
                     </head><body><p>Redirecting to product...</p></body></html>`;
                     tree.push({ path: `p/${p.id}.html`, mode: '100644', type: 'blob', content: html });
                 }
+            }
+            
+            if (this.hasUnsavedTranslations) {
+                tree.push({
+                    path: 'translations.js',
+                    mode: '100644',
+                    type: 'blob',
+                    content: `const translations = ${JSON.stringify(this.translationsData, null, 4)};\n`
+                });
             }
 
             // 5. Post the new tree to GitHub
@@ -1150,7 +1158,9 @@ const app = {
 
             this.originalDataText = JSON.stringify(this.data);
             this.hasUnsavedChanges = false;
+            this.hasUnsavedTranslations = false;
             localStorage.removeItem('parinay_preview_data');
+            localStorage.removeItem('parinay_preview_translations');
             
             confirmResult.modal.remove();
             this.showToast('✅ Live site updated! GitHub Pages will deploy in ~1 minute.');
@@ -1167,8 +1177,9 @@ const app = {
     previewChanges() {
         if (!this.data) { alert('No data loaded yet.'); return; }
 
-        // Write current in-memory state to localStorage
         localStorage.setItem('parinay_preview_data', JSON.stringify(this.data));
+        // Also save translations explicitly for preview interpolation on main site
+        localStorage.setItem('parinay_preview_translations', JSON.stringify(this.translationsData));
 
         // Show a small picker modal — which page to open?
         const old = document.getElementById('admin-preview-modal');
@@ -1507,7 +1518,7 @@ app.openTranslationsModal = function() {
                 <h2 style="margin:0; color:#5a67d8;">Manage Translations</h2>
                 <div style="display:flex; gap:10px;">
                     <button class="btn btn-small" onclick="app.addNewTranslation()" style="background:#48bb78; margin:0; padding:6px 12px; font-weight:bold;">+ Add New</button>
-                    <button class="btn btn-small" onclick="app.saveTranslationsToGitHub()" style="background:#5a67d8; margin:0; padding:6px 12px; font-weight:bold;">Save & Publish</button>
+                    <button class="btn btn-small" onclick="app.saveTranslations()" style="background:#5a67d8; margin:0; padding:6px 12px; font-weight:bold;">Save & Close</button>
                     <button style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:#777;" onclick="document.getElementById('admin-trans-modal').remove()">&times;</button>
                 </div>
             </div>
@@ -1668,54 +1679,21 @@ app.deleteTranslation = function(key) {
     }
 };
 
-app.saveTranslationsToGitHub = async function() {
+app.saveTranslations = function() {
     this._syncTranslationInputs();
+    this.hasUnsavedChanges = true;
+    this.hasUnsavedTranslations = true;
     
-    try {
-        let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslationsToGitHub()"]');
-        if (btn) {
-            btn._oldText = btn.innerText;
-            btn.innerText = 'Publishing...';
-            btn.disabled = true;
-        }
-
-        const jsText = `const translations = ${JSON.stringify(this.translationsData, null, 4)};\n`;
-        
-        function utf8ToBase64(str) {
-            return window.btoa(unescape(encodeURIComponent(str)));
-        }
-
-        const encodedContent = utf8ToBase64(jsText);
-        
-        let reqBody = {
-            message: 'Update translations via admin panel',
-            content: encodedContent
-        };
-        if (this.translationsFileSha) reqBody.sha = this.translationsFileSha;
-        
-        await this._ghAPI('contents/translations.js', 'PUT', reqBody);
-
-        await this.loadTranslations();
-
-        if (btn) {
-            btn.innerText = 'Published!';
-            setTimeout(() => {
-                btn.innerText = btn._oldText;
-                btn.disabled = false;
-                let m = document.getElementById('admin-trans-modal');
-                if (m) m.remove();
-            }, 1000);
-        }
-
-        this.showToast('Translations published to live site!');
-    } catch(e) {
-        alert('Failed to publish translations. Check console logs.');
-        console.error(e);
-        let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslationsToGitHub()"]');
-        if (btn) {
-            btn.innerText = btn._oldText;
-            btn.disabled = false;
-        }
+    let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslations()"]');
+    if (btn) {
+        btn.innerText = 'Saved Memory!';
+        setTimeout(() => {
+            let m = document.getElementById('admin-trans-modal');
+            if (m) m.remove();
+        }, 1000);
+    } else {
+        let m = document.getElementById('admin-trans-modal');
+        if (m) m.remove();
     }
 };
 
