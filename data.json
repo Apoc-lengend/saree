@@ -528,14 +528,15 @@
         "price": "₹1200",
         "image": "assets/bedsheets/Screenshot_20251031_212414.png",
         "style": "",
-        "stock": 10,
+        "stock": 0,
         "discount": 20,
         "badge": "new",
         "description": "",
         "more_images": [
           "assets/bedsheets/Screenshot_20251008_161804.png"
         ],
-        "dateAdded": "2026-04-05T20:39:18.609Z"
+        "dateAdded": "2026-04-05T20:39:18.609Z",
+        "status": "archived"
       },
       {
         "id": "bed_8_1775425651572772",
