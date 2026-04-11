@@ -1,4 +1,4 @@
-const CACHE_NAME = 'parinay-cache-v1';
+const CACHE_NAME = 'parinay-cache-v2';
 const CORE_ASSETS = [
     './',
     './index.html',
@@ -40,8 +40,8 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
     const url = new URL(event.request.url);
 
-    // Skip API requests and admin dashboard entirely
-    if (url.pathname.includes('admin.html') || url.hostname === 'api.github.com') {
+    // Skip API requests, admin dashboard, and background pollers entirely
+    if (url.pathname.includes('admin.html') || url.hostname === 'api.github.com' || url.searchParams.has('poll')) {
         return;
     }
 

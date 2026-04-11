@@ -332,6 +332,21 @@ if (!window.location.pathname.includes('admin')) {
             }
             // Fire event so any page script waiting on this data can proceed
             window.dispatchEvent(new Event('siteDataReady'));
+            
+            // Ultra-lightweight HEAD poller to hot-reload if admin dashboard pushes an update
+            let lastModified = null;
+            setInterval(async () => {
+                try {
+                    const res = await fetch('data.json?poll=' + Date.now(), { method: 'HEAD', cache: 'no-store' });
+                    const lm = res.headers.get('last-modified') || res.headers.get('etag');
+                    if (!lastModified && lm) lastModified = lm;
+                    else if (lm && lastModified !== lm) {
+                        console.log('Live changes detected. Refreshing...');
+                        window.location.reload();
+                    }
+                } catch(e) {}
+            }, 15000);
+
         }).catch(e => {});
 }
 
