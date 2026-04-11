@@ -15,6 +15,23 @@
   "products": {
     "sarees": [
       {
+        "id": "p1775911697237",
+        "name": "Silk not Saree",
+        "price": "₹2131",
+        "image": "assets/sarees/1775911689640_Screenshot_20251031_213428.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 50,
+        "badge": "new",
+        "description": "Adwawdasdasdas",
+        "status": "live",
+        "more_images": [
+          "assets/sarees/1775911693062_photo_2025-10-10_22-46-56.webp",
+          "assets/sarees/1775911695360_Screenshot_20251008_161804.webp"
+        ],
+        "dateAdded": "2026-04-11T12:48:09.368Z"
+      },
+      {
         "id": "sar_19_1775425651572697",
         "name": "Bhagalpuri Silk",
         "price": "₹10,236",
