@@ -15,6 +15,20 @@
   "products": {
     "sarees": [
       {
+        "id": "p1776419284941",
+        "name": "silky cotton saree",
+        "price": "₹2500",
+        "image": "assets/sarees/1776419281982_Gemini_Generated_Image_8r26368r26368r26.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 25,
+        "badge": "new",
+        "description": "Limited stock buy soon only one piece",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-04-17T09:48:01.732Z"
+      },
+      {
         "id": "p1775911697237",
         "name": "Silk not Saree",
         "price": "₹2131",
