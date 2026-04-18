@@ -1,6 +1,6 @@
 {
   "site_config": {
-    "hero_cover": "assets/banners/1775901871427_saree3.webp",
+    "hero_cover": "assets/banners/1776488303334_saree6.webp",
     "sarees_cover": "assets/banners/1775900684317_saree4.2.webp",
     "bedsheets_cover": "assets/bedsheet.png",
     "hero_title": "Weave Your World in Elegance",
@@ -14,6 +14,20 @@
   },
   "products": {
     "sarees": [
+      {
+        "id": "p1776487732872",
+        "name": "sagar",
+        "price": "₹3000",
+        "image": "assets/sarees/1776487730069_gpt.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 30,
+        "badge": "new",
+        "description": "100% percent cotton limited stock buy soon",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-04-18T04:48:49.642Z"
+      },
       {
         "id": "p1776419284941",
         "name": "silky cotton saree",
@@ -554,6 +568,20 @@
     ],
     "bedsheets": [
       {
+        "id": "p1776488201724",
+        "name": "cotton",
+        "price": "₹350",
+        "image": "assets/bedsheets/1776488199323_P8.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 23,
+        "badge": "sale",
+        "description": "100 percent cotton",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-04-18T04:56:38.984Z"
+      },
+      {
         "id": "p1775421563905",
         "name": "Silk Bedsheets",
         "price": "₹1200",
@@ -568,6 +596,21 @@
         ],
         "dateAdded": "2026-04-05T20:39:18.609Z",
         "status": "archived"
+      },
+      {
+        "id": "bed_21_1775425651572179",
+        "name": "Gingham Checkered",
+        "price": "₹14,462",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(70deg) saturate(74%);",
+        "stock": 47,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-01-04T11:54:18.520Z"
       },
       {
         "id": "bed_10_1775425651572208",
@@ -1040,21 +1083,6 @@
         "discount": 10,
         "badge": "trending",
         "dateAdded": "2025-01-01T00:00:00.000Z"
-      },
-      {
-        "id": "bed_21_1775425651572179",
-        "name": "Gingham Checkered",
-        "price": "₹14,462",
-        "image": "assets/bed1.png",
-        "style": "filter: hue-rotate(70deg) saturate(74%);",
-        "stock": 47,
-        "discount": 30,
-        "badge": "",
-        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
-        "more_images": [
-          "assets/bedsheet.png"
-        ],
-        "dateAdded": "2026-01-04T11:54:18.520Z"
       }
     ]
   }
