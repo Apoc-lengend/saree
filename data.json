@@ -1148,6 +1148,22 @@
         "description": "Stunning golden silk lehenga for festive celebrations.",
         "more_images": [],
         "dateAdded": "2026-04-19T00:00:00.000Z"
+      },
+      {
+        "id": "p1776628260747",
+        "name": "Mehenga Lehenga",
+        "price": "₹12345",
+        "image": "assets/lehenga/1776628255864_IMG-20260408-WA0002.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 75,
+        "badge": "sale",
+        "description": "Atti Sarvoch Lehenga",
+        "status": "live",
+        "more_images": [
+          "assets/lehenga/1776628258979_IMG-20260405-WA0004.webp"
+        ],
+        "dateAdded": "2026-04-19T19:50:55.152Z"
       }
     ]
   }
