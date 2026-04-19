@@ -1181,6 +1181,24 @@
           "assets/lehenga/1776629314884_Screenshot_20260309_152742.webp"
         ],
         "dateAdded": "2026-04-19T20:08:33.695Z"
+      },
+      {
+        "id": "p1776630502400",
+        "name": "Textures Lehenga",
+        "price": "₹5332",
+        "image": "assets/lehenga/1776630501076_photo_2025-10-10_22-46-56.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 60,
+        "badge": "trending",
+        "description": "Highly Addictive",
+        "status": "live",
+        "more_images": [
+          "assets/lehenga/1776630501410_Screenshot_20260309_152742.webp",
+          "assets/lehenga/1776630501955_Screenshot_20260309_155100.webp",
+          "assets/lehenga/1776630502400_Screenshot_20260315_012821.webp"
+        ],
+        "dateAdded": "2026-04-19T20:28:20.797Z"
       }
     ]
   }
