@@ -53,3 +53,70 @@ h3 { margin-top: 0; color: var(--second); border-bottom: 1px solid #eee; padding
 .product-info { display: flex; align-items: center; }
 
 #toast { position: fixed; bottom: 20px; right: 20px; background: #333; color: white; padding: 1rem; border-radius: 6px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); display: none; z-index: 1000;}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+    .container {
+        padding: 1rem;
+    }
+    .header-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    .header-bar > div:last-child {
+        justify-content: flex-start !important;
+    }
+    .header-bar .btn-small {
+        flex: 1 1 45%;
+        text-align: center;
+        padding: 0.6rem;
+    }
+    .grid-2 {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    .auth-card {
+        margin: 1rem;
+        padding: 2rem 1.5rem;
+    }
+    .panel {
+        padding: 1rem;
+        margin-bottom: 1.5rem;
+    }
+    /* Modals override inline styles */
+    #admin-edit-modal > div,
+    #admin-pref-modal > div,
+    #admin-translation-modal > div {
+        width: 100% !important;
+        height: 100% !important;
+        max-height: 100vh !important;
+        max-width: 100% !important;
+        border-radius: 0 !important;
+        padding: 20px 15px !important;
+    }
+    .product-item {
+        flex-wrap: wrap;
+        padding: 0.8rem 0.5rem;
+    }
+    .product-item > div[style*="flex:1"] {
+        flex-basis: 100% !important;
+        margin-top: 10px;
+        margin-left: 28px; /* align with text */
+    }
+    .product-item .btn-red {
+        margin-left: auto !important;
+        margin-top: 10px !important;
+    }
+    #metric-dashboard {
+        grid-template-columns: 1fr 1fr !important;
+    }
+    /* Status tabs */
+    #status-tabs {
+        flex-wrap: wrap;
+    }
+    #status-tabs button {
+        flex: 1 1 50% !important;
+        border-bottom: 1px solid #ddd;
+    }
+}
