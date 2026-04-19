@@ -101,13 +101,11 @@
                     <label id="cfg-home-sarees-label" for="cfg-home-sarees-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Saree Cover</label>
                     <input type="file" id="cfg-home-sarees-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_sarees_cover', this.files[0], 'cfg-home-sarees-label')">
                     <input type="text" id="cfg-home-sarees-title" placeholder="Hero Saree Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_sarees_title', this.value)">
-                    <textarea id="cfg-home-sarees-subtitle" placeholder="Hero Saree Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_sarees_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
                     <label id="cfg-home-bedsheets-label" for="cfg-home-bedsheets-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Bedsheet Cover</label>
                     <input type="file" id="cfg-home-bedsheets-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_bedsheets_cover', this.files[0], 'cfg-home-bedsheets-label')">
                     <input type="text" id="cfg-home-bedsheets-title" placeholder="Hero Bedsheet Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_bedsheets_title', this.value)">
-                    <textarea id="cfg-home-bedsheets-subtitle" placeholder="Hero Bedsheet Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_bedsheets_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
                     <label id="cfg-lehenga-label" for="cfg-lehenga-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Lehenga Cover</label>
@@ -119,7 +117,6 @@
                     <label id="cfg-home-lehenga-label" for="cfg-home-lehenga-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Lehenga Cover</label>
                     <input type="file" id="cfg-home-lehenga-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_lehenga_cover', this.files[0], 'cfg-home-lehenga-label')">
                     <input type="text" id="cfg-home-lehenga-title" placeholder="Hero Lehenga Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_lehenga_title', this.value)">
-                    <textarea id="cfg-home-lehenga-subtitle" placeholder="Hero Lehenga Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_lehenga_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
                     <label>Delivery Rate</label>
@@ -169,6 +166,7 @@
                     <select id="add-category">
                         <option value="sarees">Sarees</option>
                         <option value="bedsheets">Bedsheets</option>
+                        <option value="lehenga">Lehengas</option>
                     </select>
                 </div>
                 <div class="form-group">

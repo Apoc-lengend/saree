@@ -100,6 +100,7 @@ const app = {
             this.data.products = this.data.products || {};
             this.data.products.sarees = this.data.products.sarees || [];
             this.data.products.bedsheets = this.data.products.bedsheets || [];
+            this.data.products.lehenga = this.data.products.lehenga || [];
 
             // Switch UI
             document.getElementById('auth-screen').style.display = 'none';
@@ -186,17 +187,14 @@ const app = {
 
         document.getElementById('cfg-home-sarees-label').innerHTML = '📁 Hero Saree Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_sarees_cover || 'assets/saree.png') + '</small>';
         document.getElementById('cfg-home-sarees-title').value = c.home_sarees_title || 'Designer Sarees';
-        document.getElementById('cfg-home-sarees-subtitle').value = c.home_sarees_subtitle || 'Experience the rich heritage and delicate craftsmanship of our authentically woven traditional and modern sarees.';
 
         document.getElementById('cfg-home-bedsheets-label').innerHTML = '📁 Hero Bedsheet Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_bedsheets_cover || 'assets/bedsheet.png') + '</small>';
         document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || 'Premium Bedsheets';
-        document.getElementById('cfg-home-bedsheets-subtitle').value = c.home_bedsheets_subtitle || 'Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk bedsheets.';
 
         document.getElementById('cfg-lehenga-label').innerHTML = '📁 Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.lehenga_cover || 'Not set') + '</small>';
         
         document.getElementById('cfg-home-lehenga-label').innerHTML = '📁 Hero Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_lehenga_cover || 'assets/lehenga.png') + '</small>';
         document.getElementById('cfg-home-lehenga-title').value = c.home_lehenga_title || 'Designer Lehengas';
-        document.getElementById('cfg-home-lehenga-subtitle').value = c.home_lehenga_subtitle || 'Discover elegant and beautifully crafted lehengas perfect for weddings and festive celebrations.';
 
         document.getElementById('cfg-about-title').value = c.about_title || 'Why Choose Us';
         document.getElementById('cfg-about-subtitle').value = c.about_subtitle || 'The Parinay Saree Promise';
@@ -766,6 +764,7 @@ const app = {
         try {
             this.showToast('Uploading main image...');
             const image = await this.compressAndUpload(mainImageFile, category);
+            
             const more_images = [];
             for (let i = 0; i < moreImageFiles.length; i++) {
                 this.showToast(`Uploading extra image ${i + 1}/${moreImageFiles.length}...`);

@@ -12,16 +12,16 @@ window.addEventListener('beforeinstallprompt', (e) => {
     if (!document.getElementById('pwa-install-banner')) {
         const banner = document.createElement('div');
         banner.id = 'pwa-install-banner';
-        banner.style.cssText = 'position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:var(--primary-color, #7B1338); color:white; padding:12px 24px; border-radius:30px; font-weight:bold; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:10000; display:flex; align-items:center; gap:15px; cursor:pointer; font-family:sans-serif; animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space:nowrap;';
+        banner.style.cssText = 'position:fixed; bottom:20px; left:20px; background:var(--primary-color, #7B1338); color:white; padding:8px 16px; border-radius:30px; font-weight:bold; font-size:0.9rem; box-shadow:0 10px 25px rgba(0,0,0,0.3); z-index:10000; display:flex; align-items:center; gap:10px; cursor:pointer; font-family:sans-serif; animation: popUp 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); white-space:nowrap;';
         
         banner.innerHTML = `
-            <span style="font-size:1.3rem;">📲</span>
+            <span style="font-size:1.1rem;">📲</span>
             <span>Install Parinay App</span>
-            <span id="pwa-close" style="font-size:1.5rem; margin-left:10px; opacity:0.7; pointer-events:auto;">&times;</span>
+            <span id="pwa-close" style="font-size:1.3rem; margin-left:8px; opacity:0.7; pointer-events:auto;">&times;</span>
         `;
         
         const closeStyle = document.createElement('style');
-        closeStyle.innerHTML = `@keyframes popUp { 0% { bottom: -50px; opacity: 0; transform: translateX(-50%) scale(0.9); } 100% { bottom: 20px; opacity: 1; transform: translateX(-50%) scale(1); } }`;
+        closeStyle.innerHTML = `@keyframes popUp { 0% { bottom: -50px; opacity: 0; transform: scale(0.9); } 100% { bottom: 20px; opacity: 1; transform: scale(1); } }`;
         document.head.appendChild(closeStyle);
         document.body.appendChild(banner);
 
@@ -417,7 +417,7 @@ window.generatePriceHTML = function(priceString, discount, isModal = false) {
 };
 
 window.buildProductCard = function(product, category = '') {
-    const isSaree = category === 'sarees' || window.location.pathname.includes('sarees.html') || product.category === 'sarees';
+    const isSaree = category === 'sarees' || category === 'lehenga' || window.location.pathname.includes('sarees.html') || window.location.pathname.includes('lehenga.html') || product.category === 'sarees' || product.category === 'lehenga';
     const discount = product.discount || 0;
     const stock = product.stock !== undefined ? product.stock : 10;
     const isOutOfStock = stock <= 0;
