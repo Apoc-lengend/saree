@@ -46,10 +46,10 @@ const app = {
         const res = await fetch(url, options);
         if (!res.ok) {
             let errMsg = res.statusText;
-            try { 
-                const errData = await res.json(); 
+            try {
+                const errData = await res.json();
                 if (errData.message) errMsg = errData.message;
-            } catch(e) {}
+            } catch (e) { }
             throw new Error(`GitHub API Error: ${errMsg}`);
         }
         return res.json();
@@ -192,7 +192,7 @@ const app = {
         document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || 'Premium Bedsheets';
 
         document.getElementById('cfg-lehenga-label').innerHTML = '📁 Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.lehenga_cover || 'Not set') + '</small>';
-        
+
         document.getElementById('cfg-home-lehenga-label').innerHTML = '📁 Hero Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_lehenga_cover || 'assets/lehenga.png') + '</small>';
         document.getElementById('cfg-home-lehenga-title').value = c.home_lehenga_title || 'Designer Lehengas';
 
@@ -215,8 +215,8 @@ const app = {
     async uploadConfigImage(key, file, labelId) {
         if (!file) return;
         const label = document.getElementById(labelId);
-        label.innerText = 'Uploading...';
-        this.showToast('Pushing to GitHub...');
+        label.innerText = 'Processing...';
+        this.showToast('Queuing image in memory...');
         try {
             const path = await this.compressAndUpload(file, 'banners');
             this.updateConfig(key, path);
@@ -303,7 +303,7 @@ const app = {
         // Map filtered indices back to their REAL indices in the full array
         // so edits/deletes use the correct position in data.products[category]
         let indexedFiltered = filtered.map(p => ({ prod: p, realIndex: all.indexOf(p) }));
-        
+
         if (sortValue === 'newest') {
             indexedFiltered.sort((a, b) => new Date(b.prod.dateAdded || 0) - new Date(a.prod.dateAdded || 0));
         } else if (sortValue === 'oldest') {
@@ -330,9 +330,17 @@ const app = {
             const statusDot = { live: '#38a169', hidden: '#d69e2e', archived: '#e53e3e' }[status] || '#38a169';
             const statusLabel = status.charAt(0).toUpperCase() + status.slice(1);
             const isChecked = this.selectedIndices.has(index);
-            const extraThumbs = (prod.more_images || []).map(img =>
-                `<img src="${img}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;border:1px solid #ccc;">`
-            ).join('');
+
+            let mainImgUrl = prod.image;
+            if (app.localImagePreviews && app.localImagePreviews.has(prod.image)) {
+                mainImgUrl = app.localImagePreviews.get(prod.image);
+            }
+
+            const extraThumbs = (prod.more_images || []).map(img => {
+                let u = img;
+                if (app.localImagePreviews && app.localImagePreviews.has(img)) u = app.localImagePreviews.get(img);
+                return `<img src="${u}" style="width:28px;height:28px;border-radius:3px;object-fit:cover;border:1px solid #ccc;">`;
+            }).join('');
 
             item.innerHTML = `
                 <label style="display:flex;align-items:center;padding:10px 6px;cursor:pointer;" onclick="event.stopPropagation()">
@@ -341,7 +349,7 @@ const app = {
                         style="width:16px;height:16px;cursor:pointer;">
                 </label>
                 <div style="position:relative;margin-top:8px;margin-right:12px;flex-shrink:0;">
-                    <img src="${prod.image}" onerror="this.src='https://via.placeholder.com/50'"
+                    <img src="${mainImgUrl}" onerror="this.src='https://via.placeholder.com/50'"
                         style="width:52px;height:52px;object-fit:cover;border-radius:5px;">
                     <span style="position:absolute;bottom:-3px;right:-3px;width:11px;height:11px;
                         border-radius:50%;background:${statusDot};border:2px solid white;"
@@ -575,14 +583,23 @@ const app = {
             </label>`;
         }).join('');
 
-        let extraThumbsHTML = (prod.more_images || []).map((img, i) => `
+        let mainImgUrl = prod.image;
+        if (app.localImagePreviews && app.localImagePreviews.has(prod.image)) {
+            mainImgUrl = app.localImagePreviews.get(prod.image);
+        }
+
+        let extraThumbsHTML = (prod.more_images || []).map((img, i) => {
+            let u = img;
+            if (app.localImagePreviews && app.localImagePreviews.has(img)) u = app.localImagePreviews.get(img);
+            return `
             <div style="position:relative;display:inline-block;">
-                <img src="${img}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ddd;">
+                <img src="${u}" style="width:60px;height:60px;object-fit:cover;border-radius:4px;border:1px solid #ddd;">
                 <button onclick="app.removeExtraImage('${category}',${index},${i})"
                     style="position:absolute;top:-6px;right:-6px;background:#e53e3e;color:white;border:none;
                            border-radius:50%;width:20px;height:20px;cursor:pointer;font-size:11px;
                            display:flex;align-items:center;justify-content:center;">&times;</button>
-            </div>`).join('');
+            </div>`;
+        }).join('');
 
         modal.innerHTML = `
             <div style="background:white;padding:25px;border-radius:10px;width:95%;max-width:520px;
@@ -593,7 +610,7 @@ const app = {
                 <h2 style="margin-bottom:16px;color:#7B1338;">Edit Product</h2>
 
                 <div style="display:flex;gap:14px;margin-bottom:18px;">
-                    <img src="${prod.image}" style="width:90px;height:90px;object-fit:cover;border-radius:7px;border:1px solid #eee;flex-shrink:0;">
+                    <img src="${mainImgUrl}" style="width:90px;height:90px;object-fit:cover;border-radius:7px;border:1px solid #eee;flex-shrink:0;">
                     <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
                         <input type="text" id="edit-name" value="${prod.name.replace(/"/g, '&quot;')}"
                             placeholder="Product Name" style="padding:9px;border:1px solid #ddd;width:100%;border-radius:5px;box-sizing:border-box;">
@@ -688,10 +705,10 @@ const app = {
 
     async uploadExtraImagesForEdit(category, index, files) {
         if (!files.length) return;
-        document.getElementById('edit-upload-label').innerText = 'Uploading...';
+        document.getElementById('edit-upload-label').innerText = 'Processing...';
         const paths = [];
         for (let i = 0; i < files.length; i++) {
-            this.showToast(`Uploading ${i + 1}/${files.length}...`);
+            this.showToast(`Processing ${i + 1}/${files.length}...`);
             try {
                 paths.push(await this.compressAndUpload(files[i], category));
             } catch (e) { alert('Upload failed: ' + e); }
@@ -701,7 +718,7 @@ const app = {
         }
         this.data.products[category][index].more_images.push(...paths);
         this.markChanged();
-        this.showToast('Extra images uploaded!');
+        this.showToast('Images queued in memory!');
         document.getElementById('admin-edit-modal').remove();
         this.openEditModal(category, index);
     },
@@ -759,15 +776,15 @@ const app = {
         price = '₹' + priceNum;
 
         const btn = document.querySelector('button[onclick="app.addProduct()"]');
-        if (btn) { btn.innerText = 'Uploading...'; btn.disabled = true; }
+        if (btn) { btn.innerText = 'Processing...'; btn.disabled = true; }
 
         try {
-            this.showToast('Uploading main image...');
+            this.showToast('Compressing main image...');
             const image = await this.compressAndUpload(mainImageFile, category);
-            
+
             const more_images = [];
             for (let i = 0; i < moreImageFiles.length; i++) {
-                this.showToast(`Uploading extra image ${i + 1}/${moreImageFiles.length}...`);
+                this.showToast(`Compressing extra image ${i + 1}/${moreImageFiles.length}...`);
                 more_images.push(await this.compressAndUpload(moreImageFiles[i], category));
             }
 
@@ -823,24 +840,15 @@ const app = {
                 const baseName = file.name.replace(/\s+/g, '-').replace(/\.[^.]+$/, '');
                 const safeName = `${Date.now()}_${baseName}.${ext}`;
                 const path = `assets/${category}/${safeName}`;
-                let sha = null;
-                try {
-                    const getRes = await fetch(`https://api.github.com/repos/${app.auth.username}/${app.auth.repo}/contents/${path}`, {
-                        headers: { 'Authorization': `token ${app.auth.token}` }
-                    });
-                    if (getRes.ok) sha = (await getRes.json()).sha;
-                } catch (e) { }
 
-                const body = { message: `Upload ${baseName}`, content: b64 };
-                if (sha) body.sha = sha;
+                // Defer actual upload to commit phase
+                if (!app.pendingUploads) app.pendingUploads = new Map();
+                if (!app.localImagePreviews) app.localImagePreviews = new Map();
 
-                const putRes = await fetch(`https://api.github.com/repos/${app.auth.username}/${app.auth.repo}/contents/${path}`, {
-                    method: 'PUT',
-                    headers: { 'Authorization': `token ${app.auth.token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify(body)
-                });
-                if (!putRes.ok) reject('Failed to upload ' + file.name);
-                else resolve(path);
+                app.pendingUploads.set(path, { b64: b64, blobSha: null });
+                app.localImagePreviews.set(path, base64Data);
+
+                resolve(path);
             };
 
             // Laplacian unsharp-mask for crisp fabric textures after downscale
@@ -924,6 +932,13 @@ const app = {
             return;
         }
 
+        if (this.pendingUploads && this.pendingUploads.has(path)) {
+            this.pendingUploads.delete(path);
+            if (this.localImagePreviews) this.localImagePreviews.delete(path);
+            console.log('Removed pending upload before commit:', path);
+            return;
+        }
+
         this.pendingDeletions.add(path);
         this.markChanged();
         console.log('Queued ghost asset for deletion:', path);
@@ -946,18 +961,18 @@ const app = {
 
     _generateDiffHTML() {
         let oldData = {};
-        try { oldData = JSON.parse(this.originalDataText || "{}"); } catch(e){}
+        try { oldData = JSON.parse(this.originalDataText || "{}"); } catch (e) { }
         let html = '';
         let hasChanges = false;
 
         const oldCfg = oldData.site_config || {};
         const newCfg = this.data.site_config || {};
         const cfgChanges = [];
-        for (let k in newCfg) { 
+        for (let k in newCfg) {
             if (newCfg[k] !== oldCfg[k]) {
                 const readableKey = k.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                 cfgChanges.push(`<li><b>${readableKey}</b> updated</li>`);
-            } 
+            }
         }
         if (cfgChanges.length > 0) {
             html += `
@@ -974,15 +989,15 @@ const app = {
         for (const cat of categories) {
             const oldList = oldData.products?.[cat] || [];
             const newList = this.data.products?.[cat] || [];
-            
-            const oldMap = new Map(oldList.filter(p=>p).map((p, i) => [p.id, { p, index: i }]));
-            const newMap = new Map(newList.filter(p=>p).map((p, i) => [p.id, { p, index: i }]));
-            
+
+            const oldMap = new Map(oldList.filter(p => p).map((p, i) => [p.id, { p, index: i }]));
+            const newMap = new Map(newList.filter(p => p).map((p, i) => [p.id, { p, index: i }]));
+
             const addedNames = [];
             const removedNames = [];
             const editedNames = [];
             const reorderedNames = [];
-            
+
             for (const [newId, newVal] of newMap.entries()) {
                 if (!oldMap.has(newId)) {
                     addedNames.push(newVal.p.name);
@@ -990,18 +1005,18 @@ const app = {
                     const oldVal = oldMap.get(newId);
                     const isEdited = JSON.stringify(oldVal.p) !== JSON.stringify(newVal.p);
                     const isReordered = oldVal.index !== newVal.index;
-                    
+
                     if (isEdited) editedNames.push(newVal.p.name);
                     else if (isReordered) reorderedNames.push(newVal.p.name);
                 }
             }
-            
+
             for (const [oldId, oldVal] of oldMap.entries()) {
                 if (!newMap.has(oldId)) {
                     removedNames.push(oldVal.p.name);
                 }
             }
-            
+
             if (addedNames.length > 0 || removedNames.length > 0 || editedNames.length > 0 || reorderedNames.length > 0) {
                 hasChanges = true;
                 const badges = [];
@@ -1009,7 +1024,7 @@ const app = {
                 if (removedNames.length > 0) badges.push(`<span style="color:#c53030;background:#fff5f5;padding:3px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">-${removedNames.length} Removed</span>`);
                 if (editedNames.length > 0) badges.push(`<span style="color:#d69e2e;background:#fffff0;border:1px solid #fefcbf;padding:2px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">✎ ${editedNames.length} Edited</span>`);
                 if (reorderedNames.length > 0) badges.push(`<span style="color:#2b6cb0;background:#ebf8ff;border:1px solid #bee3f8;padding:2px 8px;border-radius:12px;font-size:0.8rem;font-weight:600;">⇅ ${reorderedNames.length} Reordered</span>`);
-                
+
                 const catName = cat.charAt(0).toUpperCase() + cat.slice(1);
                 html += `<div style="margin-bottom:12px;">
                             <div style="display:flex;align-items:center;margin-bottom:6px;gap:8px;">
@@ -1017,22 +1032,22 @@ const app = {
                                 ${badges.join(' ')}
                             </div>
                             <ul style="margin:0 0 0 24px;color:#555;font-size:0.85rem;line-height:1.4;">`;
-                            
+
                 const truncateObj = (arr, prefix) => {
                     if (arr.length === 0) return '';
                     if (arr.length <= 3) return `<li style="margin-bottom:2px;"><span style="display:inline-block;width:75px;font-weight:600;color:#7B1338;">${prefix}:</span> ${arr.join(', ')}</li>`;
-                    return `<li style="margin-bottom:2px;"><span style="display:inline-block;width:75px;font-weight:600;color:#7B1338;">${prefix}:</span> ${arr.slice(0,3).join(', ')} ... <i>and ${arr.length - 3} more</i></li>`;
+                    return `<li style="margin-bottom:2px;"><span style="display:inline-block;width:75px;font-weight:600;color:#7B1338;">${prefix}:</span> ${arr.slice(0, 3).join(', ')} ... <i>and ${arr.length - 3} more</i></li>`;
                 };
-                
+
                 html += truncateObj(addedNames, 'Added');
                 html += truncateObj(editedNames, 'Edited');
                 html += truncateObj(reorderedNames, 'Reordered');
                 html += truncateObj(removedNames, 'Removed');
-                
+
                 html += `</ul></div>`;
             }
         }
-        
+
         if (!hasChanges) return `<div style="color:#777;font-style:italic;">No changes detected since last commit.</div>`;
         return html;
     },
@@ -1067,7 +1082,7 @@ const app = {
                     #commit-confirm:hover { background:#5a0d28; transform:translateY(-2px); box-shadow:0 6px 16px rgba(123,19,56,0.35); }
                 </style>
             `;
-            
+
             modal.onclick = () => { modal.remove(); resolve(false); };
             document.body.appendChild(modal);
 
@@ -1088,6 +1103,79 @@ const app = {
         if (!confirmResult || !confirmResult.proceed) return;
 
         try {
+            // --- PHASE 1: Upload Pending Images with Checkpointing ---
+            if (app.pendingUploads && app.pendingUploads.size > 0) {
+                const total = app.pendingUploads.size;
+                let completed = 0;
+                let failed = 0;
+
+                const confirmBtn = document.getElementById('commit-confirm');
+                const uploadQueue = Array.from(app.pendingUploads.entries());
+                const CONCURRENCY = 3;
+
+                const worker = async () => {
+                    while (uploadQueue.length > 0) {
+                        const [path, originalPendingItem] = uploadQueue.shift();
+                        let pendingItem = originalPendingItem;
+                        if (typeof pendingItem === 'string') {
+                            pendingItem = { b64: pendingItem, blobSha: null };
+                            app.pendingUploads.set(path, pendingItem);
+                        }
+
+                        let success = false;
+                        let retries = 0;
+                        while (!success && retries < 3) {
+                            try {
+                                if (pendingItem.blobSha) {
+                                    success = true;
+                                    break;
+                                }
+
+                                const body = { content: pendingItem.b64, encoding: 'base64' };
+                                const blobRes = await fetch(`https://api.github.com/repos/${app.auth.username}/${app.auth.repo}/git/blobs`, {
+                                    method: 'POST',
+                                    headers: { 'Authorization': `token ${app.auth.token}`, 'Content-Type': 'application/json' },
+                                    body: JSON.stringify(body)
+                                });
+
+                                if (!blobRes.ok) throw new Error('Blob upload failed');
+                                
+                                const blobData = await blobRes.json();
+                                pendingItem.blobSha = blobData.sha; // Checkpoint
+
+                                success = true;
+                                completed++;
+                                if (confirmBtn) confirmBtn.innerHTML = `Uploading images... (${completed}/${total})`;
+                            } catch (e) {
+                                retries++;
+                                if (retries < 3) await new Promise(r => setTimeout(r, 1000));
+                            }
+                        }
+                        if (!success) failed++;
+                    }
+                };
+
+                if (confirmBtn) confirmBtn.innerHTML = `Uploading images... (0/${total})`;
+                const workers = [];
+                for (let i = 0; i < Math.min(CONCURRENCY, uploadQueue.length); i++) {
+                    workers.push(worker());
+                }
+                await Promise.all(workers);
+
+                if (failed > 0) {
+                    confirmResult.modal.remove();
+                    alert(`Failed to upload ${failed} image(s) after retries.\nThe ones that succeeded were saved.\nPlease check your connection and click "Commit Changes" again to resume the remaining uploads.`);
+                    return; // Abort Phase 2
+                }
+            }
+
+            if (confirmResult.modal) {
+                const btn = document.getElementById('commit-confirm');
+                if (btn) btn.innerHTML = 'Publishing database...';
+            }
+
+            // --- PHASE 2: Update data.json and HTML via Git Tree ---
+
             // 1. Get repository info to find default branch
             const repoInfo = await this._ghAPI('');
             const branch = repoInfo.default_branch || 'main';
@@ -1108,6 +1196,19 @@ const app = {
                 type: 'blob',
                 content: jsonText
             }];
+
+            if (app.pendingUploads) {
+                for (const [path, pendingItem] of app.pendingUploads.entries()) {
+                    if (pendingItem.blobSha) {
+                        tree.push({
+                            path: path,
+                            mode: '100644',
+                            type: 'blob',
+                            sha: pendingItem.blobSha
+                        });
+                    }
+                }
+            }
 
             function escapeHTML(str) {
                 if (!str) return '';
@@ -1135,7 +1236,7 @@ const app = {
                     tree.push({ path: `p/${p.id}.html`, mode: '100644', type: 'blob', content: html });
                 }
             }
-            
+
             if (this.hasUnsavedTranslations) {
                 tree.push({
                     path: 'translations.js',
@@ -1178,9 +1279,11 @@ const app = {
             this.hasUnsavedChanges = false;
             this.hasUnsavedTranslations = false;
             this.pendingDeletions.clear();
+            if (this.pendingUploads) this.pendingUploads.clear();
+            if (this.localImagePreviews) this.localImagePreviews.clear();
             localStorage.removeItem('parinay_preview_data');
             localStorage.removeItem('parinay_preview_translations');
-            
+
             confirmResult.modal.remove();
             this.showToast('✅ Live site updated! GitHub Pages will deploy in ~1 minute.');
         } catch (err) {
@@ -1258,7 +1361,7 @@ const app = {
                 const txt = await (await fetch(sf + '?t=' + Date.now())).text();
                 const matches = txt.match(/assets\/[a-zA-Z0-9_\\-\\.\\/]+/g);
                 if (matches) matches.forEach(m => referenced.add(m));
-            } catch(e) {}
+            } catch (e) { }
         }
         // Fetch file listings from all asset subfolders
         const folders = ['assets/sarees', 'assets/bedsheets', 'assets/lehenga', 'assets/banners'];
@@ -1291,15 +1394,15 @@ const app = {
     },
 
     // ─── EXPORT PRODUCT LIST AS PDF ───────────────────────────────────────────
-    
+
     exportProductList() {
         if (!this.data) { alert('No data loaded yet.'); return; }
         const category = document.getElementById('manage-category').value;
         const all = this.data.products[category] || [];
-        
+
         // Filter by active status tab
-        const filtered = this.activeStatusTab === 'all' 
-            ? all 
+        const filtered = this.activeStatusTab === 'all'
+            ? all
             : all.filter(p => (p.status || 'live') === this.activeStatusTab);
 
         if (filtered.length === 0) {
@@ -1312,7 +1415,7 @@ const app = {
             alert('Popup blocked! Please allow popups to export the PDF.');
             return;
         }
-        
+
         // Derive live site base URL dynamically (works on GitHub Pages & custom domain)
         const adminPath = window.location.href;
         const baseUrl = adminPath.substring(0, adminPath.lastIndexOf('/') + 1);
@@ -1321,7 +1424,7 @@ const app = {
         const d = new Date().toLocaleDateString('en-IN');
         const tabName = this.activeStatusTab.charAt(0).toUpperCase() + this.activeStatusTab.slice(1);
         const catName = category.charAt(0).toUpperCase() + category.slice(1);
-        
+
         let html = `<!DOCTYPE html>
         <html lang="en">
         <head>
@@ -1446,9 +1549,9 @@ const app = {
             const badgeHTML = badge ? `<span class="badge-pill ${badgeClass}">${badge}</span>` : '-';
             const imgSrc = p.image || '';
             const productUrl = `${baseUrl}p/${p.id || ''}.html`;
-            
-            const linkHTML = status === 'live' 
-                ? `<a href="${productUrl}" target="_blank" style="color:#7B1338;text-decoration:none;font-weight:600;font-size:11px;">Visit Site ↗</a>` 
+
+            const linkHTML = status === 'live'
+                ? `<a href="${productUrl}" target="_blank" style="color:#7B1338;text-decoration:none;font-weight:600;font-size:11px;">Visit Site ↗</a>`
                 : `<span style="color:#aaa;font-weight:600;font-size:11px;">Link Unavailable</span>`;
 
             html += `
@@ -1508,7 +1611,7 @@ const app = {
 app.translationsFileSha = null;
 app.translationsData = {};
 
-app.loadTranslations = async function() {
+app.loadTranslations = async function () {
     try {
         const res = await fetch(`https://api.github.com/repos/${this.auth.username}/${this.auth.repo}/contents/translations.js?timestamp=${Date.now()}`, {
             headers: { 'Authorization': `token ${this.auth.token}` },
@@ -1518,7 +1621,7 @@ app.loadTranslations = async function() {
             const fileData = await res.json();
             this.translationsFileSha = fileData.sha;
             let jsText = decodeURIComponent(escape(window.atob(fileData.content.replace(/\\s/g, ''))));
-            
+
             let start = jsText.indexOf('{');
             let end = jsText.lastIndexOf('}');
             if (start !== -1 && end !== -1) {
@@ -1526,12 +1629,12 @@ app.loadTranslations = async function() {
                 this.translationsData = new Function(`return ${jsonText}`)();
             }
         }
-    } catch(e) {
+    } catch (e) {
         console.error('Failed to load translations', e);
     }
 };
 
-app.openTranslationsModal = async function() {
+app.openTranslationsModal = async function () {
     // Aggressively re-fetch translations from GitHub so CLI pushes or external forces instantly sync
     if (!this.hasUnsavedTranslations) {
         await this.loadTranslations();
@@ -1571,7 +1674,7 @@ app.openTranslationsModal = async function() {
     this.renderTranslationsList();
 };
 
-app.getDynamicAppStrings = function() {
+app.getDynamicAppStrings = function () {
     let strings = new Set();
     const textBaseKeys = [
         'hero_title', 'hero_subtitle', 'sarees_title', 'sarees_subtitle',
@@ -1579,7 +1682,7 @@ app.getDynamicAppStrings = function() {
         'home_bedsheets_title', 'home_bedsheets_subtitle', 'about_title', 'about_subtitle',
         'about_f1_title', 'about_f1_desc', 'about_f2_title', 'about_f2_desc', 'about_f3_title', 'about_f3_desc'
     ];
-    
+
     if (this.data && this.data.site_config) {
         textBaseKeys.forEach(k => {
             let val = this.data.site_config[k];
@@ -1588,7 +1691,7 @@ app.getDynamicAppStrings = function() {
             }
         });
     }
-    
+
     if (this.data && this.data.products) {
         Object.keys(this.data.products).forEach(cat => {
             (this.data.products[cat] || []).forEach(p => {
@@ -1600,28 +1703,28 @@ app.getDynamicAppStrings = function() {
     return Array.from(strings);
 };
 
-app.renderTranslationsList = function() {
+app.renderTranslationsList = function () {
     let container = document.getElementById('trans-list-container');
     if (!container) return;
-    
+
     // Auto-save any ongoing input edits
     this._syncTranslationInputs();
 
     let sQ = (document.getElementById('trans-search')?.value || '').toLowerCase();
-    
+
     // Get all existing keys from dict and dynamic app data
     let allKeys = new Set(Object.keys(this.translationsData));
     let dynamicStrings = this.getDynamicAppStrings();
     dynamicStrings.forEach(s => allKeys.add(s));
-    
-    let sortedKeys = Array.from(allKeys).sort((a,b) => {
+
+    let sortedKeys = Array.from(allKeys).sort((a, b) => {
         let aVal = this.translationsData[a] || '';
         let bVal = this.translationsData[b] || '';
-        
+
         // Push unassigned to the very top
         if (!aVal && bVal) return -1;
         if (aVal && !bVal) return 1;
-        
+
         // Otherwise alphabetize
         return a.localeCompare(b);
     });
@@ -1630,11 +1733,11 @@ app.renderTranslationsList = function() {
     for (let key of sortedKeys) {
         let val = this.translationsData[key] || '';
         if (sQ && !key.toLowerCase().includes(sQ) && !val.toLowerCase().includes(sQ)) continue;
-        
+
         // Escape for input forms
         let safeKey = key.replace(/"/g, '&quot;');
         let safeVal = val.replace(/"/g, '&quot;');
-        
+
         let bgStyle = val ? '#f9f9f9' : '#fff5f5';  // Highlight missing translation
         let borderStyle = val ? '1px solid #eee' : '1px solid #fc8181';
         let phColor = val ? '#aaa' : '#e53e3e';
@@ -1649,52 +1752,52 @@ app.renderTranslationsList = function() {
             </div>
         `;
     }
-    
+
     if (html === '' && sortedKeys.length > 0) {
-       html = '<div style="padding:20px; text-align:center; color:#888;">No matches found for search query.</div>';
+        html = '<div style="padding:20px; text-align:center; color:#888;">No matches found for search query.</div>';
     } else if (html === '') {
-       html = '<div style="padding:20px; text-align:center; color:#888;">No text found to translate.</div>';
+        html = '<div style="padding:20px; text-align:center; color:#888;">No text found to translate.</div>';
     }
-    
+
     container.innerHTML = html;
 };
 
-app._syncTranslationInputs = function() {
+app._syncTranslationInputs = function () {
     let kInputs = document.querySelectorAll('.trans-key-input');
     let vInputs = document.querySelectorAll('.trans-val-input');
-    if(kInputs.length === 0) return;
-    
+    if (kInputs.length === 0) return;
+
     let newData = {};
     for (let i = 0; i < kInputs.length; i++) {
         let key = kInputs[i].value.trim();
         let val = vInputs[i].value.trim();
         if (key) newData[key] = val;
     }
-    
+
     // We only merge keys that are currently "visible" in the DOM into our data state,
     // plus keep any keys that weren't in the DOM (because of search filtering).
     let sQ = (document.getElementById('trans-search')?.value || '').toLowerCase();
-    if(sQ) {
-       for (let k in this.translationsData) {
-           let v = this.translationsData[k];
-           // If key wasn't in search result, keep it un-changed
-           if (!k.toLowerCase().includes(sQ) && !v.toLowerCase().includes(sQ)) {
-               newData[k] = v; 
-           }
-       }
+    if (sQ) {
+        for (let k in this.translationsData) {
+            let v = this.translationsData[k];
+            // If key wasn't in search result, keep it un-changed
+            if (!k.toLowerCase().includes(sQ) && !v.toLowerCase().includes(sQ)) {
+                newData[k] = v;
+            }
+        }
     }
     this.translationsData = newData;
 };
 
-app.addNewTranslation = function() {
+app.addNewTranslation = function () {
     this._syncTranslationInputs();
-    let safeKey = 'New English Text ' + Math.floor(Math.random()*1000);
+    let safeKey = 'New English Text ' + Math.floor(Math.random() * 1000);
     this.translationsData[safeKey] = 'New Hindi Translation';
-    
+
     // Clear search so the new translation is visible
     let search = document.getElementById('trans-search');
     if (search) search.value = '';
-    
+
     this.renderTranslationsList();
     setTimeout(() => {
         let c = document.getElementById('trans-list-container');
@@ -1702,8 +1805,8 @@ app.addNewTranslation = function() {
     }, 50);
 };
 
-app.deleteTranslation = function(key) {
-    if(confirm('Delete translation for "' + key + '"?')) {
+app.deleteTranslation = function (key) {
+    if (confirm('Delete translation for "' + key + '"?')) {
         this._syncTranslationInputs();
         let unescapedKey = key.replace(/&quot;/g, '"');
         delete this.translationsData[unescapedKey];
@@ -1711,11 +1814,11 @@ app.deleteTranslation = function(key) {
     }
 };
 
-app.saveTranslations = function() {
+app.saveTranslations = function () {
     this._syncTranslationInputs();
     this.hasUnsavedChanges = true;
     this.hasUnsavedTranslations = true;
-    
+
     let btn = document.querySelector('#admin-trans-modal button[onclick="app.saveTranslations()"]');
     if (btn) {
         btn.innerText = 'Saved Memory!';
