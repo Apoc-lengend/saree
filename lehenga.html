@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lehengas - Parinay Saree</title>
+    <meta name="description" content="Browse our exclusive designer lehenga collection crafted for elegance and weddings.">
+    <!-- Open Graph / WhatsApp / Social Sharing -->
+    <meta property="og:type"        content="website">
+    <meta property="og:site_name"   content="Parinay Saree">
+    <meta property="og:title"       content="Designer Lehengas - Parinay Saree">
+    <meta property="og:description" content="Browse our exclusive designer lehenga collection crafted for elegance and weddings.">
+    <meta property="og:url"         content="https://parinaysaree.in/lehenga.html">
+    <meta property="og:image"       content="assets/lehenga.png">
+    <meta name="twitter:card"       content="summary_large_image">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .hero { height: 50vh; min-height: 350px; background-size: cover; background-position: center; }
+
+        /* ── Sort / Filter Bar ── */
+        #filter-bar {
+            display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+            padding: 14px 20px; background: #fffaf6;
+            border-bottom: 1px solid #f0e8df; position: sticky; top: 60px; z-index: 100;
+        }
+        #filter-bar label { font-size: 0.82rem; font-weight: 700; color: #7B1338; white-space: nowrap; }
+        #filter-bar select {
+            padding: 6px 28px 6px 10px; border: 1.5px solid #ddd; border-radius: 20px;
+            font-family: inherit; font-size: 0.82rem; color: #333; background: white;
+            cursor: pointer; appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%237B1338' stroke-width='2.5'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 10px center;
+            transition: border-color 0.2s;
+        }
+        #filter-bar select:focus { outline: none; border-color: var(--primary-color); }
+        #product-count { font-size: 0.8rem; color: #888; margin-left: auto; white-space: nowrap; }
+
+        /* ── Back to Top ── */
+        #back-to-top {
+            position: fixed; bottom: 100px; right: 28px; width: 44px; height: 44px;
+            background: var(--primary-color); color: white; border: none; border-radius: 50%;
+            font-size: 1.3rem; cursor: pointer; z-index: 9998;
+            display: flex; align-items: center; justify-content: center;
+            box-shadow: 0 4px 14px rgba(123,19,56,0.35);
+            opacity: 0; pointer-events: none;
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+        #back-to-top.visible { opacity: 1; pointer-events: auto; }
+        #back-to-top:hover { transform: translateY(-3px); }
+
+        /* ── Carousel focus ring ── */
+        #product-carousel-track button:focus-visible {
+            outline: 3px solid var(--primary-color);
+            outline-offset: 2px;
+        }
+    </style>
+    <script src="components.js"></script>
+    <script src="translations.js"></script>
+    <script src="language.js"></script>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="assets/logo.png">
+    <link rel="icon" type="image/png" href="assets/logo.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Parinay Saree">
+</head>
+<body>
+    <site-navbar></site-navbar>
+    <header class="hero" id="dynamic-hero">
+        <div class="hero-content">
+            <h1 id="dynamic-title">Designer Lehengas</h1>
+            <p id="dynamic-subtitle">Loading...</p>
+        </div>
+    </header>
+
+    <!-- Sort / Filter Bar -->
+    <div id="filter-bar">
+        <label for="sort-select">Sort:</label>
+        <select id="sort-select" onchange="applyFilters()">
+            <option value="default">Default</option>
+            <option value="price-asc">Price: Low to High</option>
+            <option value="price-desc">Price: High to Low</option>
+        </select>
+        <label for="badge-filter" style="margin-left:8px;">Badge:</label>
+        <select id="badge-filter" onchange="applyFilters()">
+            <option value="all">All</option>
+            <option value="new">New</option>
+            <option value="sale">Sale</option>
+            <option value="trending">Trending</option>
+        </select>
+        <span id="product-count"></span>
+    </div>
+
+    <section class="collections" style="padding-top: 2rem; padding-bottom: 4rem;">
+        <div class="product-grid" id="products-grid"></div>
+    </section>
+
+    <!-- Back to Top -->
+    <button id="back-to-top" onclick="window.scrollTo({top:0,behavior:'smooth'})" aria-label="Back to top">&#8679;</button>
+
+    <script>
+        window.initProductCollection('lehenga', {
+            cover: 'lehenga_cover',
+            title: 'lehenga_title',
+            subtitle: 'lehenga_subtitle'
+        });
+    </script>
+    <site-footer></site-footer>
+</body>
+</html>

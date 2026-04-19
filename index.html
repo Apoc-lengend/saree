@@ -76,9 +76,20 @@
                 </div>
                 <div class="card-info">
                     <h3 id="dynamic-home-bedsheets-title">Premium Bedsheets</h3>
-                    <p id="dynamic-home-bedsheets-subtitle">Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk
-                        bedsheets.</p>
+                    <p id="dynamic-home-bedsheets-subtitle">Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk bedsheets.</p>
                     <a href="bedsheets.html" class="btn-secondary">View Bedsheets</a>
+                </div>
+            </div>
+
+            <!-- Lehenga Collection -->
+            <div class="card" onclick="window.location.href='lehenga.html'">
+                <div class="card-img-wrapper">
+                    <img id="dynamic-home-lehenga-img" src="assets/lehenga.png" loading="lazy" alt="Designer Traditional Lehenga Collection">
+                </div>
+                <div class="card-info">
+                    <h3 id="dynamic-home-lehenga-title">Designer Lehengas</h3>
+                    <p id="dynamic-home-lehenga-subtitle">Discover elegant and beautifully crafted lehengas perfect for weddings and festive celebrations.</p>
+                    <a href="lehenga.html" class="btn-secondary">View Lehengas</a>
                 </div>
             </div>
         </div>
@@ -129,6 +140,10 @@
             if(c.home_bedsheets_cover) document.getElementById('dynamic-home-bedsheets-img').src = c.home_bedsheets_cover;
             if(c.home_bedsheets_title) document.getElementById('dynamic-home-bedsheets-title').innerText = c.home_bedsheets_title;
             if(c.home_bedsheets_subtitle) document.getElementById('dynamic-home-bedsheets-subtitle').innerText = c.home_bedsheets_subtitle;
+
+            if(c.home_lehenga_cover) document.getElementById('dynamic-home-lehenga-img').src = c.home_lehenga_cover;
+            if(c.home_lehenga_title) document.getElementById('dynamic-home-lehenga-title').innerText = c.home_lehenga_title;
+            if(c.home_lehenga_subtitle) document.getElementById('dynamic-home-lehenga-subtitle').innerText = c.home_lehenga_subtitle;
 
             // About Section
             if(c.about_title) document.getElementById('dynamic-about-title').innerText = c.about_title;

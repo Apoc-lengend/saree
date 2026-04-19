@@ -181,6 +181,8 @@ const app = {
         document.getElementById('cfg-sarees-subtitle').value = c.sarees_subtitle || '';
         document.getElementById('cfg-bedsheets-title').value = c.bedsheets_title || '';
         document.getElementById('cfg-bedsheets-subtitle').value = c.bedsheets_subtitle || '';
+        document.getElementById('cfg-lehenga-title').value = c.lehenga_title || '';
+        document.getElementById('cfg-lehenga-subtitle').value = c.lehenga_subtitle || '';
 
         document.getElementById('cfg-home-sarees-label').innerHTML = '📁 Hero Saree Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_sarees_cover || 'assets/saree.png') + '</small>';
         document.getElementById('cfg-home-sarees-title').value = c.home_sarees_title || 'Designer Sarees';
@@ -189,6 +191,12 @@ const app = {
         document.getElementById('cfg-home-bedsheets-label').innerHTML = '📁 Hero Bedsheet Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_bedsheets_cover || 'assets/bedsheet.png') + '</small>';
         document.getElementById('cfg-home-bedsheets-title').value = c.home_bedsheets_title || 'Premium Bedsheets';
         document.getElementById('cfg-home-bedsheets-subtitle').value = c.home_bedsheets_subtitle || 'Upgrade your bedroom sanctuary with our highly comfortable, long-lasting premium cotton and silk bedsheets.';
+
+        document.getElementById('cfg-lehenga-label').innerHTML = '📁 Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.lehenga_cover || 'Not set') + '</small>';
+        
+        document.getElementById('cfg-home-lehenga-label').innerHTML = '📁 Hero Lehenga Cover<br><small style="font-weight:normal;color:#7B1338;">' + (c.home_lehenga_cover || 'assets/lehenga.png') + '</small>';
+        document.getElementById('cfg-home-lehenga-title').value = c.home_lehenga_title || 'Designer Lehengas';
+        document.getElementById('cfg-home-lehenga-subtitle').value = c.home_lehenga_subtitle || 'Discover elegant and beautifully crafted lehengas perfect for weddings and festive celebrations.';
 
         document.getElementById('cfg-about-title').value = c.about_title || 'Why Choose Us';
         document.getElementById('cfg-about-subtitle').value = c.about_subtitle || 'The Parinay Saree Promise';
@@ -1245,7 +1253,7 @@ const app = {
             }
         }
         // Fetch file listings from static files to protect hardcoded images
-        const staticFiles = ['index.html', 'styles.css', 'components.js', 'sarees.html', 'bedsheets.html'];
+        const staticFiles = ['index.html', 'styles.css', 'components.js', 'sarees.html', 'bedsheets.html', 'lehenga.html'];
         for (const sf of staticFiles) {
             try {
                 const txt = await (await fetch(sf + '?t=' + Date.now())).text();
@@ -1254,7 +1262,7 @@ const app = {
             } catch(e) {}
         }
         // Fetch file listings from all asset subfolders
-        const folders = ['assets/sarees', 'assets/bedsheets', 'assets/banners'];
+        const folders = ['assets/sarees', 'assets/bedsheets', 'assets/lehenga', 'assets/banners'];
         const orphans = [];
 
         for (const folder of folders) {

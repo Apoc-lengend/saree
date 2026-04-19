@@ -110,6 +110,18 @@
                     <textarea id="cfg-home-bedsheets-subtitle" placeholder="Hero Bedsheet Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_bedsheets_subtitle', this.value)"></textarea>
                 </div>
                 <div class="form-group">
+                    <label id="cfg-lehenga-label" for="cfg-lehenga-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Lehenga Cover</label>
+                    <input type="file" id="cfg-lehenga-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('lehenga_cover', this.files[0], 'cfg-lehenga-label')">
+                    <input type="text" id="cfg-lehenga-title" placeholder="Lehenga Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('lehenga_title', this.value)">
+                    <textarea id="cfg-lehenga-subtitle" placeholder="Lehenga Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('lehenga_subtitle', this.value)"></textarea>
+                </div>
+                <div class="form-group">
+                    <label id="cfg-home-lehenga-label" for="cfg-home-lehenga-cover" style="display:block; padding:8px 12px; background:#f0f0f0; border-radius:4px; font-weight:bold; cursor:pointer;">📁 Hero Lehenga Cover</label>
+                    <input type="file" id="cfg-home-lehenga-cover" style="display:none;" accept="image/*" onchange="app.uploadConfigImage('home_lehenga_cover', this.files[0], 'cfg-home-lehenga-label')">
+                    <input type="text" id="cfg-home-lehenga-title" placeholder="Hero Lehenga Title" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_lehenga_title', this.value)">
+                    <textarea id="cfg-home-lehenga-subtitle" placeholder="Hero Lehenga Subtitle" rows="2" style="width:100%; margin-top:5px; padding:6px; font-size:0.8rem; border:1px solid #ccc; border-radius:4px;" onchange="app.updateConfig('home_lehenga_subtitle', this.value)"></textarea>
+                </div>
+                <div class="form-group">
                     <label>Delivery Rate</label>
                     <input type="text" id="cfg-delivery-value" placeholder="e.g. Free Delivery or 50" onchange="app.updateConfig('delivery_value', this.value)">
                 </div>
@@ -216,6 +228,7 @@
                     <select id="manage-category" onchange="app.resetAndRender()" style="flex:1;">
                         <option value="sarees">View Sarees</option>
                         <option value="bedsheets">View Bedsheets</option>
+                        <option value="lehenga">View Lehengas</option>
                     </select>
                     <button class="btn btn-small" onclick="app.openPreferencesModal()" style="padding:10px; background:#4a5568; margin-top:0;">Preference</button>
                 </div>

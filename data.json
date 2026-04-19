@@ -3,12 +3,15 @@
     "hero_cover": "assets/banners/1776488303334_saree6.webp",
     "sarees_cover": "assets/banners/1775900684317_saree4.2.webp",
     "bedsheets_cover": "assets/bedsheet.png",
-    "hero_title": "JAI SHREE KRISHNA ",
+    "lehenga_cover": "assets/lehenga.png",
+    "hero_title": "Weave Your World in Elegance",
     "hero_subtitle": "Explore our curated collection of pure silk sarees and ultra-premium home linens, designed for ultimate comfort and timeless luxury.",
     "sarees_title": "Designer Sarees",
     "sarees_subtitle": "Pure silk, georgette, and intricately designed traditional sarees.",
     "bedsheets_title": "Premium Bedsheets",
     "bedsheets_subtitle": "Upgrade your sanctuary with ultra-soft, Egyptian cotton threads.",
+    "lehenga_title": "Designer Lehengas",
+    "lehenga_subtitle": "Discover elegant and beautifully crafted lehengas perfect for weddings and festive celebrations.",
     "delivery_value": "Free Delivery",
     "whatsapp_number": "919876543210"
   },
@@ -1083,6 +1086,62 @@
         "discount": 10,
         "badge": "trending",
         "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "bed_21_1775425651572179",
+        "name": "Gingham Checkered",
+        "price": "₹14,462",
+        "image": "assets/bed1.png",
+        "style": "filter: hue-rotate(70deg) saturate(74%);",
+        "stock": 47,
+        "discount": 30,
+        "badge": "",
+        "description": "High quality premium material specially curated for maximum comfort and an elegant aesthetic look. Designed for longevity.",
+        "more_images": [
+          "assets/bedsheet.png"
+        ],
+        "dateAdded": "2026-01-04T11:54:18.520Z"
+      }
+    ],
+    "lehenga": [
+      {
+        "id": "leh_1",
+        "name": "Bridal Red Lehenga",
+        "price": "₹25,000",
+        "image": "assets/lehenga.png",
+        "style": "",
+        "stock": 5,
+        "discount": 10,
+        "badge": "new",
+        "description": "Elegant bridal lehenga with intricate zari work, perfect for your special day.",
+        "more_images": [],
+        "dateAdded": "2026-04-19T00:00:00.000Z"
+      },
+      {
+        "id": "leh_2",
+        "name": "Pastel Pink Engagement Lehenga",
+        "price": "₹15,000",
+        "image": "assets/lehenga.png",
+        "style": "filter: hue-rotate(90deg);",
+        "stock": 10,
+        "discount": 0,
+        "badge": "trending",
+        "description": "Soft pastel pink lehenga with pearl embellishments for a classy look.",
+        "more_images": [],
+        "dateAdded": "2026-04-19T00:00:00.000Z"
+      },
+      {
+        "id": "leh_3",
+        "name": "Golden Silk Lehenga",
+        "price": "₹18,500",
+        "image": "assets/lehenga.png",
+        "style": "filter: sepia(100%) hue-rotate(10deg);",
+        "stock": 2,
+        "discount": 5,
+        "badge": "",
+        "description": "Stunning golden silk lehenga for festive celebrations.",
+        "more_images": [],
+        "dateAdded": "2026-04-19T00:00:00.000Z"
       }
     ]
   }
