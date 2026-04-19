@@ -1164,6 +1164,23 @@
           "assets/lehenga/1776628258979_IMG-20260405-WA0004.webp"
         ],
         "dateAdded": "2026-04-19T19:50:55.152Z"
+      },
+      {
+        "id": "p1776629314884",
+        "name": "Badhiya Lehenga",
+        "price": "₹1234",
+        "image": "assets/lehenga/1776629314049_Screenshot_20260309_152725.webp",
+        "style": "",
+        "stock": 3,
+        "discount": 65,
+        "badge": "new",
+        "description": "High Quality GAme",
+        "status": "live",
+        "more_images": [
+          "assets/lehenga/1776629314566_Screenshot_20260309_155100.webp",
+          "assets/lehenga/1776629314884_Screenshot_20260309_152742.webp"
+        ],
+        "dateAdded": "2026-04-19T20:08:33.695Z"
       }
     ]
   }
