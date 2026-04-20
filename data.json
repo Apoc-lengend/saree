@@ -1111,6 +1111,20 @@
     ],
     "lehenga": [
       {
+        "id": "p1776679789113",
+        "name": "bridal lehenga",
+        "price": "₹7000",
+        "image": "assets/lehenga/1776679789113_WhatsApp-Image-2026-04-18-at-12.54.23-PM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 29,
+        "badge": "new",
+        "description": "ONLY ONE PIECE LIMITED LEHENGA VERY LUXURY AND BEAUTY ORDER FAST",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-04-20T10:09:48.667Z"
+      },
+      {
         "id": "leh_1",
         "name": "Bridal Red Lehenga",
         "price": "₹25,000",
