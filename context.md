@@ -22,6 +22,7 @@ The entire system follows a **Zero-Dependency Principle** — no Node.js, no NPM
 | `index.html` | Main homepage — Hero section, collections overview, features section, OG meta tags |
 | `sarees.html` | Full Saree product listing — sort bar, badge filter, product count, back-to-top, OG tags |
 | `bedsheets.html` | Full Bedsheet product listing — identical feature set to sarees.html |
+| `lehenga.html` | Full Lehenga product listing — identical feature set, using PS branding |
 | `admin.html` | Browser-based Admin CMS dashboard — login UI, metric dashboard, all control panels |
 | `admin.js` | All admin logic — GitHub API, product CRUD, image pipeline, bulk ops, preview, cleanup |
 | `components.js` | Shared UI — navbar, footer, product cards, modals, cart, checkout, helpers |
@@ -55,6 +56,9 @@ Controls all global website settings — covers, titles, subtitles, delivery, Wh
     "bedsheets_cover": "assets/banners/bedsheets.jpg",
     "bedsheets_title": "Skyloom Bedsheets",
     "bedsheets_subtitle": "Luxury sleep starts here",
+    "lehenga_cover": "assets/banners/lehenga.jpg",
+    "home_lehenga_cover": "assets/banners/home_lehenga.jpg",
+    "home_lehenga_title": "Designer Lehengas",
     "delivery_value": "Free Delivery",
     "whatsapp_number": "919876543210"
   }
@@ -65,7 +69,7 @@ Controls all global website settings — covers, titles, subtitles, delivery, Wh
 
 ### 3.2 products Block
 
-All products stored under `products.sarees[]` and `products.bedsheets[]`. Each product object:
+All products stored under `products.sarees[]`, `products.bedsheets[]`, and `products.lehenga[]`. Each product object:
 
 ```json
 {
@@ -171,7 +175,7 @@ Primary product rendering function. Generates a full product card DOM element wi
 - Lazy-loaded cover image (`loading="lazy"`).
 - Discount badge overlay (top-left) and marketing badge (top-right).
 - Pricing block with MRP strikethrough calculated via CSS superscript scaling.
-- **Branded logo** auto-inserted based on category — `PS_LOGO` for sarees, `SKYLOOM_LOGO` for bedsheets.
+- **Branded logo** auto-inserted based on category — `PS_LOGO` for sarees and lehengas, `SKYLOOM_LOGO` for bedsheets.
 - "Add to Cart" and "WhatsApp Order" overlay buttons on hover (hidden if out of stock).
 - Click handler that opens `showProductDetails()`.
 
@@ -185,9 +189,14 @@ Opens a full-screen modal with:
 
 ### 4.6 Cart, Checkout & WhatsApp Order Flow
 - Cart state is stored in `localStorage` under `parinay_cart`.
+- **Cart Enforcement**: The "Add to Cart" functionality strictly respects real-time stock limits. Users cannot add more quantity of an item than is currently in stock.
 - Checkout calculates: `subtotal + GST (5%) + deliveryCost` using `getDeliveryCost()`.
 - Final order is formatted as a WhatsApp message URL and opened in a new tab.
 - After order, cart is cleared from localStorage.
+
+### 4.7 Status-Based Access Control & Search
+- **Visibility Restrictions**: "Archived" and "Hidden" products are restricted from the frontend. If a user accesses them via a direct link, the system intercepts the request and silently redirects them to the main category page with a user-friendly alert, preventing access to restricted item details.
+- **Search Filtering**: The global search engine explicitly excludes non-live products from the results.
 
 ---
 
@@ -547,7 +556,7 @@ The product detail modal's image carousel arrow buttons previously had no keyboa
 | Background | `#f9f5ef` | Warm off-white page background |
 
 - **Typography**: Google Fonts — `Outfit` (English, all weights 300–700) + `Noto Sans Devanagari` (Hindi, weights 400–700).
-- **Branding Rule**: Sarees → `PS_LOGO` (`assets/ps-logo-compressed.png`) at 48px on cards, 54px in modals. Bedsheets → `SKYLOOM_LOGO` (`assets/skyloom-logo.png`) at 65px on cards, 80px in modals.
+- **Branding Rule**: Sarees and Lehengas → `PS_LOGO` (`assets/ps-logo-compressed.png`) at 48px on cards, 54px in modals. Bedsheets → `SKYLOOM_LOGO` (`assets/skyloom-logo.png`) at 65px on cards, 80px in modals.
 - **Price Rendering**: ₹ symbol at reduced CSS `font-size`, not `<sup>` tag (which causes baseline misalignment).
 
 ---
@@ -641,6 +650,7 @@ The current approach (immediate upload) is simpler and more resilient. Orphans a
 | Shifting Preference drag-and-drop reorder modal | ✅ Live |
 | Product Status (Live/Hidden/Archived) — admin & frontend | ✅ Live |
 | Status Filter Tabs with live counts | ✅ Live |
+| Progressive Web App (PWA) Installability | ✅ Live |
 | Bulk Actions (11 operations) | ✅ Live |
 | Metric Dashboard | ✅ Live |
 | Pagination (Load More, 20 per page) | ✅ Live |

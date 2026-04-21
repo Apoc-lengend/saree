@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Bill Generator — Parinay Saree</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="bill-generator.css"/>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader"><div class="spin"></div><p>Loading products…</p></div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- ════════════════ PRODUCT MODAL ════════════════ -->
+<div class="modal-overlay" id="prod-modal-overlay" onclick="closeProdModalOnBg(event)">
+  <div class="modal" id="prod-modal">
+    <div class="modal-head">
+      <h2>🛍 Products</h2>
+      <input class="modal-search" id="modal-search" type="text" placeholder="Search products…" oninput="filterModalProducts()" autocomplete="off"/>
+      <button class="modal-close-btn" onclick="closeProdModal()">✕</button>
+    </div>
+    <div class="modal-tabs" id="modal-tabs">
+      <button class="m-tab active" data-tab="all" onclick="switchTab('all')">All</button>
+      <button class="m-tab" data-tab="Saree" onclick="switchTab('Saree')">Sarees</button>
+      <button class="m-tab" data-tab="Bedsheet" onclick="switchTab('Bedsheet')">Bedsheets</button>
+      <button class="m-tab" data-tab="Lehenga" onclick="switchTab('Lehenga')">Lehengas</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-foot">
+      <span class="m-sel-count" id="m-sel-count">0 selected</span>
+      <button class="m-add-btn" onclick="addSelectedProducts()">＋ Add to Bill</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ CUSTOMERS MODAL ════════════════ -->
+<div class="modal-overlay" id="cust-modal-overlay" onclick="closeCustModalOnBg(event)">
+  <div class="modal" id="cust-modal">
+    <div class="modal-head">
+      <h2>👥 Customer Records</h2>
+      <button class="modal-close-btn" onclick="closeCustModal()">✕</button>
+    </div>
+    <div class="cust-head-info" id="cust-summary">Loading customer records…</div>
+    <div class="cust-list" id="cust-list"></div>
+    <div class="cust-foot">
+      <button class="c-exp-btn" onclick="exportCustomers()">⬇️ Export customers.json</button>
+      <button class="c-clear-btn" onclick="clearCustomers()">🗑 Clear All</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ PICK CUSTOMER MODAL ════════════════ -->
+<div class="modal-overlay" id="pick-cust-overlay" onclick="closePickCustomerOnBg(event)">
+  <div class="modal" style="max-width:420px;">
+    <div class="modal-head">
+      <h2>👥 Pick Customer</h2>
+      <input class="modal-search" id="pick-cust-search" placeholder="Search name or phone…" oninput="filterPickCustomer()"/>
+      <button class="modal-close-btn" onclick="closePickCustomer()">✕</button>
+    </div>
+    <div class="modal-body" style="padding:0;" id="pick-cust-list"></div>
+  </div>
+</div>
+
+<!-- ════════════════ CUSTOM DIALOG ════════════════ -->
+<div class="modal-overlay" id="dialog-overlay">
+  <div class="modal" style="max-width:360px; text-align:center;">
+    <div style="padding:28px 24px 10px;">
+      <div id="dialog-icon" style="font-size:2.4rem; margin-bottom:14px;"></div>
+      <p id="dialog-msg" style="font-size:.93rem; color:var(--t); line-height:1.6;"></p>
+    </div>
+    <div id="dialog-btns" style="display:flex; gap:10px; padding:16px 20px; justify-content:center;"></div>
+  </div>
+</div>
+
+<!-- ════════════════ BILLS ARCHIVE MODAL ════════════════ -->
+<div class="modal-overlay" id="bills-modal-overlay" onclick="closeBillsModalOnBg(event)">
+  <div class="modal" id="bills-modal">
+    <div class="modal-head">
+      <h2>📜 Saved Bills Archive</h2>
+      <input class="modal-search" id="bills-search" placeholder="Search invoice or customer…" oninput="filterBills()"/>
+      <button class="modal-close-btn" onclick="closeBillsModal()">✕</button>
+    </div>
+    <div class="cust-head-info" id="bills-summary">Loading bills…</div>
+    <div id="bills-sort-bar">
+      <span class="sort-lbl">Sort:</span>
+      <button class="sort-pill active" data-s="date" onclick="setBillsSort('date')">📅 Date</button>
+      <button class="sort-pill" data-s="invoice" onclick="setBillsSort('invoice')">🔢 Invoice</button>
+      <button class="sort-pill" data-s="name" onclick="setBillsSort('name')">👤 Customer</button>
+      <button class="sort-pill" data-s="amount" onclick="setBillsSort('amount')">₹ Amount</button>
+      <button class="sort-pill" id="sort-dir-btn" onclick="toggleBillsSortDir()" style="margin-left:auto;">↓ Desc</button>
+    </div>
+    <div class="cust-list" id="bills-list"></div>
+  </div>
+</div>
+
+<!-- ════════════════ BILL VIEW MODAL ════════════════ -->
+<div class="modal-overlay" id="bill-view-overlay" onclick="closeBillViewOnBg(event)" style="z-index: 500;">
+  <div class="modal" id="bill-view-modal" style="max-width: 660px; background: transparent; box-shadow: none;">
+    <div style="flex: 1; min-height: 0; overflow-y: auto; border-radius:3px; box-shadow: 0 6px 32px rgba(0,0,0,.15); background:var(--w);">
+      <div id="bill-view-content"></div>
+    </div>
+    <div style="display:flex; gap:10px; margin-top:16px; justify-content:center;">
+      <button id="bv-edit-btn" style="background:#18763e; color:#fff; border:none; padding:10px 20px; border-radius:8px; font:inherit; font-weight:600; cursor:pointer; box-shadow:0 3px 12px rgba(24,118,62,.3);">✏️ Edit Bill</button>
+      <button id="bv-share-btn" style="background:var(--p); color:#fff; border:none; padding:10px 20px; border-radius:8px; font:inherit; font-weight:600; cursor:pointer; box-shadow:0 3px 12px rgba(123,19,56,.3);">📤 Share</button>
+      <button id="bv-del-btn" style="background:#c0392b; color:#fff; border:none; padding:10px 20px; border-radius:8px; font:inherit; font-weight:600; cursor:pointer; box-shadow:0 3px 12px rgba(192,57,43,.3);">🗑 Delete</button>
+      <button onclick="closeBillView()" style="background:var(--w); color:var(--t); border:none; padding:10px 20px; border-radius:8px; font:inherit; font-weight:600; cursor:pointer;">✕ Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════ TOP BAR ════════════════ -->
+<div class="topbar">
+  <img src="assets/ps-logo-compressed.png" alt="PS" onerror="this.style.display='none'"/>
+  <div class="tb-brand">
+    <div class="tb-title">Parinay Saree</div>
+    <div class="tb-sub">Bill Generator</div>
+  </div>
+  <div class="tb-right">
+    <button class="tb-btn" onclick="setSecretKey()" style="background:#2b6cb0; border-color:#3182ce;">🔑 Set Key</button>
+    <button class="tb-btn" onclick="exportCustomers()" style="background:#c0392b; border-color:#e74c3c;">💾 Download DB</button>
+    <label class="tb-btn" style="cursor:pointer; margin-bottom:0;">
+      <input type="file" accept=".json" style="display:none;" onchange="handleTopBarUpload(event)">
+      📂 Upload DB
+    </label>
+    <button class="tb-btn" onclick="openBillsModal()">📜 Saved Bills</button>
+    <button class="tb-btn" onclick="openCustModal()">👥 Customers</button>
+  </div>
+</div>
+
+<!-- ════════════════ MAIN LAYOUT ════════════════ -->
+<div class="layout">
+
+  <!-- ── FORM SIDE ── -->
+  <div class="form-side">
+
+    <div class="sec">
+      <div class="sec-title">🏪 Store Info</div>
+      <div class="field"><label>Store Name</label><input id="s-name" value="Parinay Saree" oninput="render()"/></div>
+      <div class="field"><label>Address</label><textarea id="s-addr" oninput="render()">Your Store Address, City, State — PIN</textarea></div>
+      <div class="r2">
+        <div class="field"><label>Phone</label><input id="s-phone" value="+91 98765 43210" oninput="render()"/></div>
+        <div class="field"><label>GST No.</label><input id="s-gst" placeholder="GSTIN (optional)" oninput="render()"/></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">📄 Invoice Details</div>
+      <div class="r2">
+        <div class="field"><label>Invoice #</label><input id="inv-num" value="INV-1000" oninput="render()"/></div>
+        <div class="field"><label>Date</label><input id="inv-date" type="date" oninput="render()"/></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">👤 Bill To</div>
+      <div class="field">
+        <label>Customer Name</label>
+        <div style="display:flex; gap:6px; align-items:center;">
+          <div style="position:relative; flex:1;">
+            <input id="c-name" placeholder="Full name" oninput="render(); updateClearBtn()" style="width:100%; padding-right:28px;"/>
+            <button type="button" id="c-name-clear" onclick="clearCustomerFields()" title="Clear customer" style="display:none; position:absolute; right:7px; top:50%; transform:translateY(-50%); background:none; border:none; cursor:pointer; color:#c0392b; font-size:1rem; line-height:1; padding:0;">&#x2715;</button>
+          </div>
+          <button type="button" onclick="addCustomerContact()" style="padding:0 12px; height:36px; background:linear-gradient(135deg,var(--pd),var(--p)); border:none; border-radius:8px; cursor:pointer; font-size:1.1rem; flex-shrink:0; color:#fff;" title="Save Customer to List">＋</button>
+          <button type="button" onclick="openPickCustomer()" style="padding:0 11px; height:36px; background:var(--bg); border:1.5px solid var(--bd); border-radius:8px; cursor:pointer; font-size:.9rem; font-family:inherit; font-weight:600; color:var(--p); flex-shrink:0;" title="Pick Saved Customer">👥 Pick</button>
+        </div>
+      </div>
+      <div class="field"><label>Address</label><textarea id="c-addr" placeholder="Delivery address" oninput="render()"></textarea></div>
+      <div class="r2">
+        <div class="field"><label>Phone</label><input id="c-phone" placeholder="+91 XXXXX XXXXX" oninput="render()"/></div>
+        <div class="field"><label>City / PIN</label><input id="c-city" placeholder="City — PIN" oninput="render()"/></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">🛍 Products</div>
+      <button class="add-prod-btn" onclick="openProdModal()">＋ Add Products from Catalog</button>
+      <div id="items-list"><div class="li-empty">No items yet. Click "Add Products" above.</div></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">💰 Charges</div>
+      <div class="charge-row"><label>GST %</label><input id="gst-rate" type="number" value="5" min="0" max="100" step=".5" oninput="render()"/><span class="unit">%</span></div>
+      <div class="charge-row"><label>Discount %</label><input id="disc-rate" type="number" value="0" min="0" max="100" step="1" oninput="render()"/><span class="unit">%</span></div>
+      <div class="charge-row"><label>Delivery</label><input id="delivery" type="number" value="0" min="0" step="10" oninput="render()"/><span class="unit">₹</span></div>
+    </div>
+
+    <div class="sec">
+      <div class="sec-title">📝 Notes</div>
+      <div class="field"><label>Payment / Custom Note</label><textarea id="notes" placeholder="E.g. Pay via UPI to parinay@upi" oninput="render()"></textarea></div>
+    </div>
+
+    <div class="sec actions">
+      <button class="btn btn-primary" onclick="downloadBill()">📤 Share / Download</button>
+      <button class="btn btn-save" id="save-bill-btn" onclick="saveCustomer()">💾 Save the Bill</button>
+      <button class="btn btn-outline" onclick="newBill()">🔄 New Bill</button>
+    </div>
+
+  </div><!-- /form-side -->
+
+  <!-- ── PREVIEW SIDE ── -->
+  <div class="preview-side">
+    <div class="preview-label">Live Bill Preview</div>
+    <div id="bill">
+      <div class="b-empty" id="b-empty">
+        <div class="icon">🧾</div>
+        <p>Add at least one product to see the bill preview.</p>
+      </div>
+      <div id="b-content" style="display:none">
+        <div class="b-hdr">
+          <div class="b-hdr-l">
+            <div class="b-logo"><img src="assets/ps-logo-compressed.png" alt="PS" onerror="this.style.display='none'"/></div>
+            <div>
+              <div class="b-co-name" id="b-co-name">Parinay Saree</div>
+              <div class="b-co-tag">Weave Your World in Elegance</div>
+              <div class="b-co-info" id="b-co-info"></div>
+            </div>
+          </div>
+          <div class="b-hdr-r">
+            <div class="b-inv-lbl">Invoice</div>
+            <div class="b-inv-num" id="b-inv-num">#INV-1000</div>
+            <div class="b-inv-dt"  id="b-inv-dt"></div>
+          </div>
+        </div>
+        <div class="b-gold"></div>
+        <div class="b-meta">
+          <div class="b-mb">
+            <div class="b-ml">Bill To</div>
+            <div class="b-mv" id="b-cust"><span class="bld">—</span></div>
+          </div>
+          <div class="b-mb">
+            <div class="b-ml">Order For</div>
+            <div class="b-mv">Premium Sarees &amp; Home Linens</div>
+            <div style="font-size:.7rem;color:var(--tl);margin-top:4px;" id="b-gstin"></div>
+          </div>
+        </div>
+        <table class="b-tbl">
+          <thead><tr>
+            <th>#</th><th style="text-align:left;width:99%">Item Description</th>
+            <th>Qty</th><th>Rate</th><th>Amount</th>
+          </tr></thead>
+          <tbody id="b-tbody"></tbody>
+        </table>
+        <div class="b-totals">
+          <div class="tot-inner">
+            <div class="t-row"><span class="tl">Subtotal</span><span class="tv" id="b-sub">₹0</span></div>
+            <div class="t-row t-disc" id="b-disc-row" style="display:none">
+              <span class="tl">Discount (<span id="b-dp">0</span>%)</span>
+              <span class="tv" id="b-dv">-₹0</span>
+            </div>
+            <div class="t-row" id="b-gst-row" style="display:none">
+              <span class="tl">GST (<span id="b-gp">5</span>%)</span>
+              <span class="tv" id="b-gv">₹0</span>
+            </div>
+            <div class="t-row" id="b-del-row" style="display:none">
+              <span class="tl">Delivery</span><span class="tv" id="b-dlv">₹0</span>
+            </div>
+            <div class="t-grand">
+              <span class="gl">Total Amount</span>
+              <span class="gv" id="b-total">₹0</span>
+            </div>
+          </div>
+        </div>
+        <div class="b-ftr">
+          <div class="b-ftr-ty" id="b-notes-out" style="text-transform:none; letter-spacing:normal; font-size:.86rem; border-top:none; padding:0; text-align:center;">Thank you for your business!</div>
+          <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-top:12px;">
+            <div class="b-ver-id" id="b-ver-id" style="text-align:left; margin-top:0;"></div>
+            <div class="b-ftr-note" style="margin-bottom:0; text-align:right;">
+              <strong id="b-fn">Parinay Saree</strong><br/>
+              Contact: <strong id="b-fp">+91 98765 43210</strong>
+            </div>
+          </div>
+        </div>
+        <div class="b-strip"></div>
+      </div><!-- /b-content -->
+    </div><!-- /bill -->
+  </div><!-- /preview-side -->
+
+</div><!-- /layout -->
+
+<!-- ════════════════ DB INIT OVERLAY ════════════════ -->
+<div class="modal-overlay open" id="db-init-overlay" style="z-index: 1000; background: rgba(244,240,234,0.98);">
+  <div class="modal" style="padding:40px; text-align:center; max-width:460px;">
+    <div style="font-size:3rem; margin-bottom:15px;">📁</div>
+    <h2 style="font-size:1.4rem; color:var(--p); margin-bottom:10px;">Load Customer Database</h2>
+    <p style="font-size:.9rem; color:var(--tm); margin-bottom:25px; line-height:1.5;">
+      To protect privacy, no customer data is stored online. Please load your latest <strong>customers.json</strong> file to continue. (Your data will be securely cached in your browser while you work).
+    </p>
+    <div style="display:flex; flex-direction:column; gap:12px;">
+      <label class="btn btn-primary" style="cursor:pointer; display:flex;">
+        <input type="file" accept=".json" style="display:none;" onchange="handleDbUpload(event)">
+        📂 Upload customers.json
+      </label>
+      <button class="btn btn-outline" onclick="startFreshDb()">✨ Start Fresh (New Database)</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="bill-generator.js"></script>
+</body>
+</html>

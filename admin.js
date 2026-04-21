@@ -788,7 +788,7 @@ const app = {
                 more_images.push(await this.compressAndUpload(moreImageFiles[i], category));
             }
 
-            const newId = 'p' + Date.now();
+            const newId = category + '_' + Date.now();
             let finalStock = stock;
             if (status === 'archived') finalStock = 0;
 
@@ -1139,7 +1139,7 @@ const app = {
                                 });
 
                                 if (!blobRes.ok) throw new Error('Blob upload failed');
-                                
+
                                 const blobData = await blobRes.json();
                                 pendingItem.blobSha = blobData.sha; // Checkpoint
 

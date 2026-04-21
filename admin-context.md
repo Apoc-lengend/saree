@@ -44,6 +44,7 @@ The admin panel (`admin.html` + `admin.js`) is a **fully browser-based CMS** wit
 |---|---|
 | **Zero Backend** | No Node.js, no Express, no database. GitHub is the backend. |
 | **In-Memory Edits** | All changes edit `app.data` in RAM. Nothing is saved until "Commit Changes" is clicked. |
+| **Mobile Responsive** | The admin interface (`admin.css`) is completely fluid using CSS Grid, allowing full CMS management from mobile devices. |
 | **Single Source of Truth** | `data.json` in the GitHub repo is the live DB for both admin and frontend. |
 | **Deferred Writes** | Text/product data is staged in memory; only images upload immediately (architectural constraint). |
 | **Git Tree Commit** | The commit pipeline uses GitHub's Git Tree API, not individual file-by-file PUT requests — atomic, efficient. |
@@ -649,15 +650,13 @@ const path = `assets/${category}/${safeName}`;
    }
    ```
 
-### GitHub Upload (within processFile)
+### Deferred GitHub Upload (In-Memory Queue)
 
-1. Attempt GET on the target path — if exists, capture existing SHA
-2. Build PUT body: `{ message: "Upload {name}", content: base64, sha?: existingSha }`
-3. PUT to `https://api.github.com/repos/{user}/{repo}/contents/{path}`
-4. On success → resolve Promise with `path`
-5. On failure → reject with error
+1. The processed Base64 string is stored in memory via `app.pendingUploads.set(path, { b64, blobSha: null })`.
+2. A corresponding data URL is stored in `app.localImagePreviews` for instant UI rendering.
+3. The promise resolves with the path, and the UI displays the image instantly.
 
-> **Key architectural fact:** Images are pushed to GitHub **immediately** on selection, before the admin clicks "Commit Changes". This is an intentional architectural trade-off. See Section 14 for why.
+> **Key architectural fact:** Images are **NOT** pushed to GitHub immediately anymore. They are cached in browser memory and only uploaded as raw blobs (without committing) during the Phase 1 step of "Commit Changes". This ensures the Git commit history remains perfectly clean (one single commit per save session).
 
 ---
 
@@ -698,18 +697,16 @@ Lets the admin see exactly how their **uncommitted in-memory changes** will look
 
 | Can Preview | Cannot Preview |
 |---|---|
-| Product status (live/hidden/archived) | Images uploaded in this session (they're already on GitHub) |
+| Product status (live/hidden/archived) | — |
 | Price, discount, badge edits | — |
 | New products added | — |
 | Product order changes | — |
 | Hero/cover title and subtitle | — |
 | Translation changes | — |
+| Images uploaded in this session | — (Images are now previewed from local memory!) |
 
-### Why Images Can't Be Staged
-
-1. The browser cannot write to local disk — a `File` object only lives in RAM for the session
-2. The product record needs a real resolvable URL in its `image` field at creation time
-3. `deleteFileFromGitHub` relies on files having a live GitHub SHA
+### Image Previews
+Because image uploads are now deferred to the commit phase, they use `app.localImagePreviews` to intercept any URL resolving on the admin panel or during a Preview session. `loadData()` in `components.js` automatically looks for these local previews if `?preview=1` is active, seamlessly replacing broken GitHub URLs with live Base64 data URLs.
 
 ---
 
@@ -746,21 +743,34 @@ A modal showing a **diff summary** of all changes since the last commit. The dif
 
 "Yes, Publish Now" button → locks both buttons (pointer-events: none), shows "Publishing…"
 
-### Step 2: Git Tree Commit (`saveChanges`)
+### Step 2: Two-Phase Commit (`saveChanges`)
 
-Uses the **Git Tree API** (not individual PUT calls) for an atomic, multi-file commit:
+Because standard GitHub File API PUT requests create a new commit for every single file, pushing 20 images would ruin the Git history. The new system solves this via a Two-Phase Commit process:
+
+**Phase 1: Concurrent Blob Upload**
+A worker pool (concurrency: 3) loops through `app.pendingUploads`.
+```
+1. POST /repos/{user}/{repo}/git/blobs
+   Body: { content: base64, encoding: 'base64' }
+2. Success → Stores the returned blob `sha` in `pendingItem.blobSha`.
+```
+*Note: The Blob API uploads the raw data to GitHub's database but **does not** create a commit.*
+
+**Phase 2: Atomic Git Tree Commit**
+Uses the **Git Tree API** to bundle all the new blob SHAs, data.json, and SEO pages into a single commit:
 
 ```
-1. GET /repos/{user}/{repo}                    → get default_branch
-2. GET /repos/{user}/{repo}/git/refs/heads/{branch} → get commitSha
-3. GET /repos/{user}/{repo}/git/commits/{commitSha} → get baseTreeSha
-4. POST /repos/{user}/{repo}/git/trees          → create new tree with:
+1. GET /repos/{user}/{repo}                             → get default_branch
+2. GET /repos/{user}/{repo}/git/refs/heads/{branch}     → get commitSha
+3. GET /repos/{user}/{repo}/git/commits/{commitSha}     → get baseTreeSha
+4. POST /repos/{user}/{repo}/git/trees                  → create new tree with:
       - data.json (updated catalog)
       - p/{id}.html for every product (SEO redirect pages)
       - translations.js (if hasUnsavedTranslations)
+      - All pending image uploads (using their newly generated blob SHAs)
       - null sha for each pendingDeletion path (deletes the file)
-5. POST /repos/{user}/{repo}/git/commits        → create commit
-6. PATCH /repos/{user}/{repo}/git/refs/{branch} → fast-forward branch
+5. POST /repos/{user}/{repo}/git/commits                → create one clean commit
+6. PATCH /repos/{user}/{repo}/git/refs/{branch}         → fast-forward branch
 ```
 
 ### SEO Static Pages (auto-generated per commit)
