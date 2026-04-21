@@ -573,6 +573,24 @@
         "discount": 0,
         "badge": "trending",
         "dateAdded": "2025-01-01T00:00:00.000Z"
+      },
+      {
+        "id": "sarees_1776806797813",
+        "name": "Indori Jarjooti Saree",
+        "price": "₹9000",
+        "image": "assets/sarees/1776806796933_Screenshot_20251102_085842.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 50,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [
+          "assets/sarees/1776806797265_Screenshot_20251031_223047.webp",
+          "assets/sarees/1776806797518_Screenshot_20251031_213428.webp",
+          "assets/sarees/1776806797813_Screenshot_20251031_212414.webp"
+        ],
+        "dateAdded": "2026-04-21T21:26:36.784Z"
       }
     ],
     "bedsheets": [
