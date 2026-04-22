@@ -476,6 +476,14 @@ function showConfirm(msg, onYes) {
   ]);
 }
 
+function hardResetApp() {
+  showConfirm('This will completely clear your local database, saved bills, and cached settings. This action cannot be undone. Start fresh?', function() {
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.reload(true);
+  });
+}
+
 function setSecretKey() {
   if (!window.crypto || !window.crypto.subtle) {
     showAlert('Cannot set Secret Key. Please use a secure environment (HTTPS or localhost) to access cryptographic features.');
@@ -704,7 +712,7 @@ function updateCustFooter() {
 
 function deleteSelectedCustomers() {
   if (SELECTED_CUSTS.size === 0) return;
-  customConfirm('Delete ' + SELECTED_CUSTS.size + ' customer(s) and all their bills?', '🗑', function () {
+  showConfirm('Delete ' + SELECTED_CUSTS.size + ' customer(s) and all their bills?', function () {
     var db = loadCustomers();
     db.customers = db.customers.filter(function(c) { return !SELECTED_CUSTS.has(c.id); });
     saveCustomers(db);
