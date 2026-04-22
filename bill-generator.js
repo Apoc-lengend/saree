@@ -5,8 +5,8 @@ var ALL_PRODUCTS = [];   // {id, name, priceNum, category}
 var ITEMS = [];          // {uid, name, priceNum, qty, category}
 var UID = 1;
 var EDITING_BILL = null;
-var BILLS_SORT = 'date';
-var BILLS_SORT_DIR = -1; // -1 = desc, 1 = asc
+var BILLS_SORT = 'invoice';
+var BILLS_SORT_DIR = 1; // -1 = desc, 1 = asc
 var TIME_OFFSET_MS = 0;  // ms difference between online time and system clock
 
 // For modal: which products are toggled
@@ -96,7 +96,7 @@ async function fetchProducts() {
     (data.products.bedsheets || []).filter(live).forEach(function (p) {
       ALL_PRODUCTS.push({ id: p.id, name: p.name, priceNum: parsePrice(p.price), category: 'Bedsheet' });
     });
-    (data.products.lehengas || []).filter(live).forEach(function (p) {
+    (data.products.lehenga || data.products.lehengas || []).filter(live).forEach(function (p) {
       ALL_PRODUCTS.push({ id: p.id, name: p.name, priceNum: parsePrice(p.price), category: 'Lehenga' });
     });
     toast('✅ ' + ALL_PRODUCTS.length + ' products loaded', 'ok');
@@ -477,6 +477,10 @@ function showConfirm(msg, onYes) {
 }
 
 function setSecretKey() {
+  if (!window.crypto || !window.crypto.subtle) {
+    showAlert('Cannot set Secret Key. Please use a secure environment (HTTPS or localhost) to access cryptographic features.');
+    return;
+  }
   var pin = prompt('Enter the Session Secret Key for Bill Verification:');
   if (pin !== null && pin.trim() !== '') {
     window.SECRET_PIN = pin.trim();
@@ -663,7 +667,8 @@ async function saveCustomer(isAuto) {
 }
 
 function openCustModal() {
-  renderCustModal();
+  document.getElementById('cust-search').value = '';
+  renderCustModal('');
   document.getElementById('cust-modal-overlay').classList.add('open');
 }
 function closeCustModal() {
@@ -673,7 +678,44 @@ function closeCustModalOnBg(e) {
   if (e.target === document.getElementById('cust-modal-overlay')) closeCustModal();
 }
 
-function renderCustModal() {
+function filterCustModal() {
+  var q = (document.getElementById('cust-search').value || '').toLowerCase().trim();
+  renderCustModal(q);
+}
+
+var SELECTED_CUSTS = new Set();
+function toggleCustSelection(e, id) {
+  e.stopPropagation();
+  if (SELECTED_CUSTS.has(id)) SELECTED_CUSTS.delete(id);
+  else SELECTED_CUSTS.add(id);
+  updateCustFooter();
+}
+
+function updateCustFooter() {
+  var foot = document.getElementById('cust-foot-actions');
+  var countEl = document.getElementById('c-sel-count');
+  if (SELECTED_CUSTS.size > 0) {
+    foot.style.display = 'flex';
+    countEl.textContent = SELECTED_CUSTS.size + ' selected';
+  } else {
+    foot.style.display = 'none';
+  }
+}
+
+function deleteSelectedCustomers() {
+  if (SELECTED_CUSTS.size === 0) return;
+  customConfirm('Delete ' + SELECTED_CUSTS.size + ' customer(s) and all their bills?', '🗑', function () {
+    var db = loadCustomers();
+    db.customers = db.customers.filter(function(c) { return !SELECTED_CUSTS.has(c.id); });
+    saveCustomers(db);
+    SELECTED_CUSTS.clear();
+    updateCustFooter();
+    renderCustModal(document.getElementById('cust-search').value.toLowerCase().trim());
+    toast('Customers deleted', 'ok');
+  });
+}
+
+function renderCustModal(q) {
   var db = loadCustomers();
   var list = db.customers;
   var sumEl = document.getElementById('cust-summary');
@@ -683,8 +725,24 @@ function renderCustModal() {
   list.forEach(function (c) { totalSpent += (c.totalSpent || 0); });
   sumEl.textContent = list.length + ' customers · ₹' + Math.round(totalSpent).toLocaleString('en-IN') + ' total billed';
 
+  // Filter list
+  if (q) {
+    list = list.filter(function(c) {
+      if ((c.name || '').toLowerCase().indexOf(q) !== -1) return true;
+      // Search in orders
+      if (c.orders && c.orders.length) {
+        for (var i = 0; i < c.orders.length; i++) {
+          var o = c.orders[i];
+          if ((o.invoiceNum || '').toLowerCase().indexOf(q) !== -1) return true;
+          if ((o.verificationId || '').toLowerCase().indexOf(q) !== -1) return true;
+        }
+      }
+      return false;
+    });
+  }
+
   if (!list.length) {
-    listEl.innerHTML = '<div class="cust-empty"><div class="icon">👥</div><p>No customer records yet.<br/>Save a bill to record a customer.</p></div>';
+    listEl.innerHTML = '<div class="cust-empty"><div class="icon">👥</div><p>' + (q ? 'No customers found for "' + esc(q) + '"' : 'No customer records yet.<br/>Save a bill to record a customer.') + '</p></div>';
     return;
   }
 
@@ -706,16 +764,19 @@ function renderCustModal() {
           }).join('') +
         '</div>';
 
+    var isChecked = SELECTED_CUSTS.has(c.id) ? 'checked' : '';
     return '<div class="cust-card" onclick="toggleCustCard(this)">' +
-      '<div class="cust-card-head">' +
-        '<div><div class="cc-name">' + esc(c.name || '—') + '</div>' +
+      '<div class="cust-card-head" style="display:flex; align-items:center; gap:12px;">' +
+        '<input type="checkbox" style="transform:scale(1.3); cursor:pointer;" onclick="toggleCustSelection(event, \'' + c.id + '\')" ' + isChecked + ' />' +
+        '<div style="flex:1;"><div class="cc-name">' + esc(c.name || '—') + '</div>' +
         '<div class="cc-phone">' + (c.phone || '') + (c.city ? ' · ' + esc(c.city) : '') + '</div></div>' +
-        '<div><div class="cc-spent">' + fmt(c.totalSpent || 0) + '</div>' +
+        '<div style="text-align:right;"><div class="cc-spent">' + fmt(c.totalSpent || 0) + '</div>' +
         '<div class="cc-orders">' + orderCount + ' order' + (orderCount !== 1 ? 's' : '') + '</div></div>' +
       '</div>' +
       '<div class="cc-history">' + tilesHtml + '</div>' +
       '</div>';
   }).join('');
+  updateCustFooter();
 }
 
 function openPickCustomer() {
@@ -882,7 +943,8 @@ function renderBillsModal(q) {
 
   var filtered = q ? allBills.filter(function (b) {
     return (b.order.invoiceNum || '').toLowerCase().indexOf(q) !== -1 ||
-      (b.customer.name || '').toLowerCase().indexOf(q) !== -1;
+      (b.customer.name || '').toLowerCase().indexOf(q) !== -1 ||
+      (b.order.verificationId || '').toLowerCase().indexOf(q) !== -1;
   }) : allBills;
 
   if (!filtered.length) {
@@ -1094,15 +1156,7 @@ async function generateVerificationId() {
   var payload = inv + '|' + date + '|' + cName + '|' + grand + '|' + pin;
 
   if (!window.crypto || !window.crypto.subtle) {
-    // Fallback for non-secure contexts (e.g. file:// protocol)
-    var hash = 0;
-    for (var i = 0; i < payload.length; i++) {
-      var char = payload.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash; // Convert to 32bit integer
-    }
-    var fakeHex = Math.abs(hash).toString(16).padStart(8, '0');
-    return 'VID-' + date.replace(/-/g, '') + '-' + fakeHex.toUpperCase();
+    return 'VID-UNVERIFIED';
   }
 
   var encoder = new TextEncoder();
