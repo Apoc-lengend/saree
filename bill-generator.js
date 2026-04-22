@@ -20,6 +20,10 @@ window.SECRET_PIN = '';
 //  BOOT
 // ═══════════════════════════════════════════════
 async function init() {
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./bill-sw.js').catch(function(err) { console.log('SW registration failed:', err); });
+  }
+
   // Sync time from network first so dates are always correct
   await syncOnlineTime();
 
