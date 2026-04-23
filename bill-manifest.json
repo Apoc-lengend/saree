@@ -1,8 +1,10 @@
 {
-  "name": "Parinay Saree Bill Generator",
+  "name": "Parinay Bill Generator",
   "short_name": "PS Bills",
   "description": "Offline-first Bill Generator for Parinay Saree",
-  "start_url": "./bill-generator.html",
+  "id": "/bill-generator",
+  "scope": "/bill-generator.html",
+  "start_url": "/bill-generator.html",
   "display": "standalone",
   "background_color": "#f4f0ea",
   "theme_color": "#7B1338",
