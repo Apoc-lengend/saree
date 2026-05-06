@@ -278,6 +278,119 @@
         "dateAdded": "2026-05-05T15:40:57.506Z"
       }
     ],
-    "lehenga": []
+    "lehenga": [
+      {
+        "id": "lehenga_1778048595438",
+        "name": "Banarsi lehenga",
+        "price": "₹1800",
+        "image": "assets/lehenga/1778048595438_WhatsApp-Image-2026-04-17-at-11.45.21-AM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 20,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:23:15.245Z"
+      },
+      {
+        "id": "lehenga_1778048628605",
+        "name": "Silk patten lehenga",
+        "price": "₹2200",
+        "image": "assets/lehenga/1778048628605_WhatsApp-Image-2026-04-17-at-11.42.45-AM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 25,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:23:48.435Z"
+      },
+      {
+        "id": "lehenga_1778048883330",
+        "name": "Cotton silk patten lehenga",
+        "price": "₹2500",
+        "image": "assets/lehenga/1778048883330_WhatsApp-Image-2026-04-17-at-11.40.41-AM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 26,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:28:03.161Z"
+      },
+      {
+        "id": "lehenga_1778048954799",
+        "name": "banarsi patten lehenga",
+        "price": "₹2100",
+        "image": "assets/lehenga/1778048954799_WhatsApp-Image-2026-04-16-at-7.39.58-PM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 30,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:29:14.641Z"
+      },
+      {
+        "id": "lehenga_1778048979708",
+        "name": "Lehenga",
+        "price": "₹1900",
+        "image": "assets/lehenga/1778048979708_WhatsApp-Image-2026-04-17-at-11.39.03-AM.webp",
+        "style": "",
+        "stock": 2,
+        "discount": 25,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:29:39.535Z"
+      },
+      {
+        "id": "lehenga_1778049019082",
+        "name": "Sky lehenga",
+        "price": "₹1800",
+        "image": "assets/lehenga/1778049019082_WhatsApp-Image-2026-04-16-at-7.42.03-PM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 20,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:30:18.942Z"
+      },
+      {
+        "id": "lehenga_1778049064081",
+        "name": "Lehenga",
+        "price": "₹2500",
+        "image": "assets/lehenga/1778049064081_WhatsApp-Image-2026-04-16-at-7.44.03-PM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 15,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T06:31:03.939Z"
+      },
+      {
+        "id": "lehenga_1778054524010",
+        "name": "Pure banarsi lehenga",
+        "price": "₹3000",
+        "image": "assets/lehenga/1778054524010_WhatsApp-Image-2026-04-16-at-7.46.02-PM.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 25,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-06T08:02:03.751Z"
+      }
+    ]
   }
 }
