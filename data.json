@@ -24,6 +24,20 @@
   "products": {
     "sarees": [
       {
+        "id": "sarees_1779006117627",
+        "name": "silk saree",
+        "price": "₹2500",
+        "image": "assets/sarees/1779006117627_7.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 25,
+        "badge": "trending",
+        "description": "very unique saree",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-05-17T08:21:57.347Z"
+      },
+      {
         "id": "sarees_1777957465905",
         "name": "Silk cotton fabrak",
         "price": "₹1500",
