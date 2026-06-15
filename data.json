@@ -24,6 +24,20 @@
   "products": {
     "sarees": [
       {
+        "id": "sarees_1781549396589",
+        "name": "efwef",
+        "price": "₹23000",
+        "image": "assets/sarees/1781549396589_b__Create_an_ultra-rea.webp",
+        "style": "",
+        "stock": 1,
+        "discount": 50,
+        "badge": "new",
+        "description": "",
+        "status": "live",
+        "more_images": [],
+        "dateAdded": "2026-06-15T18:49:56.305Z"
+      },
+      {
         "id": "sarees_1779006117627",
         "name": "silk saree",
         "price": "₹2500",
